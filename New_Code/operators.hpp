@@ -11,9 +11,13 @@
 #include <iostream>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <complex>
+
+using std::vector, std::complex, std::pair;
 
 class LadderOp {
  protected:
@@ -110,6 +114,18 @@ class Monomial {
     for (std::vector<LadderOp>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
       it->herm();
     }
+  }
+};
+
+class Polynomial {
+protected:
+  vector<pair<complex<double>, Monomial> > Coeffs;
+
+public:
+  Polynomial(): Coeffs() {}
+  Polynomial(Monomial const & mn) {
+    Coeffs[1].first = complex<double>(1, 0);
+    Coeffs[0].second = mn;
   }
 };
 

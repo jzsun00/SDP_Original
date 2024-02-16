@@ -46,7 +46,41 @@ int LadderOpTest(void) {
   return EXIT_SUCCESS;
 }
 
-int main() {
+int MonomialTest(void) {
+  LadderOp * op1 = new LadderOp(0, true);
+  LadderOp * op2 = new LadderOp(1, true);
+  LadderOp * op3 = new LadderOp(2, false);
+  Monomial * mn1 = new Monomial();
+  Monomial * mn2 = new Monomial(*op1);
+  assert(mn1->getSize() == 0);
+  assert(mn2->getSize() == 1);
+  *mn1 *= *op1;
+  *mn1 *= *op2;
+  *mn1 *= *op3;
+  assert(mn1->getSize() == 3);
+  Monomial * mn3 = new Monomial(*mn1);
+  Monomial * mn4 = new Monomial();
+  *mn4 = *mn3;
+  assert(*mn3 == *mn1);
+  assert(*mn4 == *mn3);
+  assert(mn3 != mn1);
+  assert(mn4 != mn3);
+  *mn4 *= *mn2;
+  std::cout << "mn1 = " << mn1->toString() << std::endl;
+  std::cout << "mn2 = " << mn2->toString() << std::endl;
+  std::cout << "mn3 = " << mn3->toString() << std::endl;
+  std::cout << "mn4 = " << mn4->toString() << std::endl;
+  assert((*mn4)[3] == *op1);
+  assert((*mn4)[1] == *op2);
+  mn2->herm();
+  mn4->herm();
+  std::cout << "mn2+ = " << mn2->toString() << std::endl;
+  std::cout << "mn4+ = " << mn4->toString() << std::endl;
+  return EXIT_SUCCESS;
+}
+
+int main(void) {
   assert(LadderOpTest() == EXIT_SUCCESS);
+  assert(MonomialTest() == EXIT_SUCCESS);
   return EXIT_SUCCESS;
 }
