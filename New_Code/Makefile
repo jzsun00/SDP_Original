@@ -4,26 +4,45 @@ CC = g++
 # Compiler flags
 CFLAGS = -std=c++11 -Wall
 
+# Source directory
+SRC_DIR = .
+
+# Include directory
+INC_DIR = .
+
+# Build directory
+BUILD_DIR = .
+
+# Executable directory
+BIN_DIR = .
+
 # Source files
-SOURCES = operators_test.cpp, operators.hpp
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 
-# Object files
-OBJECTS = $(SOURCES:.cpp=.o)
+# Header files
+HEADERS = $(wildcard $(INC_DIR)/*.hpp)
 
-# Executable name
-EXECUTABLE = operatorsTest
+# Executable names
+EXECUTABLES = $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%,$(SOURCES))
 
 # Default target
-all: $(EXECUTABLE)
+all: $(EXECUTABLES)
 
-# Rule to build the executable
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $(EXECUTABLE)
+# Rule to build each executable
+$(BIN_DIR)/%: $(BUILD_DIR)/%.o $(HEADERS)
+	$(CC) $(CFLAGS) $< -o $@
 
 # Rule to compile .cpp files into .o files
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS) | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+
+# Create build directory
+#$(BUILD_DIR):
+#    mkdir -p $(BUILD_DIR)
 
 # Clean rule
 clean:
-	rm -f $(EXECUTABLE) $(OBJECTS)
+	rm -rf $(BUILD_DIR) $(BIN_DIR)
+
+.PHONY: all clean
+
