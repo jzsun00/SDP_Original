@@ -1,0 +1,7 @@
+#include "operators.hpp"
+
+int main(void) {
+  LadderOp * op1 = new LadderOp(0, true);
+  LadderOp * op2 = new LadderOp(1, true);
+  LadderOp * op3 = new LadderOp(2, false);
+}

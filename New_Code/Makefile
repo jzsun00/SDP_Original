@@ -1,0 +1,29 @@
+# Compiler
+CC = g++
+
+# Compiler flags
+CFLAGS = -std=c++11 -Wall
+
+# Source files
+SOURCES = operators_test.cpp, operators.hpp
+
+# Object files
+OBJECTS = $(SOURCES:.cpp=.o)
+
+# Executable name
+EXECUTABLE = operatorsTest
+
+# Default target
+all: $(EXECUTABLE)
+
+# Rule to build the executable
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(EXECUTABLE)
+
+# Rule to compile .cpp files into .o files
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean rule
+clean:
+	rm -f $(EXECUTABLE) $(OBJECTS)
