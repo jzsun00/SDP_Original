@@ -1,23 +1,27 @@
 /*
   Jan 31, 2024  Jiazheng Sun
 
-  Define ladder operators
+  Define ladder operators, monomials and polynomials.
 */
 
 #ifndef ORI_SDP_GS_OPERATORS_HPP
 #define ORI_SDP_GS_OPERATORS_HPP
 
+#include <algorithm>
+#include <complex>
 #include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
-#include <utility>
-#include <algorithm>
-#include <vector>
 #include <string>
-#include <complex>
+#include <utility>
+#include <vector>
 
-using std::vector, std::complex, std::pair;
+using std::complex;
+using std::pair;
+using std::vector;
+
+//---------------------------------------------------------------LadderOp---------------
 
 class LadderOp {
  protected:
@@ -37,96 +41,69 @@ class LadderOp {
   /*Get information of the ladder operator.*/
   int getIndex() const { return index; }
   bool getCreatorF() const { return creatorF; }
-  std::string toString() const {
-    std::string ans = "a_";
-    ans += std::to_string(index);
-    if (creatorF) {
-      ans += "+";
-    }
-    return ans;
-  }
+  std::string toString() const;
   /*Overload operators.*/
-  LadderOp & operator=(LadderOp const & rhs) {
-    index = rhs.index;
-    creatorF = rhs.creatorF;
-    return *this;
-  }
-  bool operator==(LadderOp const & rhs) const {
-    return creatorF == rhs.creatorF && index == rhs.index;
-  }
-  bool operator<(LadderOp const & rhs) const {
-    if (creatorF != rhs.creatorF) {
-      throw std::invalid_argument("Two operators are not the same kind!\n");
-    }
-    else {
-      return index < rhs.index;
-    }
-  }
+  LadderOp & operator=(LadderOp const & rhs);
+  bool operator==(LadderOp const & rhs) const;
+  bool operator<(LadderOp const & rhs) const;
   bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
   void herm() { creatorF ^= 1; }
 };
 
+//---------------------------------------------------------------Monomial---------------
+
 class Monomial {
  protected:
-  std::vector<LadderOp> Expr;
-  
+  vector<LadderOp> Expr;
+
  public:
   /*Construct a monomial with one ladder operator or copy another,
    default constructor use an empty vector.*/
-  Monomial(): Expr() {}
-  Monomial(LadderOp & Op): Expr(1, Op) {}
-  Monomial(Monomial const & rhs) {
-    Expr = rhs.Expr;
-  }
+  Monomial() : Expr() {}
+  Monomial(LadderOp & Op) : Expr(1, Op) {}
+  Monomial(Monomial const & rhs) { Expr = rhs.Expr; }
   ~Monomial() {}
   /*Get information of the monomial.*/
-  size_t getSize() const {
-    return Expr.size();
-  }
-  std::string toString() {
-    std::string ans = "";
-    for (std::vector<LadderOp>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
-      ans += it->toString();
-    }
-    return ans;
-  }
+  size_t getSize() const { return Expr.size(); }
+  std::string toString();
   /*Overload operators.*/
-  Monomial & operator=(Monomial const & rhs) {
-    Expr = rhs.Expr;
-    return *this;
-  }
-  bool operator==(Monomial const & rhs) const {
-    return Expr == rhs.Expr;
-  }
-  LadderOp operator[](size_t n) const {
-    return Expr[n];
-  }
-  Monomial & operator*=(Monomial const & rhs) {
-    Expr.insert(Expr.end(), rhs.Expr.begin(), rhs.Expr.end());
-    return *this;
-  }
-  Monomial & operator*=(LadderOp const & toAdd) {
-    Expr.push_back(toAdd);
-    return *this;
-  }
-  void herm() {
-    std::reverse(Expr.begin(), Expr.end());
-    for (std::vector<LadderOp>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
-      it->herm();
-    }
-  }
+  Monomial & operator=(Monomial const & rhs);
+  bool operator==(Monomial const & rhs) const { return Expr == rhs.Expr; }
+  LadderOp operator[](size_t n) const { return Expr[n]; }
+  Monomial & operator*=(Monomial const & rhs);
+  Monomial & operator*=(LadderOp const & toAdd);
+  void herm();
 };
 
-class Polynomial {
-protected:
-  vector<pair<complex<double>, Monomial> > Coeffs;
+//---------------------------------------------------------------Polynomial-------------
 
-public:
-  Polynomial(): Coeffs() {}
-  Polynomial(Monomial const & mn) {
-    Coeffs[1].first = complex<double>(1, 0);
-    Coeffs[0].second = mn;
+class Polynomial {
+ protected:
+  vector<pair<complex<double>, Monomial> > Terms;
+
+ public:
+  typedef vector<pair<complex<double>, Monomial> > TermType;
+  /*Construct a polynomial with one monomial or copy another,
+   default constructor use an empty vector.*/
+  Polynomial() : Terms() {}
+  Polynomial(Monomial const & mn) : Terms(1) {
+    Terms[0].first = complex<double>(1, 0);
+    Terms[0].second = mn;
   }
+  /*Get information of the polynomial.*/
+  size_t getSize() const { return Terms.size(); }
+  std::string toString();
+  /*Overload operators.*/
+  Polynomial & operator+=(TermType const & rhs);
+  Polynomial & operator+=(Polynomial const & rhs);
+  Polynomial & operator-=(TermType const & rhs);
+  Polynomial & operator-=(Polynomial const & rhs);
+  Polynomial & operator*=(TermType const & rhs);
+  Polynomial & operator*=(Polynomial const & rhs);
+  void herm();
+
+ private:
+  TermType::iterator findSameMonomial(Monomial const & mn);
 };
 
 #endif

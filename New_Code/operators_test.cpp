@@ -26,7 +26,8 @@ int LadderOpTest(void) {
   assert(op6 != op1);
   try {
     op3->herm();
-    *op2 > *op3;
+    bool mid = *op2 > *op3;
+    std::cout << mid << std::endl;
   }
   catch (std::invalid_argument & e) {
     std::cerr << "Caught exception: " << e.what() << std::endl;
@@ -79,8 +80,17 @@ int MonomialTest(void) {
   return EXIT_SUCCESS;
 }
 
+int PolynomialTest(void) {
+  LadderOp op1(0, true);
+  Monomial mn1(op1);
+  Polynomial pl1(mn1);
+  std::cout << "pl1 = " << pl1.toString() << std::endl;
+  return EXIT_SUCCESS;
+}
+
 int main(void) {
   assert(LadderOpTest() == EXIT_SUCCESS);
   assert(MonomialTest() == EXIT_SUCCESS);
+  assert(PolynomialTest() == EXIT_SUCCESS);
   return EXIT_SUCCESS;
 }
