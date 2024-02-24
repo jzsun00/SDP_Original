@@ -1,0 +1,26 @@
+#include <cassert>
+
+#include "../Basics/operators.hpp"
+
+int main(void) {
+  LadderOp op1(0, true);
+  LadderOp op2(1, true);
+  LadderOp op3;
+  LadderOp op4(1, true);
+  LadderOp op5(op1);
+  LadderOp op6;
+  op6 = op1;
+  assert(op2.getIndex() == 1);
+  assert(op2.getCreatorF() == true);
+  op3.herm();
+  assert(op3.getIndex() == std::numeric_limits<int>::min());
+  assert(op3.getCreatorF() == true);
+  assert(op5 == op1);
+  assert(op6 == op1);
+  delete op1;
+  delete op2;
+  delete op3;
+  delete op4;
+  delete op5;
+  delete op6;
+}

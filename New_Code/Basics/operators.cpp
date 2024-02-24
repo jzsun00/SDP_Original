@@ -111,4 +111,65 @@ Polynomial & Polynomial::operator+=(pair<complex<double>, Monomial> const & toAd
   return *this;
 }
 
+Polynomial & Polynomial::operator+=(Polynomial & rhs) {
+  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+       termIt != rhs.getEnd();
+       ++termIt) {
+    *this += *termIt;
+  }
+  return *this;
+}
+
+Polynomial & Polynomial::operator-=(pair<complex<double>, Monomial> & toAdd) {
+  vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
+  toAdd.first *= -1;
+  if (it == Terms.end()) {
+    Terms.push_back(toAdd);
+  }
+  else {
+    it->first += toAdd.first;
+  }
+  return *this;
+}
+
+Polynomial & Polynomial::operator-=(Polynomial & rhs) {
+  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+       termIt != rhs.getEnd();
+       ++termIt) {
+    *this -= *termIt;
+  }
+  return *this;
+}
+
+Polynomial & Polynomial::operator*=(pair<complex<double>, Monomial> const & rhs) {
+  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    it->first *= rhs.first;
+    it->second *= rhs.second;
+  }
+  return *this;
+}
+
+Polynomial & Polynomial::operator*=(Polynomial & rhs) {
+  Polynomial current(*this);
+  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+       termIt != rhs.getEnd();
+       ++termIt) {
+    Polynomial copy(current);
+    *this += (copy *= *termIt);
+  }
+  *this -= current;
+  return *this;
+}
+
+void Polynomial::herm() {
+  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    it->first = std::conj(it->first);
+    it->second.herm();
+  }
+}
+
 #endif

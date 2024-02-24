@@ -45,6 +45,7 @@ class LadderOp {
   /*Overload operators.*/
   LadderOp & operator=(LadderOp const & rhs);
   bool operator==(LadderOp const & rhs) const;
+  // Throw std::invalid_argument exception if operators are not the same kind
   bool operator<(LadderOp const & rhs) const;
   bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
   void herm() { creatorF ^= 1; }
@@ -82,9 +83,9 @@ class Polynomial {
   vector<pair<complex<double>, Monomial> > Terms;
 
  public:
-  typedef vector<pair<complex<double>, Monomial> > TermType;
+  typedef pair<complex<double>, Monomial> TermType;
   /*Construct a polynomial with one monomial or copy another,
-   default constructor use an empty vector.*/
+    default constructor use an empty vector.*/
   Polynomial() : Terms() {}
   Polynomial(Monomial const & mn) : Terms(1) {
     Terms[0].first = complex<double>(1, 0);
@@ -92,18 +93,25 @@ class Polynomial {
   }
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
+  vector<pair<complex<double>, Monomial> >::iterator getBegin() { return Terms.begin(); }
+  vector<pair<complex<double>, Monomial> >::iterator getEnd() { return Terms.end(); }
   std::string toString();
   /*Overload operators.*/
+  pair<complex<double>, Monomial> operator[](size_t n) const { return Terms[n]; }
   Polynomial & operator+=(TermType const & rhs);
-  Polynomial & operator+=(Polynomial const & rhs);
-  Polynomial & operator-=(TermType const & rhs);
-  Polynomial & operator-=(Polynomial const & rhs);
+  Polynomial & operator+=(Polynomial & rhs);
+  Polynomial & operator-=(TermType & rhs);
+  Polynomial & operator-=(Polynomial & rhs);
   Polynomial & operator*=(TermType const & rhs);
-  Polynomial & operator*=(Polynomial const & rhs);
+  Polynomial & operator*=(Polynomial & rhs);
   void herm();
 
  private:
-  TermType::iterator findSameMonomial(Monomial const & mn);
+  /*Find the same monomial for += operation.
+    Return the corresponding iterator if same monomial is found,
+    otherwise return Terms.end().*/
+  vector<pair<complex<double>, Monomial> >::iterator findSameMonomial(
+      Monomial const & mn);
 };
 
 #endif

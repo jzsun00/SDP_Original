@@ -1,48 +1,37 @@
-# Compiler
-CC = g++
+# Makefile
 
-# Compiler flags
-CFLAGS = -std=c++11 -Wall
+# Directories
+SRC_DIR := Basics
+TEST_DIR := _Tests
+EXE_DIR := _Exes
 
-# Source directory
-SRC_DIR = .
-
-# Include directory
-INC_DIR = .
-
-# Build directory
-BUILD_DIR = .
-
-# Executable directory
-BIN_DIR = .
+# Compiler and flags
+CXX := g++
+CXXFLAGS := -std=c++11 -Wall -Wextra
+LDFLAGS :=
 
 # Source files
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+HEADER_FILES := $(wildcard $(SRC_DIR)/*.hpp)
+TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 
-# Header files
-HEADERS = $(wildcard $(INC_DIR)/*.hpp)
+# Object files
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(SRC_DIR)/%.o, $(SRC_FILES))
 
-# Executable names
-EXECUTABLES = $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%,$(SOURCES))
+# Executables
+EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
 
-# Default target
-all: $(EXECUTABLES)
-
-# Rule to build each executable
-$(BIN_DIR)/%: $(BUILD_DIR)/%.o $(HEADERS)
-	$(CC) $(CFLAGS) $< -o $@
-
-# Rule to compile .cpp files into .o files
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
-
-# Create build directory
-#$(BUILD_DIR):
-#    mkdir -p $(BUILD_DIR)
-
-# Clean rule
-clean:
-	rm -rf $(BUILD_DIR) $(BIN_DIR)
-
+# Targets
 .PHONY: all clean
 
+all: $(EXE_FILES)
+
+$(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
+	@mkdir -p $(EXE_DIR)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -rf $(EXE_DIR) $(SRC_DIR)/*.o
