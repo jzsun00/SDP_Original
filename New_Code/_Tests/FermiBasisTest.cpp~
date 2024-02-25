@@ -1,0 +1,7 @@
+#include <cassert>
+
+#include "../Basics/fermiStates.hpp"
+
+int main(void) {
+  return EXIT_SUCCESS;
+}
