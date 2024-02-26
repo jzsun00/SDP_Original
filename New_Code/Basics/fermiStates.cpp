@@ -8,6 +8,8 @@
 
 #include "fermiStates.hpp"
 
+//-------------------------------------------------------------FermiFockState-----------
+
 using std::vector;
 
 std::string FermiFockState::toString() {
@@ -26,7 +28,24 @@ bool FermiFockState::operator==(FermiFockState const & rhs) const {
   return Nums == rhs.Nums;
 }
 
-//-------------------------------------------
+//--------------------------------------------------------------FermiState--------------
+
+std::string FermiState::toString() {
+  std::string ans = "";
+  for (vector<pair<complex<double>, FermiFockState> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    ans += "  (";
+    ans += std::to_string(it->first.real());
+    ans += " + ";
+    ans += std::to_string(it->first.imag());
+    ans += ")";
+    ans += it->second.toString();
+    ans += "  +";
+  }
+  ans.pop_back();
+  return ans;
+}
 
 void FermiBasis::init() {
   size_t total = std::pow(2, Sites);
@@ -56,7 +75,7 @@ std::string FermiBasis::toString() {
   return ans;
 }
 
-//------------------------------------------------
+//-------------------------------------------------------------FermiBasis---------------
 
 double innerProduct(FermiFockState lhs, FermiFockState rhs) {
   if (lhs == rhs) {

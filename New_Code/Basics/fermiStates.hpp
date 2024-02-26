@@ -9,6 +9,7 @@
 
 #include <bitset>
 #include <cmath>
+#include <numeric>
 
 #include "operators.hpp"
 
@@ -26,6 +27,7 @@ class FermiFockState {
   //FermiFockState(FermiFockState & rhs) : States(rhs.States) {}
   ~FermiFockState() {}
   size_t getSize() const { return Nums.size(); }
+  vector<bool> getNums() const { return Nums; };
   std::string toString();
   bool operator==(FermiFockState const & rhs) const;
   bool operator[](size_t n) const { return Nums[n]; }
@@ -40,6 +42,10 @@ class FermiState {
   FermiState() : Terms() {}
   FermiState(FermiFockState const & ffs) : Terms(1) {
     Terms[0].first = complex<double>(1, 0);
+    Terms[0].second = ffs;
+  }
+  FermiState(complex<double> pref, FermiFockState const & ffs) : Terms(1) {
+    Terms[0].first = pref;
     Terms[0].second = ffs;
   }
   size_t getSize() const { return Terms.size(); }
