@@ -88,6 +88,11 @@ std::string Polynomial::toString() {
   return ans;
 }
 
+Polynomial & Polynomial::operator=(Polynomial const & rhs) {
+  Terms = rhs.Terms;
+  return *this;
+}
+
 vector<pair<complex<double>, Monomial> >::iterator Polynomial::findSameMonomial(
     Monomial const & mn) {
   for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
@@ -100,7 +105,25 @@ vector<pair<complex<double>, Monomial> >::iterator Polynomial::findSameMonomial(
   return Terms.end();
 }
 
+Polynomial & Polynomial::operator+=(Monomial const & rhs) {
+  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
+  if (std::abs(toAdd.first) < std::pow(10, -9)) {
+    return *this;
+  }
+  vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
+  if (it == Terms.end()) {
+    Terms.push_back(toAdd);
+  }
+  else {
+    it->first += toAdd.first;
+  }
+  return *this;
+}
+
 Polynomial & Polynomial::operator+=(pair<complex<double>, Monomial> const & toAdd) {
+  if (std::abs(toAdd.first) < std::pow(10, -9)) {
+    return *this;
+  }
   vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
   if (it == Terms.end()) {
     Terms.push_back(toAdd);
@@ -120,7 +143,26 @@ Polynomial & Polynomial::operator+=(Polynomial & rhs) {
   return *this;
 }
 
+Polynomial & Polynomial::operator-=(Monomial const & rhs) {
+  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
+  if (std::abs(toAdd.first) < std::pow(10, -9)) {
+    return *this;
+  }
+  vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
+  toAdd.first *= -1;
+  if (it == Terms.end()) {
+    Terms.push_back(toAdd);
+  }
+  else {
+    it->first += toAdd.first;
+  }
+  return *this;
+}
+
 Polynomial & Polynomial::operator-=(pair<complex<double>, Monomial> & toAdd) {
+  if (std::abs(toAdd.first) < std::pow(10, -9)) {
+    return *this;
+  }
   vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
   toAdd.first *= -1;
   if (it == Terms.end()) {
@@ -137,6 +179,17 @@ Polynomial & Polynomial::operator-=(Polynomial & rhs) {
        termIt != rhs.getEnd();
        ++termIt) {
     *this -= *termIt;
+  }
+  return *this;
+}
+
+Polynomial & Polynomial::operator*=(Monomial const & rhs) {
+  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
+  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    it->first *= toAdd.first;
+    it->second *= toAdd.second;
   }
   return *this;
 }
@@ -169,6 +222,16 @@ void Polynomial::herm() {
        ++it) {
     it->first = std::conj(it->first);
     it->second.herm();
+  }
+}
+
+void Polynomial::eraseZeros() {
+  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    if (std::abs(it->first) < std::pow(10, -9)) {
+      Terms.erase(it);
+    }
   }
 }
 

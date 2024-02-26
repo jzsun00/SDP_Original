@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "../Basics/fermiStates.hpp"
+#include "../Basics/operators.hpp"
 
 int main(void) {
   return EXIT_SUCCESS;

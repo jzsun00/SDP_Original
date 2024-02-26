@@ -1,7 +1,9 @@
 /*
-  Jan 31, 2024  Jiazheng Sun
-
+  Jiazheng Sun
+  Updated: Feb 26, 2024
   Define ladder operators, monomials and polynomials.
+  That serves as fundamental definitions of operators in the second quantization form,
+  Fermi or Boson operators should inherit these classes and add related algebra.
 */
 
 #ifndef ORI_SDP_GS_OPERATORS_HPP
@@ -91,20 +93,29 @@ class Polynomial {
     Terms[0].first = complex<double>(1, 0);
     Terms[0].second = mn;
   }
+  Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
+  ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
   vector<pair<complex<double>, Monomial> >::iterator getBegin() { return Terms.begin(); }
   vector<pair<complex<double>, Monomial> >::iterator getEnd() { return Terms.end(); }
   std::string toString();
   /*Overload operators.*/
-  pair<complex<double>, Monomial> operator[](size_t n) const { return Terms[n]; }
+  TermType operator[](size_t n) const { return Terms[n]; }
+  Polynomial & operator=(Polynomial const & rhs);
+  bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
+  // If the prefactor of rhs is less than 10^(-9), ignore that operation
+  Polynomial & operator+=(Monomial const & rhs);
   Polynomial & operator+=(TermType const & rhs);
   Polynomial & operator+=(Polynomial & rhs);
+  Polynomial & operator-=(Monomial const & rhs);
   Polynomial & operator-=(TermType & rhs);
   Polynomial & operator-=(Polynomial & rhs);
+  Polynomial & operator*=(Monomial const & rhs);
   Polynomial & operator*=(TermType const & rhs);
   Polynomial & operator*=(Polynomial & rhs);
   void herm();
+  void eraseZeros();
 
  private:
   /*Find the same monomial for += operation.
@@ -114,4 +125,4 @@ class Polynomial {
       Monomial const & mn);
 };
 
-#endif
+#endif  //ORI_SDP_GS_OPERATORS_HPP
