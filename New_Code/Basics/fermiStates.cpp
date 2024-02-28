@@ -24,8 +24,9 @@ std::string FermiFockState::toString() {
   return ans;
 }
 
-bool FermiFockState::operator==(FermiFockState const & rhs) const {
-  return Nums == rhs.Nums;
+FermiFockState & FermiFockState::operator=(FermiFockState const & rhs) {
+  Nums = rhs.Nums;
+  return *this;
 }
 
 //--------------------------------------------------------------FermiState--------------
@@ -41,11 +42,100 @@ std::string FermiState::toString() {
     ans += std::to_string(it->first.imag());
     ans += ")";
     ans += it->second.toString();
-    ans += "  +";
+    ans += "  +\n";
   }
+  ans.pop_back();
   ans.pop_back();
   return ans;
 }
+
+pair<complex<double>, FermiFockState> FermiState::operator[](size_t n) const {
+  return Terms.at(n);
+}
+
+vector<pair<complex<double>, FermiFockState> >::iterator FermiState::findSameFockState(
+    FermiFockState const & ffs) {
+  for (vector<pair<complex<double>, FermiFockState> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    if (it->second == ffs) {
+      return it;
+    }
+  }
+  return Terms.end();
+}
+
+FermiState & FermiState::operator+=(FermiFockState const & rhs) {
+  pair<complex<double>, FermiFockState> toAdd(complex<double>(1, 0), rhs);
+  *this += toAdd;
+  return *this;
+}
+
+FermiState & FermiState::operator+=(pair<complex<double>, FermiFockState> const & rhs) {
+  if (std::abs(rhs.first) < std::pow(10, -12)) {
+    return *this;
+  }
+  vector<pair<complex<double>, FermiFockState> >::iterator it =
+      findSameFockState(rhs.second);
+  if (it == Terms.end()) {
+    Terms.push_back(rhs);
+  }
+  else {
+    it->first += rhs.first;
+  }
+  return *this;
+}
+
+FermiState & FermiState::operator+=(FermiState & rhs) {
+  for (vector<pair<complex<double>, FermiFockState> >::iterator termIt = rhs.getBegin();
+       termIt != rhs.getEnd();
+       ++termIt) {
+    *this += *termIt;
+  }
+  return *this;
+}
+
+FermiState & FermiState::operator-=(FermiFockState const & rhs) {
+  pair<complex<double>, FermiFockState> toAdd(complex<double>(1, 0), rhs);
+  *this -= toAdd;
+  return *this;
+}
+
+FermiState & FermiState::operator-=(pair<complex<double>, FermiFockState> const & rhs) {
+  if (std::abs(rhs.first) < std::pow(10, -12)) {
+    return *this;
+  }
+  vector<pair<complex<double>, FermiFockState> >::iterator it =
+      findSameFockState(rhs.second);
+  if (it == Terms.end()) {
+    pair<complex<double>, FermiFockState> copy(complex<double>(-1, 0) * rhs.first,
+                                               rhs.second);
+    Terms.push_back(copy);
+  }
+  else {
+    it->first -= rhs.first;
+  }
+  return *this;
+}
+
+FermiState & FermiState::operator-=(FermiState & rhs) {
+  for (vector<pair<complex<double>, FermiFockState> >::iterator termIt = rhs.getBegin();
+       termIt != rhs.getEnd();
+       ++termIt) {
+    *this -= *termIt;
+  }
+  return *this;
+}
+
+bool isZero(pair<complex<double>, FermiFockState> term) {
+  return std::abs(term.first) < std::pow(10, -12);
+}
+
+void FermiState::eraseZeros() {
+  Terms.erase(std::remove_if(Terms.begin(), Terms.end(), isZero), Terms.end());
+}
+
+//-------------------------------------------------------------FermiBasis---------------
 
 void FermiBasis::init() {
   size_t total = std::pow(2, Sites);
@@ -75,7 +165,7 @@ std::string FermiBasis::toString() {
   return ans;
 }
 
-//-------------------------------------------------------------FermiBasis---------------
+//-------------------------------------------------------------Other Functions---------------
 
 double innerProduct(FermiFockState lhs, FermiFockState rhs) {
   if (lhs == rhs) {

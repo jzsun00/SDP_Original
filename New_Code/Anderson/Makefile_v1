@@ -1,0 +1,38 @@
+# Makefile
+
+# Directories
+SRC_DIR := .
+INC_DIRS := include matrices/complex
+TEST_DIR := .
+EXE_DIR := _Exes
+
+# Compiler and flags
+CXX := g++
+CXXFLAGS := -std=c++11 -Wall -ansi -pedantic-errors #-Wextra
+LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
+
+# Source files
+SRC_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
+HEADER_FILES := $(foreach dir,$(INC_DIRS),$(wildcard $(dir)/*.hpp))
+TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
+
+# Object files
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(SRC_DIR)/%.o, $(SRC_FILES))
+
+# Executables
+EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
+
+# Targets
+.PHONY: all clean
+
+all: $(EXE_FILES)
+
+$(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
+	@mkdir -p $(EXE_DIR)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@ -I./include -I./matrices/complex
+
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -I./include -I./matrices/complex
+
+clean:
+	rm -rf $(EXE_DIR) $(SRC_DIR)/*.o

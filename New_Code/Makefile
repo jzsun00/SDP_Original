@@ -8,7 +8,7 @@ EXE_DIR := _Exes
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
-LDFLAGS :=
+LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
 
 # Source files
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)

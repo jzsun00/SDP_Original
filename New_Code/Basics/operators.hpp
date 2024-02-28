@@ -104,12 +104,12 @@ class Polynomial {
   TermType operator[](size_t n) const { return Terms[n]; }
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
-  // If the prefactor of rhs is less than 10^(-9), ignore that operation
+  // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations
   Polynomial & operator+=(Monomial const & rhs);
   Polynomial & operator+=(TermType const & rhs);
   Polynomial & operator+=(Polynomial & rhs);
   Polynomial & operator-=(Monomial const & rhs);
-  Polynomial & operator-=(TermType & rhs);
+  Polynomial & operator-=(TermType const & rhs);
   Polynomial & operator-=(Polynomial & rhs);
   Polynomial & operator*=(Monomial const & rhs);
   Polynomial & operator*=(TermType const & rhs);
