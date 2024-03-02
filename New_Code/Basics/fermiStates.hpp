@@ -70,12 +70,14 @@ class FermiState {
   std::string toString();
   /*Overload operators.*/
   pair<complex<double>, FermiFockState> operator[](size_t n) const;
+  FermiState & operator=(FermiState const & rhs);
   FermiState & operator+=(FermiFockState const & rhs);
   FermiState & operator+=(TermType const & rhs);
   FermiState & operator+=(FermiState & rhs);
   FermiState & operator-=(FermiFockState const & rhs);
   FermiState & operator-=(TermType const & rhs);
   FermiState & operator-=(FermiState & rhs);
+  FermiState & operator*=(complex<double> pref);
   void eraseZeros();
 
  private:

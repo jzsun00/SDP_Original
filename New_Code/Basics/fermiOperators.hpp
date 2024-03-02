@@ -14,12 +14,14 @@ class FermiLadderOp : public LadderOp {
  public:
   FermiLadderOp() : LadderOp() {}
   FermiLadderOp(int index, bool creatorF) : LadderOp(index, creatorF) {}
+  FermiLadderOp(LadderOp const & rhs) : LadderOp(rhs) {}
   FermiState operator*(FermiFockState const & rhs) const;
   FermiState operator*(FermiState const & rhs) const;
 };
 
 class FermiMonomial : public Monomial {
  public:
+  FermiMonomial(Monomial const & rhs) : Monomial(rhs) {}
   FermiState operator*(FermiFockState const & rhs) const;
   FermiState operator*(FermiState const & rhs) const;
 };

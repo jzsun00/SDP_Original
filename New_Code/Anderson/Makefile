@@ -8,23 +8,23 @@ include ./Makefile.inc
 
 # defining cscmat directory.
 
-CSCMAT_DIR = ./matrices/complex
+#CSCMAT_DIR = ./matrices/complex
 INC_DIR = ./include
 
 # compiling and linking all examples.
 
-all: lcompreg #lcompshf lcompgre lcompgsh
+all: unitTest #lcompshf lcompgre lcompgsh
 
 # compiling and linking each complex problem.
 
-lcompreg:	lcompreg.o
+unitTest:	unitTest.o
 	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -o lcompreg lcompreg.o $(SUPERLU_LIB) $(ALL_LIBS)
 
 # defining cleaning rule.
 
 .PHONY:	clean
 clean:
-	rm -f *~ *.o core lcompreg
+	rm -f *~ *.o core unitTest
 
 # defining pattern rules.
 

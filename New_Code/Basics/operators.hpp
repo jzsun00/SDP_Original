@@ -19,6 +19,8 @@
 #include <utility>
 #include <vector>
 
+//#include "fermiStates.hpp"
+
 using std::complex;
 using std::pair;
 using std::vector;
@@ -51,6 +53,7 @@ class LadderOp {
   bool operator<(LadderOp const & rhs) const;
   bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
   void herm() { creatorF ^= 1; }
+  //FermiState operator*(FermiFockState const & rhs) const;
 };
 
 //---------------------------------------------------------------Monomial---------------

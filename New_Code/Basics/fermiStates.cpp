@@ -53,6 +53,11 @@ pair<complex<double>, FermiFockState> FermiState::operator[](size_t n) const {
   return Terms.at(n);
 }
 
+FermiState & FermiState::operator=(FermiState const & rhs) {
+  Terms = rhs.Terms;
+  return *this;
+}
+
 vector<pair<complex<double>, FermiFockState> >::iterator FermiState::findSameFockState(
     FermiFockState const & ffs) {
   for (vector<pair<complex<double>, FermiFockState> >::iterator it = Terms.begin();
@@ -123,6 +128,15 @@ FermiState & FermiState::operator-=(FermiState & rhs) {
        termIt != rhs.getEnd();
        ++termIt) {
     *this -= *termIt;
+  }
+  return *this;
+}
+
+FermiState & FermiState::operator*=(complex<double> pref) {
+  for (vector<pair<complex<double>, FermiFockState> >::iterator termIt = Terms.begin();
+       termIt != Terms.end();
+       ++termIt) {
+    termIt->first *= pref;
   }
   return *this;
 }

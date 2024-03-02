@@ -45,4 +45,24 @@ FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
   }
 }
 
+FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {
+  FermiState ans(rhs);
+  for (int i = Expr.size() - 1; i >= 0; i--) {
+    FermiLadderOp op(Expr[i]);
+    ans = op * ans;
+  }
+  return ans;
+}
+
+FermiState FermiPolynomial::operator*(FermiFockState const & rhs) const {
+  FermiState ans;
+  for (size_t i = 0; i < Terms.size(); i++) {
+    FermiMonomial mn(Terms[i].second);
+    FermiState newTerm = mn * rhs;
+    newTerm *= Terms[i].first;
+    ans += newTerm;
+  }
+  return ans;
+}
+
 #endif

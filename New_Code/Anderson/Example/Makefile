@@ -9,15 +9,13 @@ include ./Makefile.inc
 # defining cscmat directory.
 
 CSCMAT_DIR = ./matrices/complex
+INC_DIR = ../include
 
 # compiling and linking all examples.
 
 all: lcompreg #lcompshf lcompgre lcompgsh
 
 # compiling and linking each complex problem.
-
-%.o:	%.cpp
-	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -I$(SUPERLU_DIR) -c $<
 
 lcompreg:	lcompreg.o
 	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -o lcompreg lcompreg.o $(SUPERLU_LIB) $(ALL_LIBS)
@@ -30,6 +28,6 @@ clean:
 
 # defining pattern rules.
 
-%.o:	%.cc
-	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -I$(SUPERLU_DIR) -c $<
+%.o:	%.cpp
+	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -I$(INC_DIR) -I$(SUPERLU_DIR) -c $<
 
