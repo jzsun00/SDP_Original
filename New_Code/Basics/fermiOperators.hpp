@@ -1,7 +1,8 @@
 /*
-  Jan 31, 2024  Jiazheng Sun
+  Jiazheng Sun
+  Updated: Mar 9, 2024
 
-  Define ladder operators, monomials and polynomials.
+  Define ladder operators, monomials and polynomials for Fermi systems.
 */
 
 #ifndef ORI_SDP_GS_FERMIOPERATORS_HPP
@@ -10,26 +11,46 @@
 #include "./fermiStates.hpp"
 #include "./operators.hpp"
 
+//------------------------------------------------------------------FermiLadderOp--------
+
 class FermiLadderOp : public LadderOp {
  public:
+  /*The constructors are identical to LadderOp.*/
   FermiLadderOp() : LadderOp() {}
   FermiLadderOp(int index, bool creatorF) : LadderOp(index, creatorF) {}
   FermiLadderOp(LadderOp const & rhs) : LadderOp(rhs) {}
+  ~FermiLadderOp() {}
+  /*Define operators at Fock states.*/
   FermiState operator*(FermiFockState const & rhs) const;
-  FermiState operator*(FermiState const & rhs) const;
+  //FermiState operator*(FermiState const & rhs) const;
 };
 
-class FermiMonomial : public Monomial {
+//------------------------------------------------------------------FermiMonomial--------
+
+class FermiMonomial : public Monomial<FermiLadderOp> {
  public:
-  FermiMonomial(Monomial const & rhs) : Monomial(rhs) {}
+  /*The constructors are identical to Monomial.*/
+  FermiMonomial() : Monomial<FermiLadderOp>() {}
+  FermiMonomial(FermiLadderOp & Op) : Monomial<FermiLadderOp>(Op) {}
+  FermiMonomial(Monomial<FermiLadderOp> const & rhs) : Monomial<FermiLadderOp>(rhs) {}
+  ~FermiMonomial() {}
+  /*Define operators at Fock states.*/
   FermiState operator*(FermiFockState const & rhs) const;
-  FermiState operator*(FermiState const & rhs) const;
+  //FermiState operator*(FermiState const & rhs) const;
 };
 
-class FermiPolynomial : public Polynomial {
+//-----------------------------------------------------------------FermiPolynomial-------
+
+class FermiPolynomial : public Polynomial<FermiLadderOp> {
  public:
+  /*The constructors are identical to Polynomial.*/
+  FermiPolynomial() : Polynomial<FermiLadderOp>() {}
+  FermiPolynomial(Monomial<FermiLadderOp> const & mn) : Polynomial<FermiLadderOp>(mn) {}
+  FermiPolynomial(FermiPolynomial const & rhs) : Polynomial<FermiLadderOp>(rhs) {}
+  ~FermiPolynomial() {}
+  /*Define operators at Fock states.*/
   FermiState operator*(FermiFockState const & rhs) const;
-  FermiState operator*(FermiState const & rhs) const;
+  //FermiState operator*(FermiState const & rhs) const;
 };
 
-#endif
+#endif  //ORI_SDP_GS_FERMIOPERATORS_HPP

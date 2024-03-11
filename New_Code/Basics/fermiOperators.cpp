@@ -1,12 +1,17 @@
 /*
+  Jiazheng Sun
+  Updated: Mar 9, 2024
+
   Implementations of methods in class:
-  LadderOp, Monomial, Polynomial.
+  FermiLadderOp, FermiMonomial, FermiPolynomial.
  */
 
 #ifndef ORI_SDP_GS_FERMIOPERATORS_CPP
 #define ORI_SDP_GS_FERMIOPERATORS_CPP
 
 #include "fermiOperators.hpp"
+
+//------------------------------------------------------------------FermiLadderOp--------
 
 FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
   if (creatorF) {
@@ -45,6 +50,8 @@ FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
   }
 }
 
+//------------------------------------------------------------------FermiMonomial--------
+
 FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {
   FermiState ans(rhs);
   for (int i = Expr.size() - 1; i >= 0; i--) {
@@ -53,6 +60,8 @@ FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {
   }
   return ans;
 }
+
+//-----------------------------------------------------------------FermiPolynomial-------
 
 FermiState FermiPolynomial::operator*(FermiFockState const & rhs) const {
   FermiState ans;
@@ -65,4 +74,4 @@ FermiState FermiPolynomial::operator*(FermiFockState const & rhs) const {
   return ans;
 }
 
-#endif
+#endif  //ORI_SDP_GS_FERMIOPERATORS_CPP

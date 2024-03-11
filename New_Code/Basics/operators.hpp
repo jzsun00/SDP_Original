@@ -1,9 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Feb 26, 2024
+  Updated: Mar 10, 2024
+
   Define ladder operators, monomials and polynomials.
   That serves as fundamental definitions of operators in the second quantization form,
   Fermi or Boson operators should inherit these classes and add related algebra.
+  Spin operators can also inherit Monomial and Polynomial class.
 */
 
 #ifndef ORI_SDP_GS_OPERATORS_HPP
@@ -18,8 +20,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-//#include "fermiStates.hpp"
 
 using std::complex;
 using std::pair;
@@ -58,15 +58,16 @@ class LadderOp {
 
 //---------------------------------------------------------------Monomial---------------
 
+template<typename OpType>
 class Monomial {
  protected:
-  vector<LadderOp> Expr;
+  vector<OpType> Expr;
 
  public:
   /*Construct a monomial with one ladder operator or copy another,
    default constructor use an empty vector.*/
   Monomial() : Expr() {}
-  Monomial(LadderOp & Op) : Expr(1, Op) {}
+  Monomial(OpType & Op) : Expr(1, Op) {}
   Monomial(Monomial const & rhs) { Expr = rhs.Expr; }
   ~Monomial() {}
   /*Get information of the monomial.*/
@@ -75,24 +76,25 @@ class Monomial {
   /*Overload operators.*/
   Monomial & operator=(Monomial const & rhs);
   bool operator==(Monomial const & rhs) const { return Expr == rhs.Expr; }
-  LadderOp operator[](size_t n) const { return Expr[n]; }
+  OpType operator[](size_t n) const { return Expr[n]; }
   Monomial & operator*=(Monomial const & rhs);
-  Monomial & operator*=(LadderOp const & toAdd);
+  Monomial & operator*=(OpType const & toAdd);
   void herm();
 };
 
 //---------------------------------------------------------------Polynomial-------------
 
+template<typename OpType>
 class Polynomial {
  protected:
-  vector<pair<complex<double>, Monomial> > Terms;
+  vector<pair<complex<double>, Monomial<OpType> > > Terms;
 
  public:
-  typedef pair<complex<double>, Monomial> TermType;
+  typedef pair<complex<double>, Monomial<OpType> > TermType;
   /*Construct a polynomial with one monomial or copy another,
     default constructor use an empty vector.*/
   Polynomial() : Terms() {}
-  Polynomial(Monomial const & mn) : Terms(1) {
+  Polynomial(Monomial<OpType> const & mn) : Terms(1) {
     Terms[0].first = complex<double>(1, 0);
     Terms[0].second = mn;
   }
@@ -100,23 +102,27 @@ class Polynomial {
   ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
-  vector<pair<complex<double>, Monomial> >::iterator getBegin() { return Terms.begin(); }
-  vector<pair<complex<double>, Monomial> >::iterator getEnd() { return Terms.end(); }
+  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator getBegin() {
+    return Terms.begin();
+  }
+  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator getEnd() {
+    return Terms.end();
+  }
   std::string toString();
   /*Overload operators.*/
   TermType operator[](size_t n) const { return Terms[n]; }
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
   // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations
-  Polynomial & operator+=(Monomial const & rhs);
+  Polynomial & operator+=(Monomial<OpType> const & rhs);
   Polynomial & operator+=(TermType const & rhs);
-  Polynomial & operator+=(Polynomial & rhs);
-  Polynomial & operator-=(Monomial const & rhs);
+  Polynomial & operator+=(Polynomial const & rhs);
+  Polynomial & operator-=(Monomial<OpType> const & rhs);
   Polynomial & operator-=(TermType const & rhs);
-  Polynomial & operator-=(Polynomial & rhs);
-  Polynomial & operator*=(Monomial const & rhs);
+  Polynomial & operator-=(Polynomial const & rhs);
+  Polynomial & operator*=(Monomial<OpType> const & rhs);
   Polynomial & operator*=(TermType const & rhs);
-  Polynomial & operator*=(Polynomial & rhs);
+  Polynomial & operator*=(Polynomial const & rhs);
   void herm();
   void eraseZeros();
 
@@ -124,8 +130,10 @@ class Polynomial {
   /*Find the same monomial for += operation.
     Return the corresponding iterator if same monomial is found,
     otherwise return Terms.end().*/
-  vector<pair<complex<double>, Monomial> >::iterator findSameMonomial(
-      Monomial const & mn);
+  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator findSameMonomial(
+      Monomial<OpType> const & mn);
 };
+
+#include "operators.cpp"
 
 #endif  //ORI_SDP_GS_OPERATORS_HPP

@@ -1,7 +1,8 @@
 /*
   Jiazheng Sun
-  Updated: Feb 27, 2024
-  Define Fock states, general quantum states for Fermionic systems.
+  Updated: Mar 10, 2024
+
+  Define Fock states, quantum states for Fermionic systems.
   Define the full basis for a Fermion lattice system.
 */
 
@@ -13,79 +14,32 @@
 #include <numeric>
 
 #include "operators.hpp"
-
-using std::vector;
+#include "states.hpp"
 
 //----------------------------------------------------------------FermiFockState--------
 
-class FermiFockState {
- protected:
-  vector<bool> Nums;
-
+class FermiFockState : public FockState<bool> {
  public:
-  /*Construct a Fock state for Fermion system.*/
-  FermiFockState() : Nums() {}
-  FermiFockState(size_t n) : Nums(n, false) {}
-  FermiFockState(vector<bool> & input) : Nums(input) {}
-  FermiFockState(FermiFockState const & rhs) : Nums(rhs.Nums) {}
+  /*Construct a Fock state for Fermion system.
+    Constructors are identical to FockState.*/
+  FermiFockState() : FockState() {}
+  FermiFockState(vector<bool> & input) : FockState(input) {}
+  FermiFockState(FockState const & rhs) : FockState(rhs) {}
   ~FermiFockState() {}
-  /*Get information of the Fock state.*/
-  size_t getSize() const { return Nums.size(); }
-  vector<bool> getNums() const { return Nums; };
-  std::string toString();
-  /*Overload operators.*/
-  FermiFockState & operator=(FermiFockState const & rhs);
-  bool operator==(FermiFockState const & rhs) const { return Nums == rhs.Nums; }
-  bool operator[](size_t n) const { return Nums[n]; }
 };
 
 //-------------------------------------------------------------------FermiState---------
 
-class FermiState {
- protected:
-  vector<pair<complex<double>, FermiFockState> > Terms;
-
+class FermiState : public State<FermiFockState> {
  public:
   typedef pair<complex<double>, FermiFockState> TermType;
-  /*Construct a general quantum state for Fermions.*/
-  FermiState() : Terms() {}
-  FermiState(FermiFockState const & ffs) : Terms(1) {
-    Terms[0].first = complex<double>(1, 0);
-    Terms[0].second = ffs;
-  }
-  FermiState(complex<double> pref, FermiFockState const & ffs) : Terms(1) {
-    Terms[0].first = pref;
-    Terms[0].second = ffs;
-  }
-  FermiState(FermiState const & rhs) : Terms(rhs.Terms) {}
+  /*Construct a general quantum state for Fermions.
+    Constructors are identical to State*/
+  FermiState() : State() {}
+  FermiState(FermiFockState const & ffs) : State(ffs) {}
+  FermiState(complex<double> pref, FermiFockState const & ffs) : State(pref, ffs) {}
+  FermiState(State const & rhs) : State(rhs) {}
   ~FermiState() {}
-  /*Get information of the general quantum state.*/
-  size_t getSize() const { return Terms.size(); }
-  vector<pair<complex<double>, FermiFockState> >::iterator getBegin() {
-    return Terms.begin();
-  }
-  vector<pair<complex<double>, FermiFockState> >::iterator getEnd() {
-    return Terms.end();
-  }
-  std::string toString();
-  /*Overload operators.*/
-  pair<complex<double>, FermiFockState> operator[](size_t n) const;
-  FermiState & operator=(FermiState const & rhs);
-  FermiState & operator+=(FermiFockState const & rhs);
-  FermiState & operator+=(TermType const & rhs);
-  FermiState & operator+=(FermiState & rhs);
-  FermiState & operator-=(FermiFockState const & rhs);
-  FermiState & operator-=(TermType const & rhs);
-  FermiState & operator-=(FermiState & rhs);
-  FermiState & operator*=(complex<double> pref);
-  void eraseZeros();
-
- private:
-  /*Find the same Fock state for += operation.
-    Return the corresponding iterator if same Fock state is found,
-    otherwise return Terms.end().*/
-  vector<pair<complex<double>, FermiFockState> >::iterator findSameFockState(
-      FermiFockState const & ffs);
 };
 
 //-------------------------------------------------------------------FermiBasis---------
@@ -96,21 +50,16 @@ class FermiBasis {
   vector<FermiFockState> States;
 
  public:
+  /*Construct the entire basis of Fermi systems.*/
   FermiBasis() : Sites(0), States() {}
   FermiBasis(size_t n) : Sites(n), States() {}
   void init();
+  /*Get information of the full basis.*/
   std::string toString();
-  vector<FermiFockState>::iterator getBegin() { return States.begin(); }
-  vector<FermiFockState>::iterator getEnd() { return States.end(); }
+  vector<FermiFockState>::const_iterator getBegin() const { return States.begin(); }
+  vector<FermiFockState>::const_iterator getEnd() const { return States.end(); }
   /*Overload operators.*/
   FermiFockState operator[](size_t n) const { return States[n]; }
 };
-
-//----------------------------------------------------------------Other Functions-------
-
-double innerProduct(FermiFockState lhs, FermiFockState rhs);
-complex<double> innerProduct(FermiFockState lhs, FermiState rhs);
-complex<double> innerProduct(FermiState lhs, FermiFockState rhs);
-complex<double> innerProduct(FermiState lhs, FermiState rhs);
 
 #endif

@@ -1,0 +1,77 @@
+/*
+  Jiazheng Sun
+  Updated: Mar 10, 2024
+
+  Define ladder operators, monomials and polynomials for Fermi systems.
+*/
+
+#ifndef ORI_SDP_GS_SPINOPERATORS_HPP
+#define ORI_SDP_GS_SPINOPERATORS_HPP
+
+#include "./operators.hpp"
+
+#define PLUS 0
+#define MINUS 1
+#define SZ 2
+
+//------------------------------------------------------------------------SpinOp---------
+
+class SpinOp {
+ protected:
+  int index;
+  int type;
+
+ public:
+  /*Construct a spin operator with specified index and type,
+   default constructor use INT_MIN and z-component.*/
+  SpinOp() : index(std::numeric_limits<int>::min()), type(SZ) {}
+  SpinOp(int index, int type) : index(index), type(type) {}
+  SpinOp(SpinOp const & rhs) {
+    index = rhs.index;
+    type = rhs.type;
+  }
+  ~SpinOp() {}
+  /*Get information of the spin operator.*/
+  int getIndex() const { return index; }
+  int getType() const { return type; }
+  std::string toString() const;
+  /*Overload operators.*/
+  SpinOp & operator=(SpinOp const & rhs);
+  bool operator==(SpinOp const & rhs) const;
+  // Throw std::invalid_argument exception if operators are not the same kind
+  bool operator<(SpinOp const & rhs) const;
+  bool operator>(SpinOp const & rhs) const { return !(*this < rhs || *this == rhs); }
+  virtual void herm() = 0;
+};
+
+//----------------------------------------------------------------------SpinZOp----------
+
+class SpinZOp : public SpinOp {
+ public:
+  SpinZOp() : SpinOp() {}
+  SpinZOp(int index) : SpinOp(index, SZ) {}
+  SpinZOp(SpinZOp const & rhs) : SpinOp(rhs) {}
+  ~SpinZOp() {}
+  virtual void herm(){};
+};
+
+//----------------------------------------------------------------------SpinUDOp---------
+
+class SpinUDOp : public SpinOp {
+ public:
+  SpinUDOp() : SpinOp() {}
+  SpinUDOp(int index, int type) : SpinOp(index, type) {}
+  SpinUDOp(SpinUDOp const & rhs) : SpinOp(rhs) {}
+  ~SpinUDOp() {}
+  virtual void herm();
+};
+
+//-------------------------------------------------------------------SpinMonomial--------
+
+class SpinMonomial : public Monomial<SpinOp> {};
+
+//------------------------------------------------------------------SpinPolynomial-------
+
+class SpinPolynomial : public Polynomial<SpinOp> {};
+
+#endif  //ORI_SDP_GS_SPINOPERATORS_HPP

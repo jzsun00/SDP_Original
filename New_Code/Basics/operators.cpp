@@ -1,4 +1,6 @@
 /*
+  Jiazheng Sun
+  Updated: Mar 9, 2024
   Implementations of methods in class:
   LadderOp, Monomial, Polynomial.
  */
@@ -41,39 +43,49 @@ bool LadderOp::operator<(LadderOp const & rhs) const {
 
 //---------------------------------------------------------------Monomial---------------
 
-std::string Monomial::toString() {
+template<typename LadderType>
+std::string Monomial<LadderType>::toString() {
   std::string ans = "";
-  for (vector<LadderOp>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
+  for (typename vector<LadderType>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
     ans += it->toString();
   }
   return ans;
 }
 
-Monomial & Monomial::operator=(Monomial const & rhs) {
+template<typename LadderType>
+Monomial<LadderType> & Monomial<LadderType>::operator=(Monomial<LadderType> const & rhs) {
   Expr = rhs.Expr;
   return *this;
 }
 
-Monomial & Monomial::operator*=(Monomial const & rhs) {
+template<typename LadderType>
+Monomial<LadderType> & Monomial<LadderType>::operator*=(
+    Monomial<LadderType> const & rhs) {
   Expr.insert(Expr.end(), rhs.Expr.begin(), rhs.Expr.end());
   return *this;
 }
-Monomial & Monomial::operator*=(LadderOp const & toAdd) {
+
+template<typename LadderType>
+Monomial<LadderType> & Monomial<LadderType>::operator*=(LadderType const & toAdd) {
   Expr.push_back(toAdd);
   return *this;
 }
-void Monomial::herm() {
+
+template<typename LadderType>
+void Monomial<LadderType>::herm() {
   std::reverse(Expr.begin(), Expr.end());
-  for (vector<LadderOp>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
+  for (typename vector<LadderType>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
     it->herm();
   }
 }
 
 //---------------------------------------------------------------Polynomial-------------
 
-std::string Polynomial::toString() {
+template<typename LadderType>
+std::string Polynomial<LadderType>::toString() {
   std::string ans = "";
-  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator it =
+           Terms.begin();
        it != Terms.end();
        ++it) {
     ans += "  (";
@@ -89,14 +101,18 @@ std::string Polynomial::toString() {
   return ans;
 }
 
-Polynomial & Polynomial::operator=(Polynomial const & rhs) {
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator=(
+    Polynomial<LadderType> const & rhs) {
   Terms = rhs.Terms;
   return *this;
 }
 
-vector<pair<complex<double>, Monomial> >::iterator Polynomial::findSameMonomial(
-    Monomial const & mn) {
-  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+template<typename LadderType>
+typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator
+Polynomial<LadderType>::findSameMonomial(Monomial<LadderType> const & mn) {
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator it =
+           Terms.begin();
        it != Terms.end();
        ++it) {
     if (it->second == mn) {
@@ -106,17 +122,22 @@ vector<pair<complex<double>, Monomial> >::iterator Polynomial::findSameMonomial(
   return Terms.end();
 }
 
-Polynomial & Polynomial::operator+=(Monomial const & rhs) {
-  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator+=(
+    Monomial<LadderType> const & rhs) {
+  pair<complex<double>, Monomial<LadderType> > toAdd(complex<double>(1, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
-Polynomial & Polynomial::operator+=(pair<complex<double>, Monomial> const & toAdd) {
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator+=(
+    pair<complex<double>, Monomial<LadderType> > const & toAdd) {
   if (std::abs(toAdd.first) < std::pow(10, -12)) {
     return *this;
   }
-  vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
+  typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator it =
+      findSameMonomial(toAdd.second);
   if (it == Terms.end()) {
     Terms.push_back(toAdd);
   }
@@ -126,8 +147,11 @@ Polynomial & Polynomial::operator+=(pair<complex<double>, Monomial> const & toAd
   return *this;
 }
 
-Polynomial & Polynomial::operator+=(Polynomial & rhs) {
-  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator+=(
+    Polynomial<LadderType> const & rhs) {
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator termIt =
+           rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     *this += *termIt;
@@ -135,30 +159,30 @@ Polynomial & Polynomial::operator+=(Polynomial & rhs) {
   return *this;
 }
 
-Polynomial & Polynomial::operator-=(Monomial const & rhs) {
-  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
-  *this -= toAdd;
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator-=(
+    Monomial<LadderType> const & rhs) {
+  pair<complex<double>, Monomial<LadderType> > toAdd(complex<double>(-1, 0), rhs);
+  *this += toAdd;
   return *this;
 }
 
-Polynomial & Polynomial::operator-=(pair<complex<double>, Monomial> const & toAdd) {
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator-=(
+    pair<complex<double>, Monomial<LadderType> > const & toAdd) {
   if (std::abs(toAdd.first) < std::pow(10, -12)) {
     return *this;
   }
-  vector<pair<complex<double>, Monomial> >::iterator it = findSameMonomial(toAdd.second);
-  if (it == Terms.end()) {
-    pair<complex<double>, Monomial> copy(complex<double>(-1, 0) * toAdd.first,
-                                         toAdd.second);
-    Terms.push_back(copy);
-  }
-  else {
-    it->first -= toAdd.first;
-  }
+  pair<complex<double>, Monomial<LadderType> > copy(-1 * toAdd.first, toAdd.sencond);
+  *this += copy;
   return *this;
 }
 
-Polynomial & Polynomial::operator-=(Polynomial & rhs) {
-  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator-=(
+    Polynomial<LadderType> const & rhs) {
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator termIt =
+           rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     *this -= *termIt;
@@ -166,19 +190,19 @@ Polynomial & Polynomial::operator-=(Polynomial & rhs) {
   return *this;
 }
 
-Polynomial & Polynomial::operator*=(Monomial const & rhs) {
-  pair<complex<double>, Monomial> toAdd(complex<double>(1, 0), rhs);
-  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
-       it != Terms.end();
-       ++it) {
-    it->first *= toAdd.first;
-    it->second *= toAdd.second;
-  }
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator*=(
+    Monomial<LadderType> const & rhs) {
+  pair<complex<double>, Monomial<LadderType> > toAdd(complex<double>(1, 0), rhs);
+  *this *= toAdd;
   return *this;
 }
 
-Polynomial & Polynomial::operator*=(pair<complex<double>, Monomial> const & rhs) {
-  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator*=(
+    pair<complex<double>, Monomial<LadderType> > const & rhs) {
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator it =
+           Terms.begin();
        it != Terms.end();
        ++it) {
     it->first *= rhs.first;
@@ -187,9 +211,12 @@ Polynomial & Polynomial::operator*=(pair<complex<double>, Monomial> const & rhs)
   return *this;
 }
 
-Polynomial & Polynomial::operator*=(Polynomial & rhs) {
+template<typename LadderType>
+Polynomial<LadderType> & Polynomial<LadderType>::operator*=(
+    Polynomial<LadderType> const & rhs) {
   Polynomial current(*this);
-  for (vector<pair<complex<double>, Monomial> >::iterator termIt = rhs.getBegin();
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator termIt =
+           rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     Polynomial copy(current);
@@ -199,8 +226,10 @@ Polynomial & Polynomial::operator*=(Polynomial & rhs) {
   return *this;
 }
 
-void Polynomial::herm() {
-  for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
+template<typename LadderType>
+void Polynomial<LadderType>::herm() {
+  for (typename vector<pair<complex<double>, Monomial<LadderType> > >::iterator it =
+           Terms.begin();
        it != Terms.end();
        ++it) {
     it->first = std::conj(it->first);
@@ -208,11 +237,13 @@ void Polynomial::herm() {
   }
 }
 
-bool isZero(pair<complex<double>, Monomial> term) {
+template<typename LadderType>
+bool isZero(pair<complex<double>, Monomial<LadderType> > term) {
   return std::abs(term.first) < std::pow(10, -12);
 }
 
-void Polynomial::eraseZeros() {
+template<typename LadderType>
+void Polynomial<LadderType>::eraseZeros() {
   /*
   for (vector<pair<complex<double>, Monomial> >::iterator it = Terms.begin();
        it != Terms.end();
@@ -226,4 +257,4 @@ void Polynomial::eraseZeros() {
   Terms.erase(std::remove_if(Terms.begin(), Terms.end(), isZero), Terms.end());
 }
 
-#endif
+#endif  //ORI_SDP_GS_OPERATORS_CPP

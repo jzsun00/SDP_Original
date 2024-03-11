@@ -1,0 +1,64 @@
+/*
+  Jiazheng Sun
+  Updated: Mar 9, 2024
+
+  Implementations of methods in class:
+  FermiFockstate, FermiState, FermiBasis.
+ */
+
+#ifndef ORI_SDP_GS_SPINSTATES_CPP
+#define ORI_SDP_GS_SPINSTATES_CPP
+
+#include "spinStates.hpp"
+
+//----------------------------------------------------------------SpinBaseState----------
+
+template<typename NumsType>
+std::string SpinBaseState<NumsType>::toString() const {
+  std::string ans = "|";
+  for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
+       ++it) {
+    ans += " ";
+    ans += std::to_string(*it);
+    ans += ",";
+  }
+  ans.pop_back();
+  ans += " >";
+  return ans;
+}
+
+template<typename NumsType>
+SpinBaseState<NumsType> & SpinBaseState<NumsType>::operator=(
+    SpinBaseState<NumsType> const & rhs) {
+  Nums = rhs.Nums;
+  return *this;
+}
+
+//-------------------------------------------------------------------SpinHalfBasis-------
+
+void SpinHalfBasis::init() {
+  size_t total = std::pow(2, Sites);
+  for (size_t i = 0; i < total; i++) {
+    std::bitset<32> bits(i);
+    vector<bool> newState(Sites);
+    for (size_t j = 0; j < Sites; j++) {
+      newState[Sites - j - 1] = bits[j];
+    }
+    SpinHalfBaseState toAdd(newState);
+    States.push_back(toAdd);
+  }
+}
+
+std::string SpinHalfBasis::toString() {
+  std::string ans = "Sites = ";
+  ans += std::to_string(Sites);
+  ans += "\nFull Basis:\n";
+  for (vector<SpinHalfBaseState>::const_iterator it = States.begin(); it != States.end();
+       ++it) {
+    ans += it->toString();
+    ans += "\n";
+  }
+  return ans;
+}
+
+#endif
