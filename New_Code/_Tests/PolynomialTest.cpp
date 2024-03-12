@@ -6,13 +6,13 @@ int main(void) {
   LadderOp op0(0, true);
   LadderOp op1(1, true);
   LadderOp op2(2, true);
-  Monomial mn0(op0);
-  Monomial mn1(op1);
-  Monomial mn2(op2);
+  Monomial<LadderOp> mn0(op0);
+  Monomial<LadderOp> mn1(op1);
+  Monomial<LadderOp> mn2(op2);
   /*Constructors tests: default, (Monomial const & mn), copy*/
-  Polynomial pl0;
-  Polynomial pl1(mn1);
-  Polynomial pl2(pl1);
+  Polynomial<LadderOp> pl0;
+  Polynomial<LadderOp> pl1(mn1);
+  Polynomial<LadderOp> pl2(pl1);
   assert(pl0.getSize() == 0);
   assert(pl1.getSize() == 1);
   assert(pl2.getSize() == 1);
@@ -21,7 +21,7 @@ int main(void) {
   std::cout << "pl2 = " << pl2.toString() << std::endl;
   std::cout << "Constructors tests pass!" << std::endl;
   /*Operator overloading tests: =, ==, [], +=, -+, *=*/
-  Polynomial pl3 = pl2;
+  Polynomial<LadderOp> pl3 = pl2;
   assert(pl1 == pl2);
   assert(pl2 == pl3);
   assert(&pl1 != &pl2);
@@ -39,7 +39,7 @@ int main(void) {
   std::cout << "After erasing zeros:" << std::endl;
   std::cout << "pl1 = " << pl1.toString() << std::endl;
   std::cout << "len(p1) = " << pl1.getSize() << std::endl;
-  Polynomial pl4 = pl2;
+  Polynomial<LadderOp> pl4 = pl2;
   std::cout << "pl2 = " << pl2.toString() << std::endl;
   std::cout << "pl4 = " << pl4.toString() << std::endl;
   pl4 *= pl2;

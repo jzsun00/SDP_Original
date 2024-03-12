@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 11, 2024
 
   Define Fock states, quantum states for spin systems.
   Define the full basis for a spin lattice system.
@@ -13,7 +13,6 @@
 #include <cmath>
 #include <numeric>
 
-#include "operators.hpp"
 #include "states.hpp"
 
 //----------------------------------------------------------------SpinBaseState----------
@@ -39,7 +38,7 @@ class SpinBaseState {
   bool operator[](size_t n) const { return Nums[n]; }
 };
 
-//------------------------------------------------------------------SpinHalfState--------
+//-------------------------------------------------------------SpinHalfBaseState--------
 
 class SpinHalfBaseState : public SpinBaseState<bool> {
  public:
@@ -49,17 +48,33 @@ class SpinHalfBaseState : public SpinBaseState<bool> {
   ~SpinHalfBaseState() {}
 };
 
-//-------------------------------------------------------------------SpinState-----------
+//------------------------------------------------------------------SpinState-----------
 
-class SpinHalfState : public State<SpinHalfBaseState> {
+template<typename SpinType>
+class SpinState : public State<SpinType> {
+ public:
+  typedef pair<complex<double>, SpinType> TermType;
+  /*Construct a general quantum state for Fermions.
+    Constructors are identical to State*/
+  SpinState() : State<SpinType>() {}
+  SpinState(SpinHalfBaseState const & ffs) : State<SpinType>(ffs) {}
+  SpinState(complex<double> pref, SpinType const & ffs) : State<SpinType>(pref, ffs) {}
+  SpinState(State<SpinType> const & rhs) : State<SpinType>(rhs) {}
+  ~SpinState() {}
+};
+
+//----------------------------------------------------------------SpinHalfState---------
+
+class SpinHalfState : public SpinState<SpinHalfBaseState> {
  public:
   typedef pair<complex<double>, SpinHalfBaseState> TermType;
   /*Construct a general quantum state for Fermions.
     Constructors are identical to State*/
-  SpinHalfState() : State() {}
-  SpinHalfState(SpinHalfBaseState const & ffs) : State(ffs) {}
-  SpinHalfState(complex<double> pref, SpinHalfBaseState const & ffs) : State(pref, ffs) {}
-  SpinHalfState(State const & rhs) : State(rhs) {}
+  SpinHalfState() : SpinState() {}
+  SpinHalfState(SpinHalfBaseState const & ffs) : SpinState(ffs) {}
+  SpinHalfState(complex<double> pref, SpinHalfBaseState const & ffs) :
+      SpinState(pref, ffs) {}
+  SpinHalfState(State const & rhs) : SpinState(rhs) {}
   ~SpinHalfState() {}
 };
 
@@ -82,5 +97,7 @@ class SpinHalfBasis {
   /*Overload operators.*/
   SpinHalfBaseState operator[](size_t n) const { return States[n]; }
 };
+
+#include "spinStates.cpp"
 
 #endif

@@ -112,4 +112,6 @@ class SpinMonomial : public Monomial<SpinOp<SpinType> > {};
 template<typename SpinType>
 class SpinPolynomial : public Polynomial<SpinOp<SpinType> > {};
 
+#include "spinOperators.cpp"
+
 #endif  //ORI_SDP_GS_SPINOPERATORS_HPP

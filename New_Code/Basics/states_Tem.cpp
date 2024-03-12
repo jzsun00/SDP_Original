@@ -1,14 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 12, 2024
 
   Implementations of methods in class:
   Fockstate, State.
   Also implementations of inner product.
  */
 
-#ifndef ORI_SDP_GS_STATES_CPP
-#define ORI_SDP_GS_STATES_CPP
+#ifndef ORI_SDP_GS_STATES_TEM_CPP
+#define ORI_SDP_GS_STATES_TEM_CPP
 
 #include "states.hpp"
 
@@ -80,6 +80,7 @@ State<StateType>::findSameFockState(StateType const & ffs) {
   return Terms.end();
 }
 
+//+=
 template<typename StateType>
 State<StateType> & State<StateType>::operator+=(StateType const & rhs) {
   pair<complex<double>, StateType> toAdd(complex<double>(1, 0), rhs);
@@ -90,7 +91,7 @@ State<StateType> & State<StateType>::operator+=(StateType const & rhs) {
 template<typename StateType>
 State<StateType> & State<StateType>::operator+=(
     pair<complex<double>, StateType> const & rhs) {
-  if (std::abs(rhs.first) < std::pow(10, -12)) {
+  if (std::abs(rhs.first) < ERROR) {
     return *this;
   }
   typename vector<pair<complex<double>, StateType> >::iterator it =
@@ -115,17 +116,18 @@ State<StateType> & State<StateType>::operator+=(State<StateType> const & rhs) {
   return *this;
 }
 
+//-=
 template<typename StateType>
 State<StateType> & State<StateType>::operator-=(StateType const & rhs) {
-  pair<complex<double>, StateType> toAdd(complex<double>(1, 0), rhs);
-  *this -= toAdd;
+  pair<complex<double>, StateType> toAdd(complex<double>(-1, 0), rhs);
+  *this += toAdd;
   return *this;
 }
 
 template<typename StateType>
 State<StateType> & State<StateType>::operator-=(
     pair<complex<double>, StateType> const & rhs) {
-  if (std::abs(rhs.first) < std::pow(10, -12)) {
+  if (std::abs(rhs.first) < ERROR) {
     return *this;
   }
   typename vector<pair<complex<double>, StateType> >::iterator it =
@@ -151,6 +153,7 @@ State<StateType> & State<StateType>::operator-=(State<StateType> const & rhs) {
   return *this;
 }
 
+//*=
 template<typename StateType>
 State<StateType> & State<StateType>::operator*=(complex<double> pref) {
   for (typename vector<pair<complex<double>, StateType> >::iterator termIt =
@@ -164,7 +167,7 @@ State<StateType> & State<StateType>::operator*=(complex<double> pref) {
 
 template<typename StateType>
 bool isZeroS(pair<complex<double>, StateType> term) {
-  return std::abs(term.first) < std::pow(10, -12);
+  return std::abs(term.first) < ERROR;
 }
 
 template<typename StateType>
@@ -206,9 +209,9 @@ complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs) {
            lhs.getBegin();
        it != lhs.getEnd();
        ++it) {
-    ans += (it->first * innerProduct(it->second, rhs));
+    ans += it->first * innerProduct(it->second, rhs);
   }
   return ans;
 }
 
-#endif  //ORI_SDP_GS_STATES_CPP
+#endif  //ORI_SDP_GS_STATES_TEM_CPP

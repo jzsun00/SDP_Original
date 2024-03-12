@@ -13,7 +13,6 @@
 #include <cmath>
 #include <numeric>
 
-#include "operators.hpp"
 #include "states.hpp"
 
 //----------------------------------------------------------------FermiFockState--------

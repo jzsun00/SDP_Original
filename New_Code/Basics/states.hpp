@@ -1,8 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 12, 2024
 
   Define Fock states and quantum states for general systems.
+  Fermi and Boson systems should inherit these classes.
+  Spin systems can also inherit State class
 */
 
 #ifndef ORI_SDP_GS_STATES_HPP
@@ -14,6 +16,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#define ERROR std::pow(10, -12)
 
 using std::complex;
 using std::pair;
@@ -51,7 +55,7 @@ class State {
 
  public:
   typedef pair<complex<double>, StateType> TermType;
-  /*Construct a general quantum state for Fermions.*/
+  /*Construct a general quantum state.*/
   State() : Terms() {}
   State(StateType const & fs) : Terms(1) {
     Terms[0].first = complex<double>(1, 0);
@@ -105,6 +109,6 @@ complex<double> innerProduct(State<StateType> lhs, StateType rhs);
 template<typename StateType>
 complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs);
 
-#include "states.cpp"
+#include "states_Tem.cpp"
 
 #endif  //ORI_SDP_GS_STATES_HPP

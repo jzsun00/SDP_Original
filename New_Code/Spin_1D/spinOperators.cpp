@@ -40,14 +40,25 @@ bool SpinOp<SpinType>::operator<(SpinOp<SpinType> const & rhs) const {
 template<typename SpinType>
 std::string SpinZOp<SpinType>::toString() const {
   std::string ans = "SZ_{";
-  ans += std::to_string(index);
+  ans += std::to_string(this->index);
   ans += "}";
-  if (creatorF) {
-    ans += "{+}";
-  }
   return ans;
 }
 
 //----------------------------------------------------------------------SpinUDOp--------
+
+template<typename SpinType>
+std::string SpinUDOp<SpinType>::toString() const {
+  std::string ans = "S";
+  if (this->type == PLUS) {
+    ans += "+";
+  }
+  if (this->type == MINUS) {
+    ans += "-";
+  }
+  ans += std::to_string(this->index);
+  ans += "}";
+  return ans;
+}
 
 #endif

@@ -16,10 +16,8 @@
 class FermiLadderOp : public LadderOp {
  public:
   /*The constructors are identical to LadderOp.*/
-  FermiLadderOp() : LadderOp() {}
   FermiLadderOp(int index, bool creatorF) : LadderOp(index, creatorF) {}
   FermiLadderOp(LadderOp const & rhs) : LadderOp(rhs) {}
-  ~FermiLadderOp() {}
   /*Define operators at Fock states.*/
   FermiState operator*(FermiFockState const & rhs) const;
   //FermiState operator*(FermiState const & rhs) const;

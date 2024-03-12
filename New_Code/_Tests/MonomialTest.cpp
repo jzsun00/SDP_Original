@@ -7,12 +7,12 @@ int main(void) {
   LadderOp op1(1, true);
   LadderOp op2(2, true);
   /*Constructors tests: default, (LadderOp & Op), copy*/
-  Monomial mono1;
-  Monomial mono2(op0);
-  Monomial mono3(mono2);
-  std::cout << "mono1 = " << mono1.toString() <<std::endl;
-  std::cout << "mono2 = " << mono2.toString() <<std::endl;
-  std::cout << "mono3 = " << mono3.toString() <<std::endl;
+  Monomial<LadderOp> mono1;
+  Monomial<LadderOp> mono2(op0);
+  Monomial<LadderOp> mono3(mono2);
+  std::cout << "mono1 = " << mono1.toString() << std::endl;
+  std::cout << "mono2 = " << mono2.toString() << std::endl;
+  std::cout << "mono3 = " << mono3.toString() << std::endl;
   assert(mono1.getSize() == 0);
   assert(mono2.getSize() == 1);
   assert(mono3.getSize() == 1);
@@ -20,15 +20,15 @@ int main(void) {
   assert(mono3[0] == op0);
   std::cout << "Constructors tests pass!" << std::endl;
   /*Operator overloading tests: =, ==, [], *=*/
-  Monomial mono4 = mono2;
-  std::cout << "mono4 = " << mono4.toString() <<std::endl;
+  Monomial<LadderOp> mono4 = mono2;
+  std::cout << "mono4 = " << mono4.toString() << std::endl;
   assert(mono4 == mono2);
   assert(mono3 == mono2);
   assert(!(mono1 == mono2));
   assert(&mono3 != &mono2);
   assert(&mono4 != &mono2);
   mono4 *= op1;
-  Monomial mono5 = mono4;
+  Monomial<LadderOp> mono5 = mono4;
   std::cout << "mono4 * op1 = " << mono4.toString() << std::endl;
   std::cout << "mono5 = " << mono5.toString() << std::endl;
   mono4 *= mono5;
@@ -40,7 +40,7 @@ int main(void) {
   mono4 *= op2;
   std::cout << "mono4 * op2 = " << mono4.toString() << std::endl;
   mono4.herm();
-  std:: cout << "mono4{+} = " << mono4.toString() << std::endl;
+  std::cout << "mono4{+} = " << mono4.toString() << std::endl;
   std::cout << "Operator overload tests pass!" << std::endl;
   std::cout << "Ladder operator tests run succeccfully!" << std::endl;
   return EXIT_SUCCESS;

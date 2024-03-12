@@ -1,11 +1,15 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 12, 2024
 
   Define ladder operators, monomials and polynomials.
   That serves as fundamental definitions of operators in the second quantization form,
   Fermi or Boson operators should inherit these classes and add related algebra.
   Spin operators can also inherit Monomial and Polynomial class.
+
+  Implementations for LadderOp is in operators_Tem.cpp,
+  for Monomial and Polynomial are in operators_NonTem.cpp.
+  Only include _Tem.cpp at the end of this file.
 */
 
 #ifndef ORI_SDP_GS_OPERATORS_HPP
@@ -16,13 +20,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <limits>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
+#define ERROR std::pow(10, -12)
+
 using std::complex;
 using std::pair;
+using std::set;
 using std::vector;
 
 //---------------------------------------------------------------LadderOp---------------
@@ -53,7 +61,6 @@ class LadderOp {
   bool operator<(LadderOp const & rhs) const;
   bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
   void herm() { creatorF ^= 1; }
-  //FermiState operator*(FermiFockState const & rhs) const;
 };
 
 //---------------------------------------------------------------Monomial---------------
@@ -87,25 +94,28 @@ class Monomial {
 template<typename OpType>
 class Polynomial {
  protected:
-  vector<pair<complex<double>, Monomial<OpType> > > Terms;
+  set<pair<complex<double>, Monomial<OpType> > > Terms;
 
  public:
   typedef pair<complex<double>, Monomial<OpType> > TermType;
   /*Construct a polynomial with one monomial or copy another,
     default constructor use an empty vector.*/
   Polynomial() : Terms() {}
-  Polynomial(Monomial<OpType> const & mn) : Terms(1) {
-    Terms[0].first = complex<double>(1, 0);
-    Terms[0].second = mn;
+  Polynomial(Monomial<OpType> const & mn) : Terms() {
+    Terms.insert(TermType(complex<double>(1, 0), mn));
+    //Terms[0].first = complex<double>(1, 0);
+    //Terms[0].second = mn;
   }
   Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
   ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
-  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator getBegin() {
+  typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator getBegin()
+      const {
     return Terms.begin();
   }
-  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator getEnd() {
+  typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator getEnd()
+      const {
     return Terms.end();
   }
   std::string toString();
@@ -134,6 +144,6 @@ class Polynomial {
       Monomial<OpType> const & mn);
 };
 
-#include "operators.cpp"
+#include "operators_Tem.cpp"
 
 #endif  //ORI_SDP_GS_OPERATORS_HPP

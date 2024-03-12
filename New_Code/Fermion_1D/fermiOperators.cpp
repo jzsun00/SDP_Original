@@ -51,7 +51,7 @@ FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
 }
 
 //------------------------------------------------------------------FermiMonomial--------
-
+/*
 FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {
   FermiState ans(rhs);
   for (int i = Expr.size() - 1; i >= 0; i--) {
@@ -60,9 +60,10 @@ FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {
   }
   return ans;
 }
+*/
 
 //-----------------------------------------------------------------FermiPolynomial-------
-
+/*
 FermiState FermiPolynomial::operator*(FermiFockState const & rhs) const {
   FermiState ans;
   for (size_t i = 0; i < Terms.size(); i++) {
@@ -73,5 +74,6 @@ FermiState FermiPolynomial::operator*(FermiFockState const & rhs) const {
   }
   return ans;
 }
+*/
 
 #endif  //ORI_SDP_GS_FERMIOPERATORS_CPP

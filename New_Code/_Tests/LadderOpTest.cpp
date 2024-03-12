@@ -4,6 +4,7 @@
 
 int main(void) {
   /*Constructors tests: default, (index, creatorF), copy*/
+
   LadderOp op1(0, true);
   LadderOp op2(1, true);
   LadderOp op3;
@@ -17,7 +18,9 @@ int main(void) {
   std::cout << "INT_MIN = " << op3.getIndex() << std::endl;
   assert(op3.getCreatorF() == true);
   std::cout << "Constructors tests pass!" << std::endl;
+
   /*Operator overloading tests: =, ==, <, >*/
+
   assert(op5 == op1);
   assert(op6 == op1);
   assert(&op5 != &op1);
@@ -34,7 +37,9 @@ int main(void) {
     std::cerr << "Caught exception: " << e.what() << std::endl;
   }
   std::cout << "Operator overload tests pass!" << std::endl;
+
   /*toString method tests*/
+
   assert(op1.toString() == "a_{0}{+}");
   assert(op2.toString() == "a_{1}{+}");
   op4.herm();
@@ -43,5 +48,6 @@ int main(void) {
   std::cout << "op4 = " << op4.toString() << std::endl;
   std::cout << "toString method tests pass!" << std::endl;
   std::cout << "Ladder operator tests run succeccfully!" << std::endl;
+
   return EXIT_SUCCESS;
 }

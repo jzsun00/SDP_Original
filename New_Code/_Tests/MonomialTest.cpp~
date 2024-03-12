@@ -1,7 +1,0 @@
-#include <cassert>
-
-#include "../Basics/operators.hpp"
-
-int main(void) {
-  return EXIT_SUCCESS;
-}
