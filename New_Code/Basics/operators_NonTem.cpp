@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 11, 2024
+  Updated: Mar 12, 2024
   Implementations of methods in class:
   LadderOp.
  */

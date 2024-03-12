@@ -13,7 +13,7 @@
 //---------------------------------------------------------------Monomial---------------
 
 template<typename OpType>
-std::string Monomial<OpType>::toString() {
+std::string Monomial<OpType>::toString() const {
   std::string ans = "";
   for (typename vector<OpType>::const_iterator it = Expr.begin(); it != Expr.end();
        ++it) {
@@ -42,6 +42,7 @@ Monomial<OpType> & Monomial<OpType>::operator*=(OpType const & toAdd) {
 
 template<typename OpType>
 void Monomial<OpType>::herm() {
+  std::reverse(Expr.begin(), Expr.end());
   for (typename vector<OpType>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
     it->herm();
   }
@@ -52,7 +53,7 @@ void Monomial<OpType>::herm() {
 template<typename OpType>
 std::string Polynomial<OpType>::toString() {
   std::string ans = "";
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::iterator it =
+  for (typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {

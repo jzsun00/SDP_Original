@@ -1,38 +1,15 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 12, 2024
 
   Implementations of methods in class:
   FermiFockstate, FermiState, FermiBasis.
  */
 
-#ifndef ORI_SDP_GS_SPINSTATES_CPP
-#define ORI_SDP_GS_SPINSTATES_CPP
+#ifndef ORI_SDP_GS_SPINSTATES1D_TEM_CPP
+#define ORI_SDP_GS_SPINSTATES1D_TEM_CPP
 
-#include "spinStates.hpp"
-
-//----------------------------------------------------------------SpinBaseState----------
-
-template<typename NumsType>
-std::string SpinBaseState<NumsType>::toString() const {
-  std::string ans = "|";
-  for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
-       ++it) {
-    ans += " ";
-    ans += std::to_string(*it);
-    ans += ",";
-  }
-  ans.pop_back();
-  ans += " >";
-  return ans;
-}
-
-template<typename NumsType>
-SpinBaseState<NumsType> & SpinBaseState<NumsType>::operator=(
-    SpinBaseState<NumsType> const & rhs) {
-  Nums = rhs.Nums;
-  return *this;
-}
+#include "spinStates1D.hpp"
 
 //-------------------------------------------------------------------SpinHalfBasis-------
 

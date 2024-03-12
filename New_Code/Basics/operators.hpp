@@ -20,7 +20,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <limits>
-#include <set>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -30,7 +29,6 @@
 
 using std::complex;
 using std::pair;
-using std::set;
 using std::vector;
 
 //---------------------------------------------------------------LadderOp---------------
@@ -79,7 +77,7 @@ class Monomial {
   ~Monomial() {}
   /*Get information of the monomial.*/
   size_t getSize() const { return Expr.size(); }
-  std::string toString();
+  std::string toString() const;
   /*Overload operators.*/
   Monomial & operator=(Monomial const & rhs);
   bool operator==(Monomial const & rhs) const { return Expr == rhs.Expr; }
@@ -94,7 +92,7 @@ class Monomial {
 template<typename OpType>
 class Polynomial {
  protected:
-  set<pair<complex<double>, Monomial<OpType> > > Terms;
+  vector<pair<complex<double>, Monomial<OpType> > > Terms;
 
  public:
   typedef pair<complex<double>, Monomial<OpType> > TermType;
@@ -102,9 +100,7 @@ class Polynomial {
     default constructor use an empty vector.*/
   Polynomial() : Terms() {}
   Polynomial(Monomial<OpType> const & mn) : Terms() {
-    Terms.insert(TermType(complex<double>(1, 0), mn));
-    //Terms[0].first = complex<double>(1, 0);
-    //Terms[0].second = mn;
+    Terms.push_back(TermType(complex<double>(1, 0), mn));
   }
   Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
   ~Polynomial() {}
@@ -120,7 +116,6 @@ class Polynomial {
   }
   std::string toString();
   /*Overload operators.*/
-  TermType operator[](size_t n) const { return Terms[n]; }
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
   // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations

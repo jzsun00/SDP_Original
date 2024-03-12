@@ -34,6 +34,29 @@ FockState<NumsType> & FockState<NumsType>::operator=(FockState<NumsType> const &
   return *this;
 }
 
+//----------------------------------------------------------------SpinBaseState----------
+
+template<typename NumsType>
+std::string SpinBaseState<NumsType>::toString() const {
+  std::string ans = "|";
+  for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
+       ++it) {
+    ans += " ";
+    ans += std::to_string(*it);
+    ans += ",";
+  }
+  ans.pop_back();
+  ans += " >";
+  return ans;
+}
+
+template<typename NumsType>
+SpinBaseState<NumsType> & SpinBaseState<NumsType>::operator=(
+    SpinBaseState<NumsType> const & rhs) {
+  Nums = rhs.Nums;
+  return *this;
+}
+
 //-----------------------------------------------------------------------State-----------
 
 template<typename StateType>

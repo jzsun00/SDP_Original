@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <complex>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -43,6 +44,29 @@ class FockState {
   /*Overload operators.*/
   FockState & operator=(FockState const & rhs);
   bool operator==(FockState const & rhs) const { return Nums == rhs.Nums; }
+  bool operator[](size_t n) const { return Nums[n]; }
+};
+
+//----------------------------------------------------------------SpinBaseState----------
+
+template<typename NumsType>
+class SpinBaseState {
+ protected:
+  vector<NumsType> Nums;
+
+ public:
+  /*Construct a pure base state for general spin system.*/
+  SpinBaseState() : Nums() {}
+  SpinBaseState(vector<NumsType> & input) : Nums(input) {}
+  SpinBaseState(SpinBaseState const & rhs) : Nums(rhs.Nums) {}
+  ~SpinBaseState() {}
+  /*Get information of the spin base state.*/
+  size_t getSize() const { return Nums.size(); }
+  vector<NumsType> getNums() const { return Nums; };
+  std::string toString() const;
+  /*Overload operators.*/
+  SpinBaseState & operator=(SpinBaseState const & rhs);
+  bool operator==(SpinBaseState const & rhs) const { return Nums == rhs.Nums; }
   bool operator[](size_t n) const { return Nums[n]; }
 };
 
