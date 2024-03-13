@@ -105,4 +105,65 @@ SpinHalfState SpinHalfMonomial::operator*(SpinHalfState const & rhs) const {
   return ans;
 }
 
+//------------------------------------------------------------------SpinPolynomial-------
+
+SpinHalfState SpinHalfPolynomial::operator*(SpinHalfBaseState const & rhs) const {
+  SpinHalfState ans;
+  for (vector<pair<complex<double>, SpinHalfMonomial> >::const_iterator it =
+           Terms.begin();
+       it != Terms.end();
+       ++it) {
+    ans += (((it->second) * rhs) *= it->first);
+  }
+  return ans;
+}
+
+SpinHalfState SpinHalfPolynomial::operator*(SpinHalfState const & rhs) const {
+  SpinHalfState ans;
+  for (vector<pair<complex<double>, SpinHalfMonomial> >::const_iterator it =
+           Terms.begin();
+       it != Terms.end();
+       ++it) {
+    ans += (((it->second) * rhs) *= it->first);
+  }
+  return ans;
+}
+
+vector<pair<complex<double>, SpinHalfMonomial> >::iterator
+SpinHalfPolynomial::findSameMonomial(SpinHalfMonomial const & mn) {
+  std::cout << "In the dynamic dispatch area" << std::endl;
+  std::cout << "size(Terms) = " << Terms.size() << std::endl;
+  //std::cout << "Terms = " << this->toString() << std::endl;
+  std::cout << "Trying to find same monomial for " << mn.toString() << std::endl;
+  for (typename vector<pair<complex<double>, SpinHalfMonomial> >::iterator it =
+           Terms.begin();
+       it != Terms.end();
+       ++it) {
+    std::cout << "it->second = " << it->second.toString() << std::endl;
+    if (it->second == mn) {
+      return it;
+    }
+  }
+  std::cout << "Returning Terms.end()" << std::endl;
+  return Terms.end();
+}
+
+/*
+SpinHalfPolynomial & SpinHalfPolynomial::operator+=(
+    pair<complex<double>, SpinHalfMonomial> const & toAdd) {
+  std::cout << "In the dynamic dispatch +=" << std::endl;
+  if (std::abs(toAdd.first) < ERROR) {
+    return *this;
+  }
+  typename vector<pair<complex<double>, SpinHalfMonomial> >::iterator it =
+      findSameMonomial(toAdd.second);
+  if (it == Terms.end()) {
+    Terms.push_back(toAdd);
+  }
+  else {
+    it->first += toAdd.first;
+  }
+  return *this;
+}
+*/
 #endif

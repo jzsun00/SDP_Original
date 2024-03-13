@@ -37,7 +37,7 @@ class SpinHalfOp {
   //  index = rhs.index;
   //  return *this;
   //}
-  //bool operator==(SpinOp const & rhs) const { return index == rhs.index; };
+  virtual bool operator==(SpinHalfOp const & rhs) const { return index == rhs.index; };
   // Throw std::invalid_argument exception if operators are not the same kind
   //bool operator<(SpinOp const & rhs) const;
   //bool operator>(SpinOp const & rhs) const { return !(*this < rhs || *this == rhs); }
@@ -75,6 +75,9 @@ class SpinUDHalfOp : public SpinHalfOp {
   }
   virtual ~SpinUDHalfOp() {}
   virtual std::string toString() const;
+  virtual bool operator==(SpinUDHalfOp const & rhs) const {
+    return index == rhs.index && plusF == rhs.plusF;
+  };
   virtual void herm() { plusF ^= 1; };
   virtual SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
   virtual SpinHalfState operator*(SpinHalfState const & rhs) const;
@@ -95,6 +98,21 @@ class SpinHalfMonomial : public MixMonomial<SpinHalfOp> {
 
 //------------------------------------------------------------------SpinPolynomial-------
 
-class SpinHalfPolynomial : public Polynomial<SpinHalfOp> {};
+class SpinHalfPolynomial : public Polynomial<SpinHalfMonomial> {
+ public:
+  SpinHalfPolynomial() : Polynomial<SpinHalfMonomial>() {}
+  SpinHalfPolynomial(SpinHalfMonomial const & mn) : Polynomial<SpinHalfMonomial>(mn) {}
+  SpinHalfPolynomial(SpinHalfPolynomial const & rhs) :
+      Polynomial<SpinHalfMonomial>(rhs) {}
+  ~SpinHalfPolynomial() {}
+  //virtual SpinHalfPolynomial & operator+=(
+  //    pair<complex<double>, SpinHalfMonomial> const & rhs);
+  SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
+  SpinHalfState operator*(SpinHalfState const & rhs) const;
+
+ protected:
+  virtual vector<pair<complex<double>, SpinHalfMonomial> >::iterator findSameMonomial(
+      SpinHalfMonomial const & mn);
+};
 
 #endif  //ORI_SDP_GS_SPINOPERATORS1D_HPP

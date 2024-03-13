@@ -89,29 +89,27 @@ class Monomial {
 
 //---------------------------------------------------------------Polynomial-------------
 
-template<typename OpType>
+template<typename MonomialType>
 class Polynomial {
  protected:
-  vector<pair<complex<double>, Monomial<OpType> > > Terms;
+  vector<pair<complex<double>, MonomialType> > Terms;
 
  public:
-  typedef pair<complex<double>, Monomial<OpType> > TermType;
+  typedef pair<complex<double>, MonomialType> TermType;
   /*Construct a polynomial with one monomial or copy another,
     default constructor use an empty vector.*/
   Polynomial() : Terms() {}
-  Polynomial(Monomial<OpType> const & mn) : Terms() {
+  Polynomial(MonomialType const & mn) : Terms() {
     Terms.push_back(TermType(complex<double>(1, 0), mn));
   }
   Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
   ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
-  typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator getBegin()
-      const {
+  typename vector<pair<complex<double>, MonomialType> >::const_iterator getBegin() const {
     return Terms.begin();
   }
-  typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator getEnd()
-      const {
+  typename vector<pair<complex<double>, MonomialType> >::const_iterator getEnd() const {
     return Terms.end();
   }
   std::string toString();
@@ -119,24 +117,24 @@ class Polynomial {
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
   // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations
-  Polynomial & operator+=(Monomial<OpType> const & rhs);
+  Polynomial & operator+=(MonomialType const & rhs);
   Polynomial & operator+=(TermType const & rhs);
   Polynomial & operator+=(Polynomial const & rhs);
-  Polynomial & operator-=(Monomial<OpType> const & rhs);
+  Polynomial & operator-=(MonomialType const & rhs);
   Polynomial & operator-=(TermType const & rhs);
   Polynomial & operator-=(Polynomial const & rhs);
-  Polynomial & operator*=(Monomial<OpType> const & rhs);
+  Polynomial & operator*=(MonomialType const & rhs);
   Polynomial & operator*=(TermType const & rhs);
   Polynomial & operator*=(Polynomial const & rhs);
   void herm();
   void eraseZeros();
 
- private:
+ protected:
   /*Find the same monomial for += operation.
     Return the corresponding iterator if same monomial is found,
     otherwise return Terms.end().*/
-  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator findSameMonomial(
-      Monomial<OpType> const & mn);
+  virtual typename vector<pair<complex<double>, MonomialType> >::iterator
+  findSameMonomial(MonomialType const & mn);
 };
 
 #include "operators_Tem.cpp"

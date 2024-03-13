@@ -50,10 +50,10 @@ void Monomial<OpType>::herm() {
 
 //---------------------------------------------------------------Polynomial-------------
 
-template<typename OpType>
-std::string Polynomial<OpType>::toString() {
+template<typename MonomialType>
+std::string Polynomial<MonomialType>::toString() {
   std::string ans = "";
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator it =
+  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {
@@ -70,17 +70,17 @@ std::string Polynomial<OpType>::toString() {
   return ans;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator=(Polynomial<OpType> const & rhs) {
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator=(
+    Polynomial<MonomialType> const & rhs) {
   Terms = rhs.Terms;
   return *this;
 }
 
-template<typename OpType>
-typename vector<pair<complex<double>, Monomial<OpType> > >::iterator
-Polynomial<OpType>::findSameMonomial(Monomial<OpType> const & mn) {
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::iterator it =
-           Terms.begin();
+template<typename MonomialType>
+typename vector<pair<complex<double>, MonomialType> >::iterator
+Polynomial<MonomialType>::findSameMonomial(MonomialType const & mn) {
+  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
        it != Terms.end();
        ++it) {
     if (it->second == mn) {
@@ -91,20 +91,21 @@ Polynomial<OpType>::findSameMonomial(Monomial<OpType> const & mn) {
 }
 
 //+=
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator+=(Monomial<OpType> const & rhs) {
-  pair<complex<double>, Monomial<OpType> > toAdd(complex<double>(1, 0), rhs);
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
+    MonomialType const & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(1, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator+=(
-    pair<complex<double>, Monomial<OpType> > const & toAdd) {
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
+    pair<complex<double>, MonomialType> const & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
-  typename vector<pair<complex<double>, Monomial<OpType> > >::iterator it =
+  typename vector<pair<complex<double>, MonomialType> >::iterator it =
       findSameMonomial(toAdd.second);
   if (it == Terms.end()) {
     Terms.push_back(toAdd);
@@ -115,9 +116,10 @@ Polynomial<OpType> & Polynomial<OpType>::operator+=(
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator+=(Polynomial<OpType> const & rhs) {
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator termIt =
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
+    Polynomial<MonomialType> const & rhs) {
+  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
            rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
@@ -127,28 +129,30 @@ Polynomial<OpType> & Polynomial<OpType>::operator+=(Polynomial<OpType> const & r
 }
 
 //-=
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator-=(Monomial<OpType> const & rhs) {
-  pair<complex<double>, Monomial<OpType> > toAdd(complex<double>(-1, 0), rhs);
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
+    MonomialType const & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(-1, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator-=(
-    pair<complex<double>, Monomial<OpType> > const & toAdd) {
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
+    pair<complex<double>, MonomialType> const & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
-  pair<complex<double>, Monomial<OpType> > copy(complex<double>(-1, 0) * toAdd.first,
-                                                toAdd.second);
+  pair<complex<double>, MonomialType> copy(complex<double>(-1, 0) * toAdd.first,
+                                           toAdd.second);
   *this += copy;
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator-=(Polynomial<OpType> const & rhs) {
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator termIt =
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
+    Polynomial<MonomialType> const & rhs) {
+  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
            rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
@@ -158,18 +162,18 @@ Polynomial<OpType> & Polynomial<OpType>::operator-=(Polynomial<OpType> const & r
 }
 
 //*=
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator*=(Monomial<OpType> const & rhs) {
-  pair<complex<double>, Monomial<OpType> > toAdd(complex<double>(1, 0), rhs);
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
+    MonomialType const & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(1, 0), rhs);
   *this *= toAdd;
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator*=(
-    pair<complex<double>, Monomial<OpType> > const & rhs) {
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::iterator it =
-           Terms.begin();
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
+    pair<complex<double>, MonomialType> const & rhs) {
+  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
        it != Terms.end();
        ++it) {
     it->first *= rhs.first;
@@ -178,10 +182,11 @@ Polynomial<OpType> & Polynomial<OpType>::operator*=(
   return *this;
 }
 
-template<typename OpType>
-Polynomial<OpType> & Polynomial<OpType>::operator*=(Polynomial<OpType> const & rhs) {
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
+    Polynomial<MonomialType> const & rhs) {
   Polynomial current(*this);
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::const_iterator termIt =
+  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
            rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
@@ -192,10 +197,9 @@ Polynomial<OpType> & Polynomial<OpType>::operator*=(Polynomial<OpType> const & r
   return *this;
 }
 
-template<typename OpType>
-void Polynomial<OpType>::herm() {
-  for (typename vector<pair<complex<double>, Monomial<OpType> > >::iterator it =
-           Terms.begin();
+template<typename MonomialType>
+void Polynomial<MonomialType>::herm() {
+  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
        it != Terms.end();
        ++it) {
     it->first = std::conj(it->first);
@@ -203,14 +207,15 @@ void Polynomial<OpType>::herm() {
   }
 }
 
-template<typename OpType>
-bool isZero(pair<complex<double>, Monomial<OpType> > term) {
+template<typename MonomialType>
+bool isZero(pair<complex<double>, MonomialType> term) {
   return std::abs(term.first) < ERROR;
 }
 
-template<typename OpType>
-void Polynomial<OpType>::eraseZeros() {
-  Terms.erase(std::remove_if(Terms.begin(), Terms.end(), isZero<OpType>), Terms.end());
+template<typename MonomialType>
+void Polynomial<MonomialType>::eraseZeros() {
+  Terms.erase(std::remove_if(Terms.begin(), Terms.end(), isZero<MonomialType>),
+              Terms.end());
 }
 
 #endif  //ORI_SDP_GS_OPERATORS_TEM_CPP

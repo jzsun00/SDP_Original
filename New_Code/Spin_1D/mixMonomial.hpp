@@ -31,15 +31,20 @@ class MixMonomial {
   MixMonomial() : ExprPtr() {}
   MixMonomial(OpType & Op) : ExprPtr() { ExprPtr.push_back(&Op); }
   MixMonomial(OpType * OpPtr) : ExprPtr(1, OpPtr) {}
-  ~MixMonomial() {
+  ~MixMonomial() {}
+  /*
     for (typename vector<OpType *>::iterator it = ExprPtr.begin(); it != ExprPtr.end();
          ++it) {
       delete (*it);
     }
   }
+  */
   size_t getSize() const { return ExprPtr.size(); }
+  typename vector<OpType *>::const_iterator getBegin() const { return ExprPtr.begin(); }
+  typename vector<OpType *>::const_iterator getEnd() const { return ExprPtr.end(); }
   std::string toString() const;
-  OpType operator[](size_t n) const { return *(ExprPtr[n]); }
+  bool operator==(MixMonomial const & rhs) const;
+  OpType * operator[](size_t n) const { return ExprPtr[n]; }
   MixMonomial & operator*=(OpType & toAdd);
   void addOp(OpType * OpPtr) { ExprPtr.push_back(OpPtr); }
   void herm();
@@ -54,6 +59,19 @@ std::string MixMonomial<OpType>::toString() const {
     ans += (*it)->toString();
   }
   return ans;
+}
+
+template<typename OpType>
+bool MixMonomial<OpType>::operator==(MixMonomial const & rhs) const {
+  if (ExprPtr.size() != rhs.getSize()) {
+    return false;
+  }
+  for (size_t i = 0; i < rhs.getSize(); i++) {
+    if (!(*ExprPtr[i] == *rhs[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 template<typename OpType>
