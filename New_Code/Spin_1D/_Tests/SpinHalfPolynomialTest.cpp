@@ -26,7 +26,7 @@ int main(void) {
   std::cout << "mn2 = " << mn2.toString() << std::endl;
   std::cout << "size(mn2) = " << mn2.getSize() << std::endl;
   std::cout << "mn2 * mn1 * base1 = " << state2.toString() << std::endl;
-  /////////////////////////
+  ///////////////////////////////////////////////////////////////////
   SpinHalfPolynomial poly1;
   std::cout << "Created empty poly1" << std::endl;
   //std::cout << "poly1 = " << poly1.toString() << std::endl;
@@ -37,7 +37,7 @@ int main(void) {
   std::cout << "poly1 = mn1 + mn2 = " << poly1.toString() << std::endl;
   SpinHalfState state3 = poly1 * base1;
   std::cout << "poly1 * base1 = " << state3.toString() << std::endl;
-  /////////////////////////
+  /////////////////////////////////////////////////////////////////
   mn1.herm();
   std::cout << "mn1{+} = " << mn1.toString() << std::endl;
   delete Sz1cp;

@@ -107,6 +107,10 @@ class SpinHalfPolynomial : public Polynomial<SpinHalfMonomial> {
   ~SpinHalfPolynomial() {}
   //virtual SpinHalfPolynomial & operator+=(
   //    pair<complex<double>, SpinHalfMonomial> const & rhs);
+  SpinHalfPolynomial & operator=(SpinHalfPolynomial & rhs) {
+    Terms = rhs.Terms;
+    return *this;
+  }
   SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
   SpinHalfState operator*(SpinHalfState const & rhs) const;
 

@@ -1,0 +1,4 @@
+#include "../hamiltonians_XXZ.cpp"
+
+int main(void) {
+}

@@ -1,0 +1,11 @@
+/*
+  Define Hamiltonian matrices.
+*/
+
+#ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
+#define ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
+
+#include "../Spin_1D/spinOperators1D.hpp"
+#include "../Spin_1D/spinStates1D.hpp"
+
+#endif  //ORI_SDP_GS_HAMILTONIANS_XXZ_HPP

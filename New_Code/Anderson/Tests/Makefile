@@ -13,18 +13,21 @@ INC_DIR = ../include
 
 # compiling and linking all examples.
 
-all: unitTest #lcompshf lcompgre lcompgsh
+all: unitTest XXZTest #lcompshf lcompgre lcompgsh
 
 # compiling and linking each complex problem.
 
 unitTest:	unitTest.o
 	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -o unitTest unitTest.o $(SUPERLU_LIB) $(ALL_LIBS)
 
+XXZTest:	XXZTest.o
+	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) -o XXZTest XXZTest.o $(SUPERLU_LIB) $(ALL_LIBS)
+
 # defining cleaning rule.
 
 .PHONY:	clean
 clean:
-	rm -f *~ *.o core unitTest
+	rm -f *~ *.o core unitTest XXZTest
 
 # defining pattern rules.
 

@@ -44,7 +44,8 @@ FORTRAN_LIBS = -lgfortran
 # Defining g++ flags and directories.
 
 # CPP_WARNINGS = -fpermissive 
-CPP_WARNINGS = -Wall -ansi -pedantic-errors
+# CPP_WARNINGS = -Wall -ansi -pedantic-errors
+CPP_WARNINGS = -Wall -std=c++11 -pedantic-errors
 CPP_DEBUG    = -g
 CPP_OPTIM    = -O
 CPP_LIBS     = 

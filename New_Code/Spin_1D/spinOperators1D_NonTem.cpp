@@ -131,20 +131,21 @@ SpinHalfState SpinHalfPolynomial::operator*(SpinHalfState const & rhs) const {
 
 vector<pair<complex<double>, SpinHalfMonomial> >::iterator
 SpinHalfPolynomial::findSameMonomial(SpinHalfMonomial const & mn) {
-  std::cout << "In the dynamic dispatch area" << std::endl;
-  std::cout << "size(Terms) = " << Terms.size() << std::endl;
+  //std::cout << "In the dynamic dispatch area" << std::endl;
+  //std::cout << "size(Terms) = " << Terms.size() << std::endl;
   //std::cout << "Terms = " << this->toString() << std::endl;
-  std::cout << "Trying to find same monomial for " << mn.toString() << std::endl;
+  //std::cout << "Trying to find same monomial for " << mn.toString() << std::endl;
+  /*
   for (typename vector<pair<complex<double>, SpinHalfMonomial> >::iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {
-    std::cout << "it->second = " << it->second.toString() << std::endl;
     if (it->second == mn) {
       return it;
     }
   }
-  std::cout << "Returning Terms.end()" << std::endl;
+  */
+  //std::cout << "Returning Terms.end()" << std::endl;
   return Terms.end();
 }
 

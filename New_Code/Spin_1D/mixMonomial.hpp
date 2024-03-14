@@ -46,6 +46,10 @@ class MixMonomial {
   bool operator==(MixMonomial const & rhs) const;
   OpType * operator[](size_t n) const { return ExprPtr[n]; }
   MixMonomial & operator*=(OpType & toAdd);
+  MixMonomial & operator*=(OpType * OpPtr) {
+    ExprPtr.push_back(OpPtr);
+    return *this;
+  }
   void addOp(OpType * OpPtr) { ExprPtr.push_back(OpPtr); }
   void herm();
 };
