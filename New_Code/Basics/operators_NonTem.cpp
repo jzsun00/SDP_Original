@@ -1,8 +1,9 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
+
   Implementations of methods in class:
-  LadderOp.
+  LadderOp, SpinOp.
  */
 
 #ifndef ORI_SDP_GS_OPERATORS_NONTEM_CPP
@@ -38,6 +39,57 @@ bool LadderOp::operator<(LadderOp const & rhs) const {
   else {
     return index < rhs.index;
   }
+}
+
+//------------------------------------------------------------------SpinOp--------------
+
+std::string SpinOp::toString() const {
+  std::string ans = "S";
+  if (isZ) {
+    ans += "z";
+  }
+  else {
+    if (isPlus) {
+      ans += "+";
+    }
+    else {
+      ans += "-";
+    }
+  }
+  ans += "_{";
+  ans += std::to_string(index);
+  ans += "}";
+  return ans;
+}
+
+SpinOp & SpinOp::operator=(SpinOp const & rhs) {
+  index = rhs.index;
+  isZ = rhs.isZ;
+  isPlus = rhs.isPlus;
+  return *this;
+}
+
+bool SpinOp::operator==(SpinOp const & rhs) const {
+  return (index == rhs.index) && (isZ == rhs.isZ) && (isPlus == rhs.isPlus);
+}
+
+void SpinOp::herm() {
+  if (isZ) {
+    return;
+  }
+  else {
+    isPlus ^= 1;
+  }
+}
+
+//----------------------------------------------------------------Other Functions-------
+
+std::string complex_toString(complex<double> num) {
+  std::string ans;
+  ans += std::to_string(num.real());
+  ans += " + i";
+  ans += std::to_string(num.imag());
+  return ans;
 }
 
 #endif  //ORI_SDP_GS_OPERATORS_NONTEM_CPP

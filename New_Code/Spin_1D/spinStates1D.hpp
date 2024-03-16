@@ -1,8 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
 
-  Define Fock states, quantum states for spin systems.
+  Class:
+  SpinHalfBaseState, SpinHalfState, SpinHalfBasis.
+
+  Define base states, states and basis for spin-1/2 systems.
   Define the full basis for a spin lattice system.
 */
 
@@ -15,10 +18,12 @@
 
 #include "../Basics/states.hpp"
 
-//-------------------------------------------------------------SpinHalfBaseState--------
+//  -------------------------------------------------------------SpinHalfBaseState-------
 
 class SpinHalfBaseState : public SpinBaseState<bool> {
  public:
+  /*Construct a base state for spin-1/2 system.
+    Added constructor: if passing in size_t N, construct state with all spin-down.*/
   SpinHalfBaseState() : SpinBaseState() {}
   SpinHalfBaseState(size_t N) : SpinBaseState() { Nums = vector<bool>(N, false); }
   SpinHalfBaseState(vector<bool> & input) : SpinBaseState(input) {}
@@ -26,18 +31,18 @@ class SpinHalfBaseState : public SpinBaseState<bool> {
   ~SpinHalfBaseState() {}
 };
 
-//----------------------------------------------------------------SpinHalfState---------
+//----------------------------------------------------------------SpinHalfState----------
 
 class SpinHalfState : public State<SpinHalfBaseState> {
  public:
-  typedef pair<complex<double>, SpinHalfBaseState> TermType;
-  /*Construct a general quantum state for Fermions.
+  /*Construct a general quantum state for spin-1/2 systems.
     Constructors are identical to State*/
   SpinHalfState() : State() {}
   SpinHalfState(SpinHalfBaseState const & ffs) : State(ffs) {}
   SpinHalfState(complex<double> pref, SpinHalfBaseState const & ffs) : State(pref, ffs) {}
-  SpinHalfState(State const & rhs) : State(rhs) {}
+  SpinHalfState(SpinHalfState const & rhs) : State(rhs) {}
   ~SpinHalfState() {}
+  SpinHalfState & operator=(SpinHalfState const & rhs);
 };
 
 //-------------------------------------------------------------------SpinHalfBasis-------
@@ -48,7 +53,7 @@ class SpinHalfBasis {
   vector<SpinHalfBaseState> States;
 
  public:
-  /*Construct the entire basis of Fermi systems.*/
+  /*Construct the entire basis of spin-1/2 systems.*/
   SpinHalfBasis() : Sites(0), States() {}
   SpinHalfBasis(size_t n) : Sites(n), States() {}
   void init();
@@ -60,6 +65,4 @@ class SpinHalfBasis {
   SpinHalfBaseState operator[](size_t n) const { return States[n]; }
 };
 
-//#include "spinStates1D_Tem.cpp"
-
-#endif
+#endif  //ORI_SDP_GS_SPINSTATES1D_HPP

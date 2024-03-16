@@ -2,14 +2,20 @@
   Jiazheng Sun
   Updated: Mar 16, 2024
 
-  Define ladder operators, monomials and polynomials.
-  That serves as fundamental definitions of operators in the second quantization form,
-  Fermi or Boson operators should inherit these classes and add related algebra.
-  Spin operators can also inherit Monomial and Polynomial class.
+  Class:
+  Operator, Ladderop, SpinOp, Monomial, Polynomial.
 
-  Implementations for LadderOp is in operators_Tem.cpp,
-  for Monomial and Polynomial are in operators_NonTem.cpp.
-  Only include _Tem.cpp at the end of this file.
+  Define general operators, monomials and polynomials.
+  Also define ladder operators and spin operators.
+  That serves as fundamental definitions of operators in the second quantization form
+  as well as for spin systems.
+  Fermi or Boson operators should inherit LadderOp, Monomial, Polynomial and
+  add related algebra.
+  Spin operators should inherit SpinOp, Monomial, Polynomial and add algebra.
+
+  Implementations for LadderOp and SpinOp are in operators_NonTem.cpp,
+  for Monomial and Polynomial are in operators_Tem.cpp.
+  Only include operators_Tem.cpp at the end of this file.
 */
 
 #ifndef ORI_SDP_GS_OPERATORS_HPP
@@ -31,34 +37,80 @@ using std::complex;
 using std::pair;
 using std::vector;
 
-//---------------------------------------------------------------LadderOp---------------
+//---------------------------------------------------------------Operator---------------
 
-class LadderOp {
+class Operator {
  protected:
   int index;
+
+ public:
+  /*Construct a general operator with specified index,
+   default constructor use INT_MIN.*/
+  Operator() : index(std::numeric_limits<int>::min()) {}
+  Operator(int index) : index(index) {}
+  Operator(Operator const & rhs) { index = rhs.index; }
+  ~Operator() {}
+  /*Get information of the operator.*/
+  int getIndex() const { return index; }
+  virtual std::string toString() const = 0;
+  /*Overload operators.*/
+  virtual void herm() = 0;
+};
+
+//---------------------------------------------------------------LadderOp---------------
+
+class LadderOp : public Operator {
+ protected:
   bool creatorF;
 
  public:
   /*Construct a ladder operator with specified index and creatorF,
    default constructor use INT_MIN and false.*/
-  LadderOp() : index(std::numeric_limits<int>::min()), creatorF(false) {}
-  LadderOp(int i_idx, bool i_creatorF) : index(i_idx), creatorF(i_creatorF) {}
-  LadderOp(LadderOp const & rhs) {
-    index = rhs.index;
-    creatorF = rhs.creatorF;
-  }
+  LadderOp() : Operator(), creatorF(false) {}
+  LadderOp(int i_idx, bool i_creatorF) : Operator(i_idx), creatorF(i_creatorF) {}
+  LadderOp(LadderOp const & rhs) : Operator(rhs) { creatorF = rhs.creatorF; }
   ~LadderOp() {}
   /*Get information of the ladder operator.*/
-  int getIndex() const { return index; }
   bool getCreatorF() const { return creatorF; }
-  std::string toString() const;
+  virtual std::string toString() const;
   /*Overload operators.*/
   LadderOp & operator=(LadderOp const & rhs);
   bool operator==(LadderOp const & rhs) const;
   // Throw std::invalid_argument exception if operators are not the same kind
   bool operator<(LadderOp const & rhs) const;
   bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
-  void herm() { creatorF ^= 1; }
+  virtual void herm() { creatorF ^= 1; }
+};
+
+//------------------------------------------------------------------SpinOp--------------
+
+class SpinOp : public Operator {
+ protected:
+  bool isZ;
+  bool isPlus;
+
+ public:
+  /*Construct a spin operator with specified index,
+    default constructor use INT_MIN and Sz.
+    If passing in one int, it's Sz;
+    if passing in one int and one bool, it's S+ or S-.*/
+  SpinOp() : Operator(), isZ(true), isPlus(false) {}
+  SpinOp(int index) : Operator(index), isZ(true), isPlus(false) {}
+  SpinOp(int index, bool isPlus) : Operator(index), isZ(false), isPlus(isPlus) {}
+  SpinOp(int index, bool isZ, bool isPlus) : Operator(index), isZ(isZ), isPlus(isPlus) {}
+  SpinOp(SpinOp const & rhs) : Operator(rhs), isZ(rhs.isZ), isPlus(rhs.isPlus) {}
+  ~SpinOp() {}
+  /*Get information of the ladder operator.*/
+  bool getIsZ() const { return isZ; }
+  bool getIsPlus() const { return isPlus; }
+  virtual std::string toString() const;
+  /*Overload operators.*/
+  SpinOp & operator=(SpinOp const & rhs);
+  bool operator==(SpinOp const & rhs) const;
+  // Throw std::invalid_argument exception if operators are not the same kind
+  bool operator<(SpinOp const & rhs) const;
+  bool operator>(SpinOp const & rhs) const { return !(*this < rhs || *this == rhs); }
+  virtual void herm();
 };
 
 //---------------------------------------------------------------Monomial---------------
@@ -112,7 +164,7 @@ class Polynomial {
   typename vector<pair<complex<double>, MonomialType> >::const_iterator getEnd() const {
     return Terms.end();
   }
-  std::string toString();
+  std::string toString() const;
   /*Overload operators.*/
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
@@ -136,6 +188,10 @@ class Polynomial {
   virtual typename vector<pair<complex<double>, MonomialType> >::iterator
   findSameMonomial(MonomialType const & mn);
 };
+
+//----------------------------------------------------------------Other Functions-------
+
+std::string complex_toString(complex<double> num);
 
 #include "operators_Tem.cpp"
 

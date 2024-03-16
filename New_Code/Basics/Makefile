@@ -1,9 +1,9 @@
 # Makefile
 
 # Directories
-SRC_DIR := Basics
-TEST_DIR := _Tests
-EXE_DIR := _Exes
+SRC_DIR := .
+TEST_DIR := ./_Tests
+EXE_DIR := ./_Exes
 
 # Compiler and flags
 CXX := g++

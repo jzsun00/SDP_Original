@@ -2,7 +2,7 @@
 
 int main(void) {
   SpinHalfBaseState b1(5);
-  SpinZHalfOp Sz1(1);
+  SpinHalfOp Sz1(1);
   SpinHalfState s1 = Sz1 * b1;
   std::cout << "b1 = " << b1.toString() << std::endl;
   std::cout << "Sz1 = " << Sz1.toString() << std::endl;

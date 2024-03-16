@@ -1,10 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
 
-  Define Fock states and quantum states for general systems.
-  Fermi and Boson systems should inherit these classes.
-  Spin systems can also inherit State class
+  Class:
+  FockState, SpinBaseState, State.
+
+  Define basis states: FockState for Fermions and Bosons,
+  SpinBaseState for spin systems.
+  Also define general quantum states.
+  Fermi and Boson systems should inherit FockState and State.
+  Spin systems should inherit SpinBaseState and State.
+
+  Implementations for all classes are in states_Tem.cpp.
 */
 
 #ifndef ORI_SDP_GS_STATES_HPP

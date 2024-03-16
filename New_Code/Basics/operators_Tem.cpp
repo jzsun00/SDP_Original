@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
   Implementations of methods in class:
   Monomial, Polynomial.
  */
@@ -14,7 +14,7 @@
 
 template<typename OpType>
 std::string Monomial<OpType>::toString() const {
-  std::string ans = "";
+  std::string ans;
   for (typename vector<OpType>::const_iterator it = Expr.begin(); it != Expr.end();
        ++it) {
     ans += it->toString();
@@ -51,16 +51,14 @@ void Monomial<OpType>::herm() {
 //---------------------------------------------------------------Polynomial-------------
 
 template<typename MonomialType>
-std::string Polynomial<MonomialType>::toString() {
-  std::string ans = "";
+std::string Polynomial<MonomialType>::toString() const {
+  std::string ans;
   for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {
     ans += "  (";
-    ans += std::to_string(it->first.real());
-    ans += " + ";
-    ans += std::to_string(it->first.imag());
+    ans += complex_toString(it->first);
     ans += ")";
     ans += it->second.toString();
     ans += "  +\n";

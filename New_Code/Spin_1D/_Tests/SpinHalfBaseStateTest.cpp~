@@ -1,5 +1,0 @@
-#include "../spinStates1D.hpp"
-
-int main(void) {
-  return EXIT_SUCCESS;
-}

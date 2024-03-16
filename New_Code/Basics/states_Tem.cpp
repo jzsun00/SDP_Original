@@ -1,9 +1,9 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
 
   Implementations of methods in class:
-  Fockstate, State.
+  Fockstate, State, SpinBaseState.
   Also implementations of inner product.
  */
 

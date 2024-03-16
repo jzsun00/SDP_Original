@@ -1,15 +1,22 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
 
   Implementations of methods in class:
   FermiFockstate, FermiState, FermiBasis.
  */
 
-#ifndef ORI_SDP_GS_SPINSTATES1D_TEM_CPP
-#define ORI_SDP_GS_SPINSTATES1D_TEM_CPP
+#ifndef ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
+#define ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
 
 #include "spinStates1D.hpp"
+
+//----------------------------------------------------------------SpinHalfState----------
+
+SpinHalfState & SpinHalfState::operator=(SpinHalfState const & rhs) {
+  Terms = rhs.Terms;
+  return *this;
+}
 
 //-------------------------------------------------------------------SpinHalfBasis-------
 
@@ -38,4 +45,4 @@ std::string SpinHalfBasis::toString() {
   return ans;
 }
 
-#endif
+#endif  //ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
