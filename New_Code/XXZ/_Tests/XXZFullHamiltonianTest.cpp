@@ -24,6 +24,9 @@ int main(void) {
   std::cout << "base0 = " << base0.toString() << std::endl;
   SpinHalfState state1 = XXZPoly * base0;
   std::cout << "XXZPoly * base1 = " << state1.toString() << std::endl;
+  XXZSparseHamiltonian hamS(XXZPoly, sites, 0.2);
+  hamS.createMatrix(basis);
+  std::cout << "Sparse Hamiltonian Matrix:\n" << hamS.toString() << std::endl;
   delete Sz1cp;
   return EXIT_SUCCESS;
 }

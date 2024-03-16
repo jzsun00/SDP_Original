@@ -9,7 +9,7 @@
 #include "./states.hpp"
 
 //-------------------------------------------------------------SparseHamiltonian---------
-/*
+
 template<typename PolyType, typename BasisType>
 class SparseHamiltonian {
  private:
@@ -30,7 +30,7 @@ class SparseHamiltonian {
   std::string toString();
   void createMatrix(BasisType & basis);
 };
-*/
+
 //-------------------------------------------------------------FullHamiltonian-----------
 
 template<typename PolyType, typename BasisType>

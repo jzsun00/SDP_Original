@@ -9,6 +9,26 @@
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
 
+//------------------------------------------------------------XXZSparseHamiltonian-------
+
+class XXZSparseHamiltonian : public SparseHamiltonian<SpinHalfPolynomial, SpinHalfBasis> {
+ private:
+  size_t sites;
+  double Jz;
+  vector<SpinHalfOp *> OpRecords;
+
+ public:
+  XXZSparseHamiltonian() : SparseHamiltonian<SpinHalfPolynomial, SpinHalfBasis>() {}
+  XXZSparseHamiltonian(SpinHalfPolynomial poly, size_t dim) :
+      SparseHamiltonian<SpinHalfPolynomial, SpinHalfBasis>(poly, dim) {}
+  XXZSparseHamiltonian(SpinHalfPolynomial poly, size_t sites, double Jz) :
+      SparseHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz), OpRecords() {}
+  ~XXZSparseHamiltonian() {}
+  SpinHalfPolynomial makePoly(size_t sites, double Jz);
+};
+
+//-------------------------------------------------------------XXZFullHamiltonian--------
+
 class XXZFullHamiltonian : public FullHamiltonian<SpinHalfPolynomial, SpinHalfBasis> {
  private:
   size_t sites;

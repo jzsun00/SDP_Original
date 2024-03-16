@@ -1,8 +1,0 @@
-/*
-  Define Hamiltonian matrices.
-*/
-
-#ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
-#define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
-
-#endif  //ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
