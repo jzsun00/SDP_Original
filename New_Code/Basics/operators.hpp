@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 12, 2024
+  Updated: Mar 16, 2024
 
   Define ladder operators, monomials and polynomials.
   That serves as fundamental definitions of operators in the second quantization form,
