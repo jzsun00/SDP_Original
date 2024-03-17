@@ -22,9 +22,16 @@ SpinHalfPolynomial makePoly(size_t sites, double Jz) {
     MNdu *= SuN;
     SpinHalfMonomial MNz(Sz);
     MNz *= SzN;
-    ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNud);
-    ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNdu);
-    ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(Jz, 0), MNz);
+    if (i == 0 || i == sites - 2) {
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.25, 0), MNud);
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.25, 0), MNdu);
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(Jz / 2, 0), MNz);
+    }
+    else {
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNud);
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNdu);
+      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(Jz, 0), MNz);
+    }
   }
   return ans;
 }

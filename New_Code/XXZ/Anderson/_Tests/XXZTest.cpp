@@ -14,15 +14,17 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 10;
-  double Jz = 0.0;
+  size_t sites = 12;
+  double Jz = -1.2;
   int dim = std::pow(2, sites);
   std::cout << "dim = " << dim << std::endl;
+
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial poly = makePoly(sites, Jz);
   SpinHalfBasis basis(sites);
   basis.init();
   std::cout << "Basis construction complete!" << std::endl;
+
   /*Consruct sparse Hamiltonian.*/
   XXZSparseHamiltonian ham(poly, sites, Jz);
   ham.createMatrix(basis);
@@ -57,7 +59,7 @@ int main() {
 
   // Defining what we need: the four eigenvectors of A with largest magnitude.
 
-  ARluCompStdEig<double> dprob(4L, A);
+  ARluCompStdEig<double> dprob(5L, A, "SR");
 
   // Finding eigenvalues and eigenvectors.
 
@@ -66,19 +68,5 @@ int main() {
   // Printing solution.
 
   Solution(A, dprob);
-  /*
-  size_t sites = 5;
-  double Jz = 0.2;
-  std::cout << "sites = " << sites << ", Jz = " << Jz << std::endl;
-  SpinHalfPolynomial poly = makePoly(sites, Jz);
-  std::cout << "poly = " << poly.toString() << std::endl;
-  SpinHalfBasis basis(sites);
-  basis.init();
-  XXZSparseHamiltonian ham(poly, sites, Jz);
-  std::cout << "Now constructing the matrix";
-  ham.createMatrix(basis);
-  std::cout << "Printing the Hamiltonian\n" << ham.toString() << std::endl;
-  std::cout << "Test pass!" << std::endl;
-  return EXIT_SUCCESS;
-  */
+
 }  // main
