@@ -16,6 +16,7 @@ int main(void) {
   op3.herm();
   assert(op3.getIndex() == std::numeric_limits<int>::min());
   std::cout << "INT_MIN = " << op3.getIndex() << std::endl;
+  std::cout << "INT_MAX = " << std::numeric_limits<int>::max() << std::endl;
   assert(op3.getCreatorF() == true);
   std::cout << "Constructors tests pass!" << std::endl;
 

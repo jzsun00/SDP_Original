@@ -54,6 +54,7 @@ class SpinHalfPolynomial : public Polynomial<SpinHalfMonomial> {
       Polynomial<SpinHalfMonomial>(rhs) {}
   ~SpinHalfPolynomial() {}
   /*Overload operators.*/
+  SpinHalfPolynomial & operator=(SpinHalfPolynomial const & rhs);
   SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
   SpinHalfState operator*(SpinHalfState const & rhs) const;
 };

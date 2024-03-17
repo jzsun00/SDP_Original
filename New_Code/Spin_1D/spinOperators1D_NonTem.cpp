@@ -73,6 +73,11 @@ SpinHalfState SpinHalfMonomial::operator*(SpinHalfState const & rhs) const {
 
 //------------------------------------------------------------------SpinPolynomial-------
 
+SpinHalfPolynomial & SpinHalfPolynomial::operator=(SpinHalfPolynomial const & rhs) {
+  Terms = rhs.Terms;
+  return *this;
+}
+
 SpinHalfState SpinHalfPolynomial::operator*(SpinHalfBaseState const & rhs) const {
   SpinHalfState ans;
   for (vector<pair<complex<double>, SpinHalfMonomial> >::const_iterator it =

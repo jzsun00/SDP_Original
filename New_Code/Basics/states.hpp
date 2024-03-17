@@ -1,9 +1,9 @@
 /*
   Jiazheng Sun
-  Updated: Mar 16, 2024
+  Updated: Mar 17, 2024
 
   Class:
-  FockState, SpinBaseState, State.
+  FockState, SpinBaseState, State, Basis.
 
   Define basis states: FockState for Fermions and Bosons,
   SpinBaseState for spin systems.
@@ -125,6 +125,27 @@ class State {
     otherwise return Terms.end().*/
   typename vector<pair<complex<double>, StateType> >::iterator findSameFockState(
       StateType const & fs);
+};
+
+//----------------------------------------------------------------------Basis------------
+
+template<typename BaseStateType>
+class Basis {
+ protected:
+  vector<BaseStateType> States;
+
+ public:
+  /*Construct a basis, default use empty vector.*/
+  Basis() : States() {}
+  ~Basis() {}
+  virtual void init() = 0;
+  /*Get information of the basis.*/
+  virtual std::string toString() = 0;
+  typename vector<BaseStateType>::const_iterator getBegin() const {
+    return States.begin();
+  }
+  typename vector<BaseStateType>::const_iterator getEnd() const { return States.end(); }
+  BaseStateType operator[](size_t n) const { return States[n]; }
 };
 
 //-------------------------------------------------------------------Inner Product-------

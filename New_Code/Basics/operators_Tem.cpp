@@ -1,6 +1,7 @@
 /*
   Jiazheng Sun
-  Updated: Mar 16, 2024
+  Updated: Mar 17, 2024
+
   Implementations of methods in class:
   Monomial, Polynomial.
  */

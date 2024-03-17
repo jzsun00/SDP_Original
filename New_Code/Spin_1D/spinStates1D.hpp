@@ -47,22 +47,18 @@ class SpinHalfState : public State<SpinHalfBaseState> {
 
 //-------------------------------------------------------------------SpinHalfBasis-------
 
-class SpinHalfBasis {
+class SpinHalfBasis : public Basis<SpinHalfBaseState> {
  protected:
   size_t Sites;
-  vector<SpinHalfBaseState> States;
 
  public:
   /*Construct the entire basis of spin-1/2 systems.*/
-  SpinHalfBasis() : Sites(0), States() {}
-  SpinHalfBasis(size_t n) : Sites(n), States() {}
-  void init();
+  SpinHalfBasis() : Basis(), Sites(0) {}
+  SpinHalfBasis(size_t n) : Basis(), Sites(n) {}
+  ~SpinHalfBasis() {}
+  virtual void init();
   /*Get information of the full basis.*/
-  std::string toString();
-  vector<SpinHalfBaseState>::const_iterator getBegin() const { return States.begin(); }
-  vector<SpinHalfBaseState>::const_iterator getEnd() const { return States.end(); }
-  /*Overload operators.*/
-  SpinHalfBaseState operator[](size_t n) const { return States[n]; }
+  virtual std::string toString();
 };
 
 #endif  //ORI_SDP_GS_SPINSTATES1D_HPP

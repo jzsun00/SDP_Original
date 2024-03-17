@@ -1,12 +1,20 @@
-#ifndef ORI_SDP_GS_HAMILTONIANS_CPP
-#define ORI_SDP_GS_HAMILTONIANS_CPP
+/*
+  Jiazheng Sun
+  Updated: Mar 17, 2024
+
+  Implementations of methods in class:
+  SparseHamiltonian, FullHamiltonian.
+ */
+
+#ifndef ORI_SDP_GS_HAMILTONIANS_TEM_CPP
+#define ORI_SDP_GS_HAMILTONIANS_TEM_CPP
 
 #include "./hamiltonians.hpp"
 
 //-------------------------------------------------------------SparseHamiltonian---------
 
-template<typename PolyType, typename BasisType>
-std::string SparseHamiltonian<PolyType, BasisType>::toString() {
+template<typename PolyType, typename BaseStateType>
+std::string SparseHamiltonian<PolyType, BaseStateType>::toString() {
   std::string ans = "";
   ans += "Number of non-zero elements: " + std::to_string(nnz) + "\n";
   ans += "Non-zero values:\n";
@@ -25,18 +33,20 @@ std::string SparseHamiltonian<PolyType, BasisType>::toString() {
   return ans;
 }
 
-template<typename polyType, typename basisType>
-void SparseHamiltonian<polyType, basisType>::createMatrix(basisType & basis) {
+template<typename polyType, typename BaseStateType>
+void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
+    Basis<BaseStateType> & basis) {
   pcol.push_back(0);
-  for (long unsigned i = 0; i < dim; i++) {
-    for (long unsigned j = 0; j < dim; j++) {
-      complex<double> elementij = innerProduct(basis[i], poly * basis[j]);
+  for (long unsigned j = 0; j < dim; j++) {
+    State<BaseStateType> mid = poly * basis[j];
+    for (long unsigned i = 0; i < dim; i++) {
+      complex<double> elementij = innerProduct(basis[i], mid);
       if (std::abs(elementij) <= ERROR) {
         continue;
       }
       nnz++;
       nzVal.push_back(elementij);
-      irow.push_back(j);
+      irow.push_back(i);
     }
     pcol.push_back(nnz);
   }
@@ -45,13 +55,18 @@ void SparseHamiltonian<polyType, basisType>::createMatrix(basisType & basis) {
 
 //-------------------------------------------------------------FullHamiltonian-----------
 
-template<typename polyType, typename basisType>
-std::string FullHamiltonian<polyType, basisType>::toString() {
-  std::string ans = "";
+template<typename PolyType, typename BaseStateType>
+std::string FullHamiltonian<PolyType, BaseStateType>::toString() {
+  std::string ans;
+  ans += "The Polynomial:\n";
+  ans += poly.toString();
+  ans += "\nSparsity: ";
+  ans += std::to_string((double)nnz / (dim * dim));
+  ans += "\n";
   ans += "The Full Matrix:\n";
   for (long unsigned i = 0; i < dim; i++) {
     for (long unsigned j = 0; j < dim; j++) {
-      ans += "  " + std::to_string(matrix[i][j].real()) + "+" +
+      ans += "  " + std::to_string(matrix[i][j].real()) + "+i" +
              std::to_string(matrix[i][j].imag());
     }
     ans += "\n";
@@ -59,14 +74,18 @@ std::string FullHamiltonian<polyType, basisType>::toString() {
   return ans;
 }
 
-template<typename polyType, typename basisType>
-void FullHamiltonian<polyType, basisType>::createMatrix(basisType const & basis) {
+template<typename PolyType, typename BaseStateType>
+void FullHamiltonian<PolyType, BaseStateType>::createMatrix(
+    Basis<BaseStateType> const & basis) {
   for (long unsigned i = 0; i < dim; i++) {
     for (long unsigned j = 0; j < dim; j++) {
       //std::cout << "i = " << i << ", j = " << j << std::endl;
       matrix[i][j] = innerProduct(basis[i], poly * basis[j]);
+      if (std::abs(matrix[i][j]) > ERROR) {
+        nnz++;
+      }
     }
   }
 }
 
-#endif
+#endif  //ORI_SDP_GS_HAMILTONIANS_TEM_CPP
