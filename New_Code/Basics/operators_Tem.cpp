@@ -1,15 +1,85 @@
 /*
   Jiazheng Sun
-  Updated: Mar 17, 2024
+  Updated: Mar 18, 2024
 
   Implementations of methods in class:
-  Monomial, Polynomial.
+  LadderOp, SpinOp, Monomial, Polynomial.
  */
 
 #ifndef ORI_SDP_GS_OPERATORS_TEM_CPP
 #define ORI_SDP_GS_OPERATORS_TEM_CPP
 
-#include "operators.hpp"
+#include "./operators.hpp"
+
+//---------------------------------------------------------------LadderOp---------------
+
+template<typename IndexType>
+std::string LadderOp<IndexType>::toString() const {
+  std::string ans = "a_{";
+  ans += indexToString();
+  ans += "}";
+  if (creatorF) {
+    ans += "{+}";
+  }
+  return ans;
+}
+
+template<typename IndexType>
+LadderOp<IndexType> & LadderOp<IndexType>::operator=(LadderOp const & rhs) {
+  this->index = rhs.index;
+  this->creatorF = rhs.creatorF;
+  return *this;
+}
+
+template<typename IndexType>
+bool LadderOp<IndexType>::operator==(LadderOp const & rhs) const {
+  return (this->creatorF == rhs.creatorF) && (this->index == rhs.index);
+}
+
+//------------------------------------------------------------------SpinOp--------------
+
+template<typename IndexType>
+std::string SpinOp<IndexType>::toString() const {
+  std::string ans = "S";
+  if (isZ) {
+    ans += "z";
+  }
+  else {
+    if (isPlus) {
+      ans += "+";
+    }
+    else {
+      ans += "-";
+    }
+  }
+  ans += "_{";
+  ans += indexToString();
+  ans += "}";
+  return ans;
+}
+
+template<typename IndexType>
+SpinOp<IndexType> & SpinOp<IndexType>::operator=(SpinOp<IndexType> const & rhs) {
+  this->index = rhs.index;
+  this->isZ = rhs.isZ;
+  this->isPlus = rhs.isPlus;
+  return *this;
+}
+
+template<typename IndexType>
+bool SpinOp<IndexType>::operator==(SpinOp<IndexType> const & rhs) const {
+  return (this->index == rhs.index) && (this->isZ == rhs.isZ) && (this->isPlus == rhs.isPlus);
+}
+
+template<typename IndexType>
+void SpinOp<IndexType>::herm() {
+  if (isZ) {
+    return;
+  }
+  else {
+    isPlus ^= 1;
+  }
+}
 
 //---------------------------------------------------------------Monomial---------------
 

@@ -1,6 +1,9 @@
-/*
+'/*
   Jiazheng Sun
-  Updated: Mar 9, 2024
+  Updated: Mar 18, 2024
+
+  Class:
+  Fermi1DLadderOp, FermiMonomial, FermiPolynomial
 
   Define ladder operators, monomials and polynomials for Fermi systems.
 */
@@ -8,8 +11,8 @@
 #ifndef ORI_SDP_GS_FERMIOPERATORS_HPP
 #define ORI_SDP_GS_FERMIOPERATORS_HPP
 
-#include "./fermiStates.hpp"
-#include "./operators.hpp"
+//#include "./fermiStates.hpp"
+#include "../Basics/operators.hpp"
 
 //------------------------------------------------------------------FermiLadderOp--------
 

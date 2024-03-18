@@ -4,11 +4,12 @@
 SRC_DIR := .
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
+OBJ_DIR := ./_Objects
 
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
-LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
+LDFLAGS := -lblas -llapack -lgfortran
 
 # Source files
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
@@ -16,7 +17,7 @@ HEADER_FILES := $(wildcard $(SRC_DIR)/*.hpp)
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 
 # Object files
-OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(SRC_DIR)/%.o, $(SRC_FILES))
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
 # Executables
 EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
@@ -30,8 +31,9 @@ $(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(EXE_DIR) $(SRC_DIR)/*.o
+	rm -rf $(EXE_DIR) $(OBJ_DIR)
