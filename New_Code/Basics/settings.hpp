@@ -13,10 +13,12 @@
 #ifndef ORI_SDP_GS_SETTINGS_HPP
 #define ORI_SDP_GS_SETTINGS_HPP
 
-#include <string>
 #include <complex>
+#include <sstream>
+#include <string>
 
 #define ERROR std::pow(10, -12)
+#define PRECISION 2
 
 //-------------------------------------------------------------complex_toString()-------
 

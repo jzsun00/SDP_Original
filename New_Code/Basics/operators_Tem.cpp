@@ -68,7 +68,8 @@ SpinOp<IndexType> & SpinOp<IndexType>::operator=(SpinOp<IndexType> const & rhs) 
 
 template<typename IndexType>
 bool SpinOp<IndexType>::operator==(SpinOp<IndexType> const & rhs) const {
-  return (this->index == rhs.index) && (this->isZ == rhs.isZ) && (this->isPlus == rhs.isPlus);
+  return (this->index == rhs.index) && (this->isZ == rhs.isZ) &&
+         (this->isPlus == rhs.isPlus);
 }
 
 template<typename IndexType>
@@ -124,6 +125,9 @@ void Monomial<OpType>::herm() {
 template<typename MonomialType>
 std::string Polynomial<MonomialType>::toString() const {
   std::string ans;
+  if (Terms.size() == 0) {
+    return ans;
+  }
   for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
            Terms.begin();
        it != Terms.end();

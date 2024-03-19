@@ -1,7 +1,0 @@
-#include <cassert>
-
-#include "../fermiOperators.hpp"
-
-int main(void) {
-  
-}

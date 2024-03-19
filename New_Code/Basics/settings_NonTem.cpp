@@ -14,11 +14,17 @@
 //-------------------------------------------------------------complex_toString()-------
 
 std::string complex_toString(std::complex<double> num) {
-  std::string ans;
-  ans += std::to_string(num.real());
-  ans += " + i";
-  ans += std::to_string(num.imag());
-  return ans;
+  std::ostringstream oss;
+  oss.precision(PRECISION);
+  oss << std::fixed;
+  oss << num.real();
+  if (num.imag() >= 0) {
+    oss << " + " << num.imag() << "i";
+  }
+  else {
+    oss << " - " << -num.imag() << "i";
+  }
+  return oss.str();
 }
 
 #endif  //ORI_SDP_GS_SETTINGS_NONTEM_CPP

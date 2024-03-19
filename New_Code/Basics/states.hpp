@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 17, 2024
+  Updated: Mar 18, 2024
 
   Class:
   FockState, SpinBaseState, State, Basis.
@@ -25,7 +25,7 @@
 #include <utility>
 #include <vector>
 
-#define ERROR std::pow(10, -12)
+#include "./settings.hpp"
 
 using std::complex;
 using std::pair;

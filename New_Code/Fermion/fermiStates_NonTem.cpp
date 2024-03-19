@@ -1,21 +1,19 @@
 /*
   Jiazheng Sun
-  Updated: Mar 9, 2024
+  Updated: Mar 18, 2024
 
   Implementations of methods in class:
   FermiFockstate, FermiState, FermiBasis.
  */
 
-#ifndef ORI_SDP_GS_FERMISTATES_CPP
-#define ORI_SDP_GS_FERMISTATES_CPP
+#ifndef ORI_SDP_GS_FERMISTATES_NONTEM_CPP
+#define ORI_SDP_GS_FERMISTATES_NONTEM_CPP
 
-#include "fermiStates.hpp"
-
-using std::vector;
+#include "fermiStates.hpp";
 
 //-------------------------------------------------------------FermiBasis----------------
 
-void FermiBasis::init() {
+void Fermi1DBasis::init() {
   size_t total = std::pow(2, Sites);
   for (size_t i = 0; i < total; i++) {
     std::bitset<32> bits(i);
@@ -28,7 +26,7 @@ void FermiBasis::init() {
   }
 }
 
-std::string FermiBasis::toString() {
+std::string Fermi1DBasis::toString() {
   std::string ans = "Sites = ";
   ans += std::to_string(Sites);
   ans += "\nFull Basis:\n";
@@ -40,4 +38,4 @@ std::string FermiBasis::toString() {
   return ans;
 }
 
-#endif
+#endif  //ORI_SDP_GS_FERMISTATES_NONTEM_CPP

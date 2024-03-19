@@ -22,8 +22,7 @@ bool Fermi1DLadderOp::operator<(LadderOp const & rhs) const {
   }
 }
 
-/*
-FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
+FermiState Fermi1DLadderOp::operator*(FermiFockState const & rhs) const {
   if (creatorF) {
     if (rhs[index] == 1) {
       return FermiState(complex<double>(0, 0), rhs);
@@ -59,7 +58,7 @@ FermiState FermiLadderOp::operator*(FermiFockState const & rhs) const {
     }
   }
 }
-*/
+
 //------------------------------------------------------------------FermiMonomial--------
 /*
 FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {

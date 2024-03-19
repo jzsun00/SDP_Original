@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 10, 2024
+  Updated: Mar 18, 2024
 
   Define Fock states, quantum states for Fermionic systems.
   Define the full basis for a Fermion lattice system.
@@ -23,7 +23,7 @@ class FermiFockState : public FockState<bool> {
     Constructors are identical to FockState.*/
   FermiFockState() : FockState() {}
   FermiFockState(vector<bool> & input) : FockState(input) {}
-  FermiFockState(FockState const & rhs) : FockState(rhs) {}
+  FermiFockState(FockState<bool> const & rhs) : FockState(rhs) {}
   ~FermiFockState() {}
 };
 
@@ -43,22 +43,17 @@ class FermiState : public State<FermiFockState> {
 
 //-------------------------------------------------------------------FermiBasis---------
 
-class FermiBasis {
+class Fermi1DBasis : Basis<FermiFockState> {
  protected:
   size_t Sites;
-  vector<FermiFockState> States;
 
  public:
   /*Construct the entire basis of Fermi systems.*/
-  FermiBasis() : Sites(0), States() {}
-  FermiBasis(size_t n) : Sites(n), States() {}
+  Fermi1DBasis() : Basis<FermiFockState>(), Sites(0) {}
+  Fermi1DBasis(size_t n) : Basis<FermiFockState>(), Sites(n) {}
   void init();
   /*Get information of the full basis.*/
   std::string toString();
-  vector<FermiFockState>::const_iterator getBegin() const { return States.begin(); }
-  vector<FermiFockState>::const_iterator getEnd() const { return States.end(); }
-  /*Overload operators.*/
-  FermiFockState operator[](size_t n) const { return States[n]; }
 };
 
 #endif
