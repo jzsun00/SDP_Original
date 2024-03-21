@@ -8,11 +8,10 @@
   Define ladder operators, monomials and polynomials for Fermi systems.
 */
 
-#ifndef ORI_SDP_GS_FERMIOPERATORS_HPP
-#define ORI_SDP_GS_FERMIOPERATORS_HPP
+#ifndef ORI_SDP_GS_HARDCOREOPERATORS_HPP
+#define ORI_SDP_GS_HARDCOREOPERATORS_HPP
 
 #include "../Basics/operators.hpp"
-//#include "./fermiStates.hpp"
 
 //------------------------------------------------------------------FermiLadderOp--------
 
@@ -108,4 +107,4 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
 
 #include "./fermiOperators_Tem.cpp"
 
-#endif  //ORI_SDP_GS_FERMIOPERATORS_HPP
+#endif  //ORI_SDP_GS_HARDCOREOPERATORS_HPP

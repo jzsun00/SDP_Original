@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Mar 20, 2024
 
   Implementations of methods in class:
   LadderOp, SpinOp, Monomial, Polynomial.

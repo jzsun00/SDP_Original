@@ -6,16 +6,16 @@
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
  */
 
-#ifndef ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
-#define ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+#ifndef ORI_SDP_GS_HARDCOREOPERATORS_TEM_CPP
+#define ORI_SDP_GS_HARDCOREOPERATORS_TEM_CPP
 
-#include "fermiOperators.hpp"
+#include "hardCoreOperators.hpp"
 
 //------------------------------------------------------------------FermiLadderOp--------
 
 template<typename IndexType>
-FermiLadderOp<IndexType> & FermiLadderOp<IndexType>::operator=(
-    FermiLadderOp<IndexType> const & rhs) {
+HardCoreLadderOp<IndexType> & HardCoreLadderOp<IndexType>::operator=(
+    HardCoreLadderOp<IndexType> const & rhs) {
   this->index = rhs.index;
   this->isUnit = rhs.isUnit;
   this->creatorF = rhs.creatorF;
@@ -23,7 +23,8 @@ FermiLadderOp<IndexType> & FermiLadderOp<IndexType>::operator=(
 }
 
 template<typename IndexType>
-bool FermiLadderOp<IndexType>::operator==(FermiLadderOp<IndexType> const & rhs) const {
+bool HardCoreLadderOp<IndexType>::operator==(
+    HardCoreLadderOp<IndexType> const & rhs) const {
   if (this->isUnit) {
     if (rhs.isUnit) {
       return true;
@@ -42,7 +43,7 @@ bool FermiLadderOp<IndexType>::operator==(FermiLadderOp<IndexType> const & rhs) 
 //------------------------------------------------------------------FermiMonomial--------
 
 template<typename OpType>
-int FermiMonomial<OpType>::findWrongOrder() const {
+int HardCoreMonomial<OpType>::findWrongOrder() const {
   for (size_t i = 0; i < this->Expr.size() - 1; i++) {
     if (this->Expr[i] > this->Expr[i + 1]) {
       return i;
@@ -52,7 +53,7 @@ int FermiMonomial<OpType>::findWrongOrder() const {
 }
 
 template<typename OpType>
-bool FermiMonomial<OpType>::isNorm() const {
+bool HardCoreMonomial<OpType>::isNorm() const {
   if (this->Expr.size() <= 1) {
     return true;
   }
@@ -63,22 +64,22 @@ bool FermiMonomial<OpType>::isNorm() const {
 }
 
 template<typename OpType>
-FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprS(size_t index) {
-  return FermiMonomial<OpType>(
+HardCoreMonomial<OpType> HardCoreMonomial<OpType>::sliceExprS(size_t index) {
+  return HardCoreMonomial<OpType>(
       vector<OpType>(this->Expr.begin(), this->Expr.begin() + index));
 }
 
 template<typename OpType>
-FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprE(size_t index) {
-  return FermiMonomial<OpType>(
+HardCoreMonomial<OpType> HardCoreMonomial<OpType>::sliceExprE(size_t index) {
+  return HardCoreMonomial<OpType>(
       vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
 }
 
 //-----------------------------------------------------------------FermiPolynomial-------
 
 template<typename MonomialType>
-FermiPolynomial<MonomialType> & FermiPolynomial<MonomialType>::operator=(
-    FermiPolynomial<MonomialType> const & rhs) {
+HardCorePolynomial<MonomialType> & HardCorePolynomial<MonomialType>::operator=(
+    HardCorePolynomial<MonomialType> const & rhs) {
   this->Terms = rhs.Terms;
   return *this;
 }
@@ -104,7 +105,7 @@ void FermiPolynomial<MonomialType>::normalize() {
 }
 */
 template<typename MonomialType>
-void FermiPolynomial<MonomialType>::normalize() {
+void HardCorePolynomial<MonomialType>::normalize() {
   for (size_t i = 0; i < this->Terms.size(); i++) {
     //std::cout << "Length = " << this->Terms.size() << std::endl;
     if (this->Terms[i].second.isNorm()) {
@@ -126,7 +127,7 @@ bool isNonNorm(pair<complex<double>, MonomialType> term) {
 }
 
 template<typename MonomialType>
-void FermiPolynomial<MonomialType>::eraseNonNorm() {
+void HardCorePolynomial<MonomialType>::eraseNonNorm() {
   this->Terms.erase(
       std::remove_if(this->Terms.begin(), this->Terms.end(), isNonNorm<MonomialType>),
       this->Terms.end());
@@ -135,37 +136,41 @@ void FermiPolynomial<MonomialType>::eraseNonNorm() {
 //----------------------------------------------------------------Algebra Functions------
 
 template<typename OpType>
-FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2) {
-  FermiMonomial<OpType> mn0(op1);
+HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType op2) {
+  HardCoreMonomial<OpType> mn0(op1);
   mn0 *= op2;
-  FermiMonomial<OpType> mnr(op2);
+  HardCoreMonomial<OpType> mnr(op2);
   mnr *= op1;
   if (op1.getCreatorF() == op2.getCreatorF()) {
-    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
+    return ans;
+  }
+  if (op1.getIndex() != op2.getIndex()) {
+    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
     return ans;
   }
   else {
-    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
-    if (op1.getIndex() == op2.getIndex()) {
-      OpType unit(true);
-      FermiMonomial<OpType> mnu(unit);
-      ans += mnu;
-    }
+    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    OpType unit(true);
+    HardCoreMonomial<OpType> mnu(unit);
+    ans += mnu;
     return ans;
   }
 }
 
 template<typename OpType>
-FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
-                                                 FermiMonomial<OpType> mn) {
+HardCorePolynomial<HardCoreMonomial<OpType> > NormOnce(complex<double> pref,
+                                                       HardCoreMonomial<OpType> mn) {
   size_t index = mn.findWrongOrder();
   //std::cout << "index = " << index << std::endl;
-  FermiPolynomial<FermiMonomial<OpType> > mid = FermiCommute(mn[index], mn[index + 1]);
+  HardCorePolynomial<HardCoreMonomial<OpType> > mid =
+      FermiCommute(mn[index], mn[index + 1]);
   //std::cout << "mid = " << mid.toString() << std::endl;
-  FermiPolynomial<FermiMonomial<OpType> > ans;
+  HardCorePolynomial<HardCoreMonomial<OpType> > ans;
   if (index > 0) {
-    FermiMonomial<OpType> mnFront(mn.sliceExprS(index));
-    FermiPolynomial<FermiMonomial<OpType> > polyFront(complex<double>(1, 0), mnFront);
+    HardCoreMonomial<OpType> mnFront(mn.sliceExprS(index));
+    HardCorePolynomial<HardCoreMonomial<OpType> > polyFront(complex<double>(1, 0),
+                                                            mnFront);
     ans = mnFront;
     ans *= mid;
   }
@@ -174,8 +179,8 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
   }
   //std::cout << "ans = " << ans.toString() << std::endl;
   if (index < mn.getSize() - 2) {
-    FermiPolynomial<FermiMonomial<OpType> > mnRear(complex<double>(1, 0),
-                                                   mn.sliceExprE(index + 2));
+    HardCorePolynomial<HardCoreMonomial<OpType> > mnRear(complex<double>(1, 0),
+                                                         mn.sliceExprE(index + 2));
     //std::cout << "Rear = " << mnRear.toString() << std::endl;
     ans *= mnRear;
   }
@@ -185,4 +190,4 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
   return ans;
 }
 
-#endif  //ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+#endif  //ORI_SDP_GS_HARDCOREOPERATORS_TEM_CPP
