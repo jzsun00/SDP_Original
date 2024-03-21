@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Mar 19, 2024
 
   Class:
   Operator, Ladderop, SpinOp, Monomial, Polynomial.
@@ -60,26 +60,25 @@ class Operator {
 template<typename IndexType>
 class LadderOp : public Operator<IndexType> {
  protected:
+  bool isUnit;
   bool creatorF;
 
  public:
   /*Construct a ladder operator with specified index and creatorF.
     Default constructor use random value index and false.*/
-  LadderOp() : Operator<IndexType>(), creatorF(false) {}
+  LadderOp() : Operator<IndexType>(), isUnit(false), creatorF(false) {}
   LadderOp(IndexType index, bool creatorF) :
-      Operator<IndexType>(index), creatorF(creatorF) {}
-  LadderOp(LadderOp const & rhs) : Operator<IndexType>(rhs), creatorF(rhs.creatorF) {}
+      Operator<IndexType>(index), isUnit(false), creatorF(creatorF) {}
+  LadderOp(bool isUnit) : Operator<IndexType>(), isUnit(isUnit) {}
+  LadderOp(LadderOp const & rhs) :
+      Operator<IndexType>(rhs), isUnit(rhs.isUnit), creatorF(rhs.creatorF) {}
   ~LadderOp() {}
   /*Get information of the ladder operator.*/
   bool getCreatorF() const { return creatorF; }
+  bool getIsUnit() const { return isUnit; }
   virtual std::string toString() const;
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
-  LadderOp & operator=(LadderOp const & rhs);
-  bool operator==(LadderOp const & rhs) const;
-  bool operator!=(LadderOp const & rhs) const { return !(*this == rhs); }
-  virtual bool operator<(LadderOp const & rhs) const = 0;
-  bool operator>(LadderOp const & rhs) const { return !(*this < rhs || *this == rhs); }
   virtual void herm() { creatorF ^= 1; }
 };
 
@@ -124,10 +123,11 @@ class Monomial {
   vector<OpType> Expr;
 
  public:
-  /*Construct a monomial with one ladder operator or copy another,
-    default constructor use an empty vector.*/
+  /*Construct a monomial with one ladder operator or copy another.
+    Default constructor use an empty vector.*/
   Monomial() : Expr() {}
   Monomial(OpType & Op) : Expr(1, Op) {}
+  Monomial(vector<OpType> const & Expr) : Expr(Expr) {}
   Monomial(Monomial<OpType> const & rhs) { Expr = rhs.Expr; }
   ~Monomial() {}
   /*Get information of the monomial.*/
@@ -152,8 +152,8 @@ class Polynomial {
 
  public:
   typedef pair<complex<double>, MonomialType> TermType;
-  /*Construct a polynomial with one monomial or copy another,
-    default constructor use an empty vector.*/
+  /*Construct a polynomial with one monomial or copy another.
+    Default constructor use an empty vector.*/
   Polynomial() : Terms() {}
   Polynomial(MonomialType const & mn) : Terms() {
     Terms.push_back(TermType(complex<double>(1, 0), mn));
@@ -184,6 +184,7 @@ class Polynomial {
   Polynomial & operator*=(MonomialType const & rhs);
   Polynomial & operator*=(TermType const & rhs);
   Polynomial & operator*=(Polynomial const & rhs);
+  Polynomial & operator*=(complex<double> rhs);
   void herm();
   void eraseZeros();
 
@@ -191,8 +192,8 @@ class Polynomial {
   /*Find the same monomial for += operation.
     Return the corresponding iterator if same monomial is found,
     otherwise return Terms.end().*/
-  virtual typename vector<pair<complex<double>, MonomialType> >::iterator
-  findSameMonomial(MonomialType const & mn);
+  typename vector<pair<complex<double>, MonomialType> >::iterator findSameMonomial(
+      MonomialType const & mn);
 };
 
 #include "operators_Tem.cpp"

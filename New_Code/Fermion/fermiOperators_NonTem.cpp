@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Mar 19, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
@@ -14,6 +14,9 @@
 //-----------------------------------------------------------------Fermi1DLadderOp-------
 
 bool Fermi1DLadderOp::operator<(LadderOp const & rhs) const {
+  if (this->isUnit && rhs.getIsUnit()) {
+    return false;
+  }
   if (this->creatorF == rhs.getCreatorF()) {
     return this->index < rhs.getIndex();
   }
@@ -21,7 +24,7 @@ bool Fermi1DLadderOp::operator<(LadderOp const & rhs) const {
     return this->creatorF < rhs.getCreatorF();
   }
 }
-
+/*
 FermiState Fermi1DLadderOp::operator*(FermiFockState const & rhs) const {
   if (creatorF) {
     if (rhs[index] == 1) {
@@ -58,7 +61,7 @@ FermiState Fermi1DLadderOp::operator*(FermiFockState const & rhs) const {
     }
   }
 }
-
+*/
 //------------------------------------------------------------------FermiMonomial--------
 /*
 FermiState FermiMonomial::operator*(FermiFockState const & rhs) const {

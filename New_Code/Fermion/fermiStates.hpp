@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Mar 19, 2024
 
   Define Fock states, quantum states for Fermionic systems.
   Define the full basis for a Fermion lattice system.
@@ -37,7 +37,7 @@ class FermiState : public State<FermiFockState> {
   FermiState() : State() {}
   FermiState(FermiFockState const & ffs) : State(ffs) {}
   FermiState(complex<double> pref, FermiFockState const & ffs) : State(pref, ffs) {}
-  FermiState(State const & rhs) : State(rhs) {}
+  FermiState(FermiState const & rhs) : State(rhs) {}
   ~FermiState() {}
 };
 

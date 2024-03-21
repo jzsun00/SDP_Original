@@ -15,6 +15,10 @@
 
 template<typename IndexType>
 std::string LadderOp<IndexType>::toString() const {
+  if (isUnit) {
+    std::string ans = "e";
+    return ans;
+  }
   std::string ans = "a_{";
   ans += indexToString();
   ans += "}";
@@ -22,18 +26,6 @@ std::string LadderOp<IndexType>::toString() const {
     ans += "{+}";
   }
   return ans;
-}
-
-template<typename IndexType>
-LadderOp<IndexType> & LadderOp<IndexType>::operator=(LadderOp const & rhs) {
-  this->index = rhs.index;
-  this->creatorF = rhs.creatorF;
-  return *this;
-}
-
-template<typename IndexType>
-bool LadderOp<IndexType>::operator==(LadderOp const & rhs) const {
-  return (this->creatorF == rhs.creatorF) && (this->index == rhs.index);
 }
 
 //------------------------------------------------------------------SpinOp--------------
@@ -102,12 +94,18 @@ Monomial<OpType> & Monomial<OpType>::operator=(Monomial<OpType> const & rhs) {
 
 template<typename OpType>
 Monomial<OpType> & Monomial<OpType>::operator*=(Monomial<OpType> const & rhs) {
+  if (rhs.getSize() == 1 && rhs[0].getIsUnit()) {
+    return *this;
+  }
   Expr.insert(Expr.end(), rhs.Expr.begin(), rhs.Expr.end());
   return *this;
 }
 
 template<typename OpType>
 Monomial<OpType> & Monomial<OpType>::operator*=(OpType const & toAdd) {
+  if (toAdd.getIsUnit() && Expr.size() > 0) {
+    return *this;
+  }
   Expr.push_back(toAdd);
   return *this;
 }
@@ -267,6 +265,16 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
     *this += (copy *= *termIt);
   }
   *this -= current;
+  return *this;
+}
+
+template<typename MonomialType>
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(complex<double> rhs) {
+  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
+       it != Terms.end();
+       ++it) {
+    it->first *= rhs;
+  }
   return *this;
 }
 

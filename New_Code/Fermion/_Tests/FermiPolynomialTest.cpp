@@ -28,6 +28,7 @@ int main(void) {
        << "poly1cp = " << poly1.toString() << endl;
   cout << "Copy constructor: "
        << "poly2cp = " << poly2.toString() << endl;
+
   /*Overloaded operators tests*/
   cout << "\nOverloaded operators tests" << endl;
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1cp2 = poly1;
@@ -42,5 +43,26 @@ int main(void) {
        << ") = " << poly1cp2.toString() << endl;
   cout << "*= operator: (" << poly2.toString() << " *= " << op4.toString()
        << ") = " << poly2cp2.toString() << endl;
+  poly1cp2 *= poly2cp2;
+  poly1cp2.eraseZeros();
+  cout << "*= operator: (" << poly1cp2.toString() << " *= " << poly2cp2.toString()
+       << ") = " << poly1cp2.toString() << endl;
+
+  /*Normalization tests.*/
+  cout << "\nNormalization tests." << endl;
+  cout << "poly1cp2 = " << poly1cp2.toString() << endl;
+  poly1cp2.normalize();
+  poly1cp2.eraseNonNorm();
+  cout << "poly1cp2 => " << poly1cp2.toString() << endl;
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly11(mn1);
+  mn1.herm();
+  poly11 *= mn1;
+  cout << "poly11 = " << poly11.toString() << endl;
+  poly11.normalize();
+  poly11.eraseNonNorm();
+  cout << "poly11 => " << poly11.toString() << endl;
+  poly1cp2 *= poly11;
+  poly1cp2.eraseZeros();
+  cout << "poly1cp2 *= poly11 = " << poly1cp2.toString() << endl;
   return EXIT_SUCCESS;
 }

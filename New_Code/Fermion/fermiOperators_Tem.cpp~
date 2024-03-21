@@ -1,0 +1,85 @@
+/*
+  Jiazheng Sun
+  Updated: Mar 19, 2024
+
+  Implementations of methods in class:
+  Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
+ */
+
+#ifndef ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+#define ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+
+#include "fermiOperators.hpp"
+
+//------------------------------------------------------------------FermiLadderOp--------
+
+template<typename IndexType>
+FermiLadderOp<IndexType> & FermiLadderOp<IndexType>::operator=(
+    FermiLadderOp<IndexType> const & rhs) {
+  this->index = rhs.index;
+  this->isUnit = rhs.isUnit;
+  this->creatorF = rhs.creatorF;
+  return *this;
+}
+
+template<typename IndexType>
+bool FermiLadderOp<IndexType>::operator==(FermiLadderOp<IndexType> const & rhs) const {
+  if (this->isUnit) {
+    if (rhs.isUnit) {
+      return true;
+    }
+    return false;
+  }
+  if (rhs.isUnit) {
+    if (this->isUnit) {
+      return true;
+    }
+    return false;
+  }
+  return (this->index == rhs.index) && (this->creatorF == rhs.creatorF);
+}
+
+//------------------------------------------------------------------FermiMonomial--------
+
+template<typename OpType>
+int FermiMonomial<OpType>::FindWrongOrder() const {
+  for (size_t i = 0; i < this->Expr.size() - 1; i++) {
+    if (this->Expr[i] > this->Expr[i + 1]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+template<typename OpType>
+bool FermiMonomial<OpType>::isNorm() const {
+  if (FindWrongOrder() < 0) {
+    return true;
+  }
+  return false;
+}
+
+//----------------------------------------------------------------Algebra Functions------
+
+template<typename OpType>
+FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2) {
+  FermiMonomial<OpType> mn0(op1);
+  mn0 *= op2;
+  FermiMonomial<OpType> mnr(op2);
+  mnr *= op1;
+  if (op1.getCreatorF() == op2.getCreatorF()) {
+    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    return ans;
+  }
+  else {
+    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    if (op1.getIndex() == op2.getIndex()) {
+      OpType unit(true);
+      FermiMonomial<OpType> mnu(unit);
+      ans += mnu;
+    }
+    return ans;
+  }
+}
+
+#endif  //ORI_SDP_GS_FERMIOPERATORS_TEM_CPP

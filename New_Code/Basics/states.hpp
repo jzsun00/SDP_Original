@@ -51,6 +51,7 @@ class FockState {
   /*Overload operators.*/
   FockState & operator=(FockState const & rhs);
   bool operator==(FockState const & rhs) const { return Nums == rhs.Nums; }
+  bool operator!=(FockState const & rhs) const { return !(*this == rhs); }
   bool operator[](size_t n) const { return Nums[n]; }
 };
 

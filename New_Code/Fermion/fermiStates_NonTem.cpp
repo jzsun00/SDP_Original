@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Mar 19, 2024
 
   Implementations of methods in class:
   FermiFockstate, FermiState, FermiBasis.
@@ -9,7 +9,7 @@
 #ifndef ORI_SDP_GS_FERMISTATES_NONTEM_CPP
 #define ORI_SDP_GS_FERMISTATES_NONTEM_CPP
 
-#include "fermiStates.hpp";
+#include "./fermiStates.hpp"
 
 //-------------------------------------------------------------FermiBasis----------------
 
@@ -27,7 +27,7 @@ void Fermi1DBasis::init() {
 }
 
 std::string Fermi1DBasis::toString() {
-  std::string ans = "Sites = ";
+  std::string ans = "1D Fermi System Basis\nSites = ";
   ans += std::to_string(Sites);
   ans += "\nFull Basis:\n";
   for (vector<FermiFockState>::const_iterator it = States.begin(); it != States.end();
