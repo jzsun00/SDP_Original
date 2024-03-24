@@ -1,23 +1,24 @@
-#include "../fermiOperators.hpp"
+#include "../hardCoreOperators.hpp"
 
 using std::cout;
 using std::endl;
 
 int main(void) {
-  Fermi1DLadderOp op1(1, true);
-  Fermi1DLadderOp op2(2, false);
-  Fermi1DLadderOp op3(3, false);
-  Fermi1DLadderOp op4(4, true);
-  Fermi1DLadderOp op5(5, true);
-  FermiMonomial<Fermi1DLadderOp> mn1(op1);
-  FermiMonomial<Fermi1DLadderOp> mn2(op2);
+  HardCore1DLadderOp op1(1, true);
+  HardCore1DLadderOp op2(2, false);
+  HardCore1DLadderOp op3(3, false);
+  HardCore1DLadderOp op4(4, true);
+  HardCore1DLadderOp op5(5, true);
+  HardCoreMonomial<HardCore1DLadderOp> mn1(op1);
+  HardCoreMonomial<HardCore1DLadderOp> mn2(op2);
   /*Constructors tests*/
   cout << "Constructors tests" << endl;
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly0;
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1(mn1);
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly2(complex<double>(-1, 0), mn2);
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1cp(poly1);
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly2cp(poly2);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly0;
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1(mn1);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly2(complex<double>(-1, 0),
+                                                                  mn2);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1cp(poly1);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly2cp(poly2);
   cout << "Default constructor: "
        << "poly0 = " << poly0.toString() << endl;
   cout << "Explicit constructor: "
@@ -31,8 +32,8 @@ int main(void) {
 
   /*Overloaded operators tests*/
   cout << "\nOverloaded operators tests" << endl;
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1cp2 = poly1;
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly2cp2 = poly2;
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1cp2 = poly1;
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly2cp2 = poly2;
   cout << "Copy operator: "
        << "poly1cp2 = " << poly1.toString() << endl;
   cout << "Copy operator: "
@@ -54,7 +55,7 @@ int main(void) {
   poly1cp2.normalize();
   poly1cp2.eraseNonNorm();
   cout << "poly1cp2 => " << poly1cp2.toString() << endl;
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly11(mn1);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly11(mn1);
   mn1.herm();
   poly11 *= mn1;
   cout << "poly11 = " << poly11.toString() << endl;

@@ -11,7 +11,7 @@
 
 #include "hardCoreOperators.hpp"
 
-//------------------------------------------------------------------FermiLadderOp--------
+//---------------------------------------------------------------HardCoreLadderOp--------
 
 template<typename IndexType>
 HardCoreLadderOp<IndexType> & HardCoreLadderOp<IndexType>::operator=(
@@ -40,7 +40,7 @@ bool HardCoreLadderOp<IndexType>::operator==(
   return (this->index == rhs.index) && (this->creatorF == rhs.creatorF);
 }
 
-//------------------------------------------------------------------FermiMonomial--------
+//---------------------------------------------------------------HardCoreMonomial--------
 
 template<typename OpType>
 int HardCoreMonomial<OpType>::findWrongOrder() const {
@@ -75,7 +75,7 @@ HardCoreMonomial<OpType> HardCoreMonomial<OpType>::sliceExprE(size_t index) {
       vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
 }
 
-//-----------------------------------------------------------------FermiPolynomial-------
+//--------------------------------------------------------------HardCorePolynomial-------
 
 template<typename MonomialType>
 HardCorePolynomial<MonomialType> & HardCorePolynomial<MonomialType>::operator=(
@@ -83,40 +83,44 @@ HardCorePolynomial<MonomialType> & HardCorePolynomial<MonomialType>::operator=(
   this->Terms = rhs.Terms;
   return *this;
 }
-/*
+
 template<typename MonomialType>
-void FermiPolynomial<MonomialType>::normalize() {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it =
-           this->Terms.begin();
-       it != this->Terms.end();
-       ++it) {
-    std::cout << "Length = " << this->Terms.size() << std::endl;
-    std::cout << "it->second = " << it->second.toString() << std::endl;
-    if (it->second.isNorm()) {
-      continue;
+bool HardCorePolynomial<MonomialType>::isNorm() const {
+  for (size_t i = 0; i < this->Terms.size(); i++) {
+    if (!(this->Terms[i].second.isNorm())) {
+      return false;
     }
-    std::cout << "NormOnce(it->first, it->second) = "
-              << NormOnce(it->first, it->second).toString() << std::endl;
-    (*this) += NormOnce(it->first, it->second);
-    this->eraseZeros();
-    std::cout << "(*this) = " << this->toString() << std::endl;
   }
-  //this->eraseZeros();
+  return true;
 }
-*/
+
+template<typename MonomialType>
+int HardCorePolynomial<MonomialType>::findNonNorm() const {
+  for (size_t i = 0; i < this->Terms.size(); i++) {
+    if (!(this->Terms[i].second.isNorm())) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+template<typename MonomialType>
+void HardCorePolynomial<MonomialType>::normOneTerm(int index) {
+  //std::cout << "\nCurrent term: "
+  //          << "index = " << index << ": " << this->Terms[index].second.toString()
+  //          << std::endl;
+  complex<double> pref = this->Terms[index].first;
+  MonomialType mn(this->Terms[index].second);
+  this->Terms.erase(this->Terms.begin() + index);
+  (*this) += HardCoreNormOnce(pref, mn);
+  //std::cout << "\n(*this) = " << this->toString() << std::endl;
+}
+
 template<typename MonomialType>
 void HardCorePolynomial<MonomialType>::normalize() {
-  for (size_t i = 0; i < this->Terms.size(); i++) {
-    //std::cout << "Length = " << this->Terms.size() << std::endl;
-    if (this->Terms[i].second.isNorm()) {
-      continue;
-    }
-    //std::cout << "NormOnce(it->first, it->second) = "
-    //<< NormOnce(this->Terms[i].first, this->Terms[i].second).toString()
-    //          << std::endl;
-    (*this) += NormOnce(this->Terms[i].first, this->Terms[i].second);
-    this->eraseZeros();
-    //std::cout << "(*this) = " << this->toString() << std::endl;
+  int index = -1;
+  while ((index = findNonNorm()) >= 0) {
+    normOneTerm(index);
   }
   this->eraseZeros();
 }
@@ -159,12 +163,13 @@ HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType
 }
 
 template<typename OpType>
-HardCorePolynomial<HardCoreMonomial<OpType> > NormOnce(complex<double> pref,
-                                                       HardCoreMonomial<OpType> mn) {
+HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreNormOnce(
+    complex<double> pref,
+    HardCoreMonomial<OpType> mn) {
   size_t index = mn.findWrongOrder();
   //std::cout << "index = " << index << std::endl;
   HardCorePolynomial<HardCoreMonomial<OpType> > mid =
-      FermiCommute(mn[index], mn[index + 1]);
+      HardCoreCommute(mn[index], mn[index + 1]);
   //std::cout << "mid = " << mid.toString() << std::endl;
   HardCorePolynomial<HardCoreMonomial<OpType> > ans;
   if (index > 0) {

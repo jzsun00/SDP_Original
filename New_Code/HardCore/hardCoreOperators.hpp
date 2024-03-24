@@ -1,11 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Mar 21, 2024
 
   Class:
-  Fermi1DLadderOp, FermiMonomial, FermiPolynomial
+  HardCoreLadderOp, HardCore1DLadderOp, HardCoreMonomial, HardCorePolynomial.
 
-  Define ladder operators, monomials and polynomials for Fermi systems.
+  Define ladder operators, monomials and polynomials for hard core Boson systems.
 */
 
 #ifndef ORI_SDP_GS_HARDCOREOPERATORS_HPP
@@ -13,7 +13,7 @@
 
 #include "../Basics/operators.hpp"
 
-//------------------------------------------------------------------FermiLadderOp--------
+//---------------------------------------------------------------HardCoreLadderOp--------
 
 template<typename IndexType>
 class HardCoreLadderOp : public LadderOp<IndexType> {
@@ -25,7 +25,7 @@ class HardCoreLadderOp : public LadderOp<IndexType> {
   HardCoreLadderOp(bool isUnit) : LadderOp<IndexType>(isUnit) {}
   HardCoreLadderOp(HardCoreLadderOp const & rhs) : LadderOp<IndexType>(rhs) {}
   ~HardCoreLadderOp() {}
-  /*Get information of the Fermi ladder operator.*/
+  /*Get information of the hard core Boson ladder operator.*/
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
   HardCoreLadderOp & operator=(HardCoreLadderOp const & rhs);
@@ -37,17 +37,17 @@ class HardCoreLadderOp : public LadderOp<IndexType> {
   }
 };
 
-//-----------------------------------------------------------------Fermi1DLadderOp-------
+//-------------------------------------------------------------HardCore1DLadderOp--------
 
 class HardCore1DLadderOp : public HardCoreLadderOp<int> {
  public:
-  /*The constructors are identical to FermiLadderOp.*/
+  /*The constructors are identical to HardCoreLadderOp.*/
   HardCore1DLadderOp() : HardCoreLadderOp<int>() {}
   HardCore1DLadderOp(int index, bool creatorF) : HardCoreLadderOp<int>(index, creatorF) {}
   HardCore1DLadderOp(bool isUnit) : HardCoreLadderOp<int>(isUnit) {}
   HardCore1DLadderOp(HardCore1DLadderOp const & rhs) : HardCoreLadderOp<int>(rhs) {}
   ~HardCore1DLadderOp() {}
-  /*Get information of the 1-D Fermi ladder operator.*/
+  /*Get information of the 1-D hard core Boson ladder operator.*/
   virtual std::string indexToString() const { return std::to_string(this->index); }
   /*Overload operators.*/
   // If same type, compare index; if not same type, creator is always larger.
@@ -57,7 +57,7 @@ class HardCore1DLadderOp : public HardCoreLadderOp<int> {
   //FermiState operator*(FermiState const & rhs) const;
 };
 
-//------------------------------------------------------------------FermiMonomial--------
+//---------------------------------------------------------------HardCoreMonomial--------
 
 template<typename OpType>
 class HardCoreMonomial : public Monomial<OpType> {
@@ -71,13 +71,14 @@ class HardCoreMonomial : public Monomial<OpType> {
   /*Define operators at Fock states.*/
   //FermiState operator*(FermiFockState const & rhs) const;
   //FermiState operator*(FermiState const & rhs) const;
+  /*Tools for normalization.*/
   int findWrongOrder() const;
   bool isNorm() const;
   HardCoreMonomial<OpType> sliceExprS(size_t index);
   HardCoreMonomial<OpType> sliceExprE(size_t index);
 };
 
-//-----------------------------------------------------------------FermiPolynomial-------
+//--------------------------------------------------------------HardCorePolynomial-------
 
 template<typename MonomialType>
 class HardCorePolynomial : public Polynomial<MonomialType> {
@@ -93,6 +94,10 @@ class HardCorePolynomial : public Polynomial<MonomialType> {
   /*Define operators at Fock states.*/
   //FermiState operator*(FermiFockState const & rhs) const;
   //FermiState operator*(FermiState const & rhs) const;
+  /*Tools for normalization.*/
+  bool isNorm() const;
+  int findNonNorm() const;
+  void normOneTerm(int index);
   void normalize();
   void eraseNonNorm();
 };
@@ -103,8 +108,9 @@ template<typename OpType>
 HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType op2);
 
 template<typename OpType>
-HardCorePolynomial<HardCoreMonomial<OpType> > NormOnce(complex<double> pref,
-                                                       HardCoreMonomial<OpType> mn);
+HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreNormOnce(
+    complex<double> pref,
+    HardCoreMonomial<OpType> mn);
 
 #include "./hardCoreOperators_Tem.cpp"
 

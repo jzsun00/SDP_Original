@@ -1,0 +1,28 @@
+/*
+  Jiazheng Sun
+  Updated: Mar 21, 2024
+
+  Implementations of methods in class:
+  Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
+ */
+
+#ifndef ORI_SDP_GS_HARDCOREOPERATORS_NONTEM_CPP
+#define ORI_SDP_GS_HARDCOREOPERATORS_NONTEM_CPP
+
+#include "./hardCoreOperators.hpp"
+
+//---------------------------------------------------------------HardCore1DLadderOp------
+
+bool HardCore1DLadderOp::operator<(LadderOp const & rhs) const {
+  if (this->isUnit && rhs.getIsUnit()) {
+    return false;
+  }
+  if (this->creatorF == rhs.getCreatorF()) {
+    return this->index < rhs.getIndex();
+  }
+  else {
+    return this->creatorF < rhs.getCreatorF();
+  }
+}
+
+#endif  //ORI_SDP_GS_HARDCOREOPERATORS_NONTEM_CPP

@@ -103,10 +103,23 @@ void FermiPolynomial<MonomialType>::normalize() {
   //this->eraseZeros();
 }
 */
+
+template<typename MonomialType>
+bool FermiPolynomial<MonomialType>::isNorm() const {
+  for (size_t i = 0; i < this->Terms.size(); i++) {
+    if (!(this->Terms[i].second.isNorm())) {
+      return false;
+    }
+  }
+  return true;
+}
+/*
 template<typename MonomialType>
 void FermiPolynomial<MonomialType>::normalize() {
   for (size_t i = 0; i < this->Terms.size(); i++) {
     //std::cout << "Length = " << this->Terms.size() << std::endl;
+    //std::cout << "\nCurrent term: "
+    //          << "i = " << i << ": " << this->Terms[i].second.toString() << std::endl;
     if (this->Terms[i].second.isNorm()) {
       continue;
     }
@@ -115,7 +128,39 @@ void FermiPolynomial<MonomialType>::normalize() {
     //          << std::endl;
     (*this) += NormOnce(this->Terms[i].first, this->Terms[i].second);
     this->eraseZeros();
-    //std::cout << "(*this) = " << this->toString() << std::endl;
+    std::cout << "\n(*this) = " << this->toString() << std::endl;
+  }
+  this->eraseZeros();
+}
+*/
+
+template<typename MonomialType>
+int FermiPolynomial<MonomialType>::findNonNorm() const {
+  for (size_t i = 0; i < this->Terms.size(); i++) {
+    if (!(this->Terms[i].second.isNorm())) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+template<typename MonomialType>
+void FermiPolynomial<MonomialType>::normOneTerm(int index) {
+  //std::cout << "\nCurrent term: "
+  //          << "index = " << index << ": " << this->Terms[index].second.toString()
+  //          << std::endl;
+  complex<double> pref = this->Terms[index].first;
+  MonomialType mn(this->Terms[index].second);
+  this->Terms.erase(this->Terms.begin() + index);
+  (*this) += NormOnce(pref, mn);
+  //std::cout << "\n(*this) = " << this->toString() << std::endl;
+}
+
+template<typename MonomialType>
+void FermiPolynomial<MonomialType>::normalize() {
+  int index = -1;
+  while ((index = findNonNorm()) >= 0) {
+    normOneTerm(index);
   }
   this->eraseZeros();
 }

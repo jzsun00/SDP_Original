@@ -1,9 +1,9 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Mar 21, 2024
 
   Class:
-  Fermi1DLadderOp, FermiMonomial, FermiPolynomial
+  FermiLadderOp, Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
 
   Define ladder operators, monomials and polynomials for Fermi systems.
 */
@@ -71,6 +71,7 @@ class FermiMonomial : public Monomial<OpType> {
   /*Define operators at Fock states.*/
   //FermiState operator*(FermiFockState const & rhs) const;
   //FermiState operator*(FermiState const & rhs) const;
+  /*Tools for normalization.*/
   int findWrongOrder() const;
   bool isNorm() const;
   FermiMonomial<OpType> sliceExprS(size_t index);
@@ -93,6 +94,10 @@ class FermiPolynomial : public Polynomial<MonomialType> {
   /*Define operators at Fock states.*/
   //FermiState operator*(FermiFockState const & rhs) const;
   //FermiState operator*(FermiState const & rhs) const;
+  /*Tools for normalization.*/
+  bool isNorm() const;
+  int findNonNorm() const;
+  void normOneTerm(int index);
   void normalize();
   void eraseNonNorm();
 };
