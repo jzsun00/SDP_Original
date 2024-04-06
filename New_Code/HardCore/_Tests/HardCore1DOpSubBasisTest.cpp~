@@ -1,0 +1,12 @@
+#include "../hardCoreSubspaces.hpp"
+
+using std::cout;
+using std::endl;
+
+int main(void) {
+  HardCore1DOpSubBasis basis1(0, 2, 4);
+  basis1.init();
+  cout << basis1.toString() << endl;
+  cout << "Tests pass!" << endl;
+  return EXIT_SUCCESS;
+}

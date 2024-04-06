@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Apr 6, 2024
 */
 
 #ifndef ORI_SDP_GS_SUBSPACES_HPP
@@ -8,17 +8,37 @@
 
 #include "./operators.hpp"
 
-template<typename MonomialType>
-class OpBasis {
+//---------------------------------------------------------------OpSubBasis--------------
+
+template<typename MonomialType, typename IndexType>
+class OpSubBasis {
  protected:
+  IndexType start;
+  IndexType end;
+  size_t order;
   vector<MonomialType> Basis;
 
  public:
-  OpBasis() : Basis() {}
-  OpBasis(OpBasis const & rhs) : Basis(rhs.Basis) {}
-  ~OpBasis() {}
-  size_t getSize() const { return Basis.size(); }
+  /*Construct a basis with MonomialType.
+    Default constructor use random size and empty vector.*/
+  OpSubBasis() : order(0), Basis() {}
+  OpSubBasis(IndexType start, IndexType end, size_t order) :
+      start(start), end(end), order(order), Basis() {}
+  OpSubBasis(OpSubBasis const & rhs) : Basis(rhs.Basis) {}
+  virtual void init() = 0;
+  ~OpSubBasis() {}
+  /*Get information of the operator basis.*/
+  size_t getLength() const { return Basis.size(); }
+  IndexType getStart() const { return start; }
+  IndexType getEnd() const { return end; }
+  size_t getOrder() const { return order; }
   MonomialType operator[](size_t n) const { return Basis[n]; }
+  virtual std::string toString() = 0;
+
+  /*Projection tools.*/
+  vector<complex<double> > projPoly(Polynomial<MonomialType> poly);
 };
+
+#include "./subspaces_Tem.hpp"
 
 #endif  //ORI_SDP_GS_SUBSPACES_HPP

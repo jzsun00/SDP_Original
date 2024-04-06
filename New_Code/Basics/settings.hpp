@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Apr 6, 2024
 
   Class:
   
@@ -16,6 +16,7 @@
 #include <complex>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #define ERROR std::pow(10, -12)
 #define PRECISION 2
@@ -23,5 +24,7 @@
 //-------------------------------------------------------------complex_toString()-------
 
 std::string complex_toString(std::complex<double> num);
+
+std::string complexVector_toString(std::vector<std::complex<double> > vec);
 
 #endif  //ORI_SDP_GS_SETTINGS_HPP

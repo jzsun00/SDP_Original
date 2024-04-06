@@ -4,6 +4,7 @@ using std::cout;
 using std::endl;
 
 int main(void) {
+  /*First construct Ladder Operators and Monomials.*/
   HardCore1DLadderOp op1(1, true);
   HardCore1DLadderOp op2(2, false);
   HardCore1DLadderOp op3(3, false);
@@ -11,7 +12,8 @@ int main(void) {
   HardCore1DLadderOp op5(5, true);
   HardCoreMonomial<HardCore1DLadderOp> mn1(op1);
   HardCoreMonomial<HardCore1DLadderOp> mn2(op2);
-  /*Constructors tests*/
+
+  /*Constructors tests.*/
   cout << "Constructors tests" << endl;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1(mn1);
@@ -30,7 +32,7 @@ int main(void) {
   cout << "Copy constructor: "
        << "poly2cp = " << poly2.toString() << endl;
 
-  /*Overloaded operators tests*/
+  /*Overloaded operators tests.*/
   cout << "\nOverloaded operators tests" << endl;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1cp2 = poly1;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly2cp2 = poly2;
@@ -68,5 +70,6 @@ int main(void) {
   poly1cp2.normalize();
   //poly1cp2.eraseNonNorm();
   cout << "poly1cp2 => " << poly1cp2.toString() << endl;
+  cout << "Tests pass!" << endl;
   return EXIT_SUCCESS;
 }

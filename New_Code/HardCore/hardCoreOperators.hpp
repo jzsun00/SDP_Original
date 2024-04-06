@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 21, 2024
+  Updated: Apr 6, 2024
 
   Class:
   HardCoreLadderOp, HardCore1DLadderOp, HardCoreMonomial, HardCorePolynomial.
@@ -52,9 +52,6 @@ class HardCore1DLadderOp : public HardCoreLadderOp<int> {
   /*Overload operators.*/
   // If same type, compare index; if not same type, creator is always larger.
   virtual bool operator<(LadderOp<int> const & rhs) const;
-  /*Define operators at Fock states.*/
-  //FermiState operator*(FermiFockState const & rhs) const;
-  //FermiState operator*(FermiState const & rhs) const;
 };
 
 //---------------------------------------------------------------HardCoreMonomial--------
@@ -68,9 +65,6 @@ class HardCoreMonomial : public Monomial<OpType> {
   HardCoreMonomial(vector<OpType> & Expr) : Monomial<OpType>(Expr) {}
   HardCoreMonomial(Monomial<OpType> const & rhs) : Monomial<OpType>(rhs) {}
   ~HardCoreMonomial() {}
-  /*Define operators at Fock states.*/
-  //FermiState operator*(FermiFockState const & rhs) const;
-  //FermiState operator*(FermiState const & rhs) const;
   /*Tools for normalization.*/
   int findWrongOrder() const;
   bool isNorm() const;
@@ -91,9 +85,6 @@ class HardCorePolynomial : public Polynomial<MonomialType> {
   HardCorePolynomial(HardCorePolynomial const & rhs) : Polynomial<MonomialType>(rhs) {}
   ~HardCorePolynomial() {}
   HardCorePolynomial & operator=(HardCorePolynomial<MonomialType> const & rhs);
-  /*Define operators at Fock states.*/
-  //FermiState operator*(FermiFockState const & rhs) const;
-  //FermiState operator*(FermiState const & rhs) const;
   /*Tools for normalization.*/
   bool isNorm() const;
   int findNonNorm() const;
