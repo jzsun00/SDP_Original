@@ -1,0 +1,17 @@
+#include "../hamiltonians_XXZ.hpp"
+
+using std::cout;
+using std::endl;
+
+int main(void) {
+  size_t sites = 4;
+  double Jz = 0.2;
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
+  cout << "sites = " << sites << "\nJz = " << Jz << endl;
+  cout << "poly1 = " << poly1.toString() << endl;
+  poly1.normalize();
+  cout << "After normalization\n"
+       << "poly1 = " << poly1.toString() << endl;
+  cout << "Tests pass!" << endl;
+  return EXIT_SUCCESS;
+}
