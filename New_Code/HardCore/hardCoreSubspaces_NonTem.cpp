@@ -11,7 +11,7 @@
 
 #include "./hardCoreSubspaces.hpp"
 
-//---------------------------------------------------------------HardCore1DOpSubBasis----
+//-------------------------------------------------------------HardCore1DOpSubBasis------
 
 void MonomialsGenerator(vector<int> & current,
                         int start,
@@ -94,6 +94,31 @@ std::string HardCore1DOpSubBasis::toString() {
     count++;
   }
   return ans;
+}
+
+//---------------------------------------------------------------HardCore1DOpBasis-------
+
+std::string HardCore1DOpBasis::toString() {
+  std::string ans;
+  ans += "Number of basis operators = ";
+  ans += std::to_string(Basis.size());
+  ans += "\nFull Basis:\n";
+  size_t count = 1;
+  for (vector<HardCoreMonomial<HardCore1DLadderOp> >::const_iterator it = Basis.begin();
+       it != Basis.end();
+       ++it) {
+    ans += (std::to_string(count) + "    ");
+    ans += it->toString();
+    ans += "\n";
+    count++;
+  }
+  return ans;
+}
+
+void HardCore1DOpBasis::addSubspace(
+    OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
+  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBasis();
+  Basis.insert(Basis.end(), sub.begin(), sub.end());
 }
 
 #endif  //ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP

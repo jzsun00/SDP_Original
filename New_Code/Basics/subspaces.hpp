@@ -32,7 +32,7 @@ class OpSubBasis {
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
-  size_t getBasis() const { return Basis; }
+  vector<MonomialType> getBasis() const { return Basis; }
   MonomialType operator[](size_t n) const { return Basis[n]; }
   virtual std::string toString() = 0;
 
@@ -52,9 +52,10 @@ class OpBasis {
   ~OpBasis() {}
   size_t getLength() const { return Basis.size(); }
   virtual std::string toString() = 0;
-  void addSubspace(OpSubBasis<MonomialType, IndexType> & rhs) {
-    std::copy(rhs.getBasis().begin(), rhs.getBasis().end(), std::back_inserter(Basis));
-  }
+  virtual void addSubspace(OpSubBasis<MonomialType, IndexType> & rhs) = 0;
+
+  /*Projection tools.*/
+  vector<complex<double> > projPoly(Polynomial<MonomialType> poly);
 };
 
 #include "./subspaces_Tem.hpp"

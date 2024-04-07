@@ -9,6 +9,8 @@
 #include "../Basics/subspaces.hpp"
 #include "./hardCoreOperators.hpp"
 
+//-------------------------------------------------------------HardCore1DOpSubBasis------
+
 class HardCore1DOpSubBasis
     : public OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> {
  public:
@@ -20,6 +22,16 @@ class HardCore1DOpSubBasis
   virtual void init();
   ~HardCore1DOpSubBasis() {}
   virtual std::string toString();
+};
+
+//---------------------------------------------------------------HardCore1DOpBasis-------
+
+class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int> {
+ public:
+  HardCore1DOpBasis() : OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {}
+  ~HardCore1DOpBasis() {}
+  virtual std::string toString();
+  virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
 };
 
 #endif
