@@ -1,0 +1,51 @@
+/*
+  Jiazheng Sun
+  Updated: Apr 15, 2024
+*/
+
+#ifndef ORI_SDP_GS_CONSTRAINS_HPP
+#define ORI_SDP_GS_CONSTRAINS_HPP
+
+#include "./operators.hpp"
+#include "./subspaces.hpp"
+
+//---------------------------------------------------------------ConsBaseSet-------------
+
+template<typename MonomialType, typename IndexType>
+class ConsBaseSet {
+ protected:
+  IndexType start;
+  IndexType end;
+  size_t order;
+  vector<MonomialType> BaseOpSet;
+
+ public:
+  ConsBaseSet() : order(0), BaseOpSet() {}
+  virtual void init() = 0;
+  ~ConsBaseSet() {}
+};
+
+//-----------------------------------------------------------------ConsSet---------------
+
+template<typename MonomialType, typename IndexType>
+class ConsSet {
+ protected:
+  vector<MonomialType> OpSet;
+
+ public:
+  ConsSet() : OpSet() {}
+  ~ConsSet() {}
+  size_t getLength() const { return OpSet.size(); }
+  virtual void addBaseSet(ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
+  Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
+};
+
+//-------------------------------------------------------------Other Functions-----------
+
+template<typename MonomialType, typename IndexType>
+void printMatrix(ConsSet<MonomialType, IndexType> & constrains,
+                 OpBasis<MonomialType, IndexType> & basis);
+
+#include "./constrains_Tem.cpp"
+
+#endif  //ORI_SDP_GS_CONSTRAINS_HPP

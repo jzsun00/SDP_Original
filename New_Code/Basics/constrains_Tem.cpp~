@@ -1,0 +1,36 @@
+/*
+  Jiazheng Sun
+  Updated: Apr 16, 2024
+
+  Implementations of methods in class:
+  OpBasis.
+ */
+
+#ifndef ORI_SDP_GS_CONSTRAINS_TEM_CPP
+#define ORI_SDP_GS_CONSTRAINS_TEM_CPP
+
+#include "./constrains.hpp"
+
+//-------------------------------------------------------------Other Functions-----------
+
+template<typename MonomialType, typename IndexType>
+void printMatrix(ConsSet<MonomialType, IndexType> & constrains,
+                 OpBasis<MonomialType, IndexType> & basis) {
+  size_t matrixNum = basis.getLength();
+  size_t matrixSize = constrains.getLength();
+  vector<vector<vector<complex<double> > > > matrices(
+      matrixNum,
+      vector<vector<complex<double> > >(matrixSize,
+                                        vector<complex<double> >(matrixSize)));
+  for (size_t i = 0; i < matrixSize; i++) {
+    for (size_t j = 0; j < matrixSize; j++) {
+      Polynomial<MonomialType> polyIJ = constrains.getIJPoly(i, j);
+      vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
+      for (size_t k = 0; k < matrixNum; k++) {
+        matrices[k][i][j] = entryIJ[k];
+      }
+    }
+  }
+}
+
+#endif  //ORI_SDP_GS_CONSTRAINS_TEM_CPP

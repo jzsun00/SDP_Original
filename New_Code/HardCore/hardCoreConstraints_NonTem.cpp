@@ -1,17 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: Apr 16, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
  */
 
-#ifndef ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP
-#define ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP
+#ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
+#define ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
 
-#include "./hardCoreSubspaces.hpp"
+#include "./hardCoreConstraints.hpp"
 
-//---------------------------------------------------------------HardCore1DOpSubBasis----
+//-------------------------------------------------------------HardCore1DOpSubBasis------
 
 void MonomialsGenerator(vector<int> & current,
                         int start,
@@ -52,17 +52,17 @@ vector<HardCoreMonomial<HardCore1DLadderOp> > listMonomials(size_t length,
   return ans;
 }
 
-void HardCore1DOpSubBasis::init() {
+void HardCore1DConsBaseSet::init() {
   for (size_t m = 0; m <= order; ++m) {
     if (m == 0) {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
           listMonomials(order, start, end, true);
-      Basis.insert(Basis.end(), creation.begin(), creation.end());
+      BaseOpSet.insert(BaseOpSet.end(), creation.begin(), creation.end());
     }
     else if (m == order) {
       vector<HardCoreMonomial<HardCore1DLadderOp> > annihilation =
           listMonomials(order, start, end, false);
-      Basis.insert(Basis.end(), annihilation.begin(), annihilation.end());
+      BaseOpSet.insert(BaseOpSet.end(), annihilation.begin(), annihilation.end());
     }
     else {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
@@ -72,25 +72,54 @@ void HardCore1DOpSubBasis::init() {
       for (size_t i = 0; i < annihilation.size(); ++i) {
         for (size_t j = 0; j < creation.size(); ++j) {
           HardCoreMonomial<HardCore1DLadderOp> copy(annihilation[i]);
-          Basis.push_back(copy *= creation[j]);
+          BaseOpSet.push_back(copy *= creation[j]);
         }
       }
     }
   }
 }
 
-std::string HardCore1DOpSubBasis::toString() {
+std::string HardCore1DConsBaseSet::toString() {
   std::string ans;
   ans += "Number of basis operators = ";
-  ans += std::to_string(Basis.size());
+  ans += std::to_string(BaseOpSet.size());
   ans += "\nFull Basis:\n";
-  for (vector<HardCoreMonomial<HardCore1DLadderOp> >::const_iterator it = Basis.begin();
-       it != Basis.end();
+  size_t count = 1;
+  for (vector<HardCoreMonomial<HardCore1DLadderOp> >::const_iterator it =
+           BaseOpSet.begin();
+       it != BaseOpSet.end();
        ++it) {
+    ans += (std::to_string(count) + "    ");
     ans += it->toString();
     ans += "\n";
+    count++;
   }
   return ans;
 }
 
-#endif  //ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP
+//------------------------------------------------------------HardCore1DConsSet----------
+
+std::string HardCore1DConsSet::toString() {
+  std::string ans;
+  ans += "Number of basis operators = ";
+  ans += std::to_string(OpSet.size());
+  ans += "\nFull Basis:\n";
+  size_t count = 1;
+  for (vector<HardCoreMonomial<HardCore1DLadderOp> >::const_iterator it = OpSet.begin();
+       it != OpSet.end();
+       ++it) {
+    ans += (std::to_string(count) + "    ");
+    ans += it->toString();
+    ans += "\n";
+    count++;
+  }
+  return ans;
+}
+
+void HardCore1DConsSet::addBaseSet(
+    ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
+  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBaseOpSet();
+  OpSet.insert(OpSet.end(), sub.begin(), sub.end());
+}
+
+#endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
