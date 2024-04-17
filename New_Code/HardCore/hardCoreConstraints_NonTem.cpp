@@ -9,6 +9,8 @@
 #ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
 #define ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
 
+#include <fstream>
+
 #include "./hardCoreConstraints.hpp"
 
 //-------------------------------------------------------------HardCore1DOpSubBasis------
@@ -54,6 +56,9 @@ vector<HardCoreMonomial<HardCore1DLadderOp> > ConslistMonomials(size_t length,
 
 void HardCore1DConsBaseSet::init() {
   for (size_t m = 0; m <= order; ++m) {
+    if (m == 0) {
+      continue;
+    }
     if (m == 0) {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
           ConslistMonomials(order, start, end, true);
@@ -136,7 +141,7 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > HardCore1DConsSet::get
 
 //-------------------------------------------------------------Other Functions-----------
 
-void printMatrixHardCore1D(HardCore1DConsSet & constraints, HardCore1DOpBasis & basis) {
+void printMatrixHardCore1D(HardCore1DConsSet & constraints, HardCore1DOpBasis & basis, std::string fileName, vector<complex<double> > ham) {
   size_t matrixNum = basis.getLength();
   size_t matrixSize = constraints.getLength();
   vector<vector<vector<complex<double> > > > matrices(
@@ -148,19 +153,56 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints, HardCore1DOpBasis & 
       HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > polyIJ =
           constraints.getIJPoly(i, j);
       vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
-      std::cout << "i = " << i << ",  j = " << j << std::endl;
-      std::cout << "polyIJ = " << polyIJ.toString() << std::endl;
-      std::cout << "entryIJ = " << complexVector_toString(entryIJ) << std::endl;
+      //std::cout << "i = " << i << ",  j = " << j << std::endl;
+      //std::cout << "polyIJ = " << polyIJ.toString() << std::endl;
+      //std::cout << "entryIJ = " << complexVector_toString(entryIJ) << std::endl;
       for (size_t k = 0; k < matrixNum; k++) {
         matrices[k][i][j] = entryIJ[k];
       }
     }
   }
   for (size_t num = 0; num < matrixNum; num++) {
-    std::cout << "num = " << num << std::endl;
-    std::cout << basis[num].toString() << std::endl;
-    std::cout << complexMatrix_toString(matrices[num]) << std::endl;
+    //std::cout << "num = " << num << std::endl;
+    //std::cout << basis[num].toString() << std::endl;
+    //std::cout << complexMatrix_toString(matrices[num]) << std::endl;
   }
+  std::ofstream inputFile(fileName);
+  if (!inputFile.is_open()) {
+    std::cerr << "Failed to open file for writing." << std::endl;
+  }
+  inputFile << "\"XXZ Test 1: mDim = 16, nBLOCK = 1, {6}\"" << std::endl;
+  inputFile << matrixNum - 1 <<"  =  mDIM" << std::endl;
+  inputFile << "1  =  nBLOCK" << std::endl;
+  inputFile << matrixSize - 1 << "  = bLOCKsTRUCT" << std::endl;
+  inputFile << "{";
+  for (size_t i = 1; i < ham.size(); i++) {
+    inputFile << ham[i].real();
+    if (i < ham.size() - 1) {
+      inputFile << ", ";
+    }
+  }
+  inputFile << " }" << std::endl;
+  for (size_t num = 0; num < matrixNum; num++) {
+    inputFile << "{";
+    for (size_t i = 1; i < matrixSize; i++) {
+      inputFile << "{";
+      for (size_t j = 1; j < matrixSize; j++) {
+        if (num == 0) {
+          inputFile << -1 * matrices[num][i][j].real();
+        }
+        else {
+          inputFile << matrices[num][i][j].real();
+        }
+        if (j < matrixSize - 1) {
+          inputFile << ", ";
+        }
+      }
+      inputFile << "} ";
+    }
+    inputFile << "}" << std::endl;
+  }
+  inputFile.close();
+  std::cout << "File has been written successfully." << std::endl;
 }
 
 #endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP

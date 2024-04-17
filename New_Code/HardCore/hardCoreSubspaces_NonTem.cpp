@@ -54,6 +54,9 @@ vector<HardCoreMonomial<HardCore1DLadderOp> > listMonomials(size_t length,
 
 void HardCore1DOpSubBasis::init() {
   for (size_t m = 0; m <= order; ++m) {
+    if (m != order / 2) {
+      continue;
+    }
     if (m == 0) {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
           listMonomials(order, start, end, true);

@@ -40,6 +40,6 @@ class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, i
 
 //-------------------------------------------------------------Other Functions-----------
 
-void printMatrixHardCore1D(HardCore1DConsSet & constraints, HardCore1DOpBasis & basis);
+void printMatrixHardCore1D(HardCore1DConsSet & constraints, HardCore1DOpBasis & basis, std::string fileName, vector<complex<double> > ham);
 
 #endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_HPP

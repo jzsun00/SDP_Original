@@ -6,14 +6,14 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 2;
+  size_t sites = 6;
   double Jz = 0.0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
-  cout << "poly1 = " << poly1.toString() << endl;
+  //cout << "poly1 = " << poly1.toString() << endl;
   poly1.normalize();
-  cout << "After normalization\n"
-       << "poly1 = " << poly1.toString() << endl;
+  //cout << "After normalization\n"
+  //     << "poly1 = " << poly1.toString() << endl;
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub1(0, sites - 1, 1);
@@ -21,14 +21,14 @@ int main(void) {
   sub1.init();
   sub2.init();
   HardCore1DOpBasis basis;
-  basis.addSubspace(sub1);
+  //basis.addSubspace(sub1);
   basis.addSubspace(sub2);
   cout << "Operator Basis:" << endl;
-  cout << basis.toString() << endl;
+  //cout << basis.toString() << endl;
   /////////////////////////////////////////////////////
   vector<complex<double> > ham = basis.projPoly(poly1);
   cout << "Hamiltonian Vector:" << endl;
-  cout << complexVector_toString(ham) << endl;
+  //cout << complexVector_toString(ham) << endl;
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
@@ -36,8 +36,8 @@ int main(void) {
   HardCore1DConsSet fullSet;
   fullSet.addBaseSet(base1);
   cout << "Constraint operator set:" << endl;
-  cout << fullSet.toString() << endl;
-  printMatrixHardCore1D(fullSet, basis);
+  //cout << fullSet.toString() << endl;
+  printMatrixHardCore1D(fullSet, basis, "test.dat", ham);
   /////////////////////////////////////////////////////
   cout << "Tests pass!" << endl;
   return EXIT_SUCCESS;
