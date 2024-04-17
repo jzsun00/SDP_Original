@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Apr 16, 2024
 
   Implementations of methods in class:
   LadderOp, SpinOp, Monomial, Polynomial.
@@ -95,6 +95,10 @@ Monomial<OpType> & Monomial<OpType>::operator=(Monomial<OpType> const & rhs) {
 template<typename OpType>
 Monomial<OpType> & Monomial<OpType>::operator*=(Monomial<OpType> const & rhs) {
   if (rhs.getSize() == 1 && rhs[0].getIsUnit()) {
+    return *this;
+  }
+  if (this->getSize() == 1 && this->Expr[0].getIsUnit()) {
+    *this = rhs;
     return *this;
   }
   Expr.insert(Expr.end(), rhs.Expr.begin(), rhs.Expr.end());

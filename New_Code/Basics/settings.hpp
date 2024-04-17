@@ -27,4 +27,7 @@ std::string complex_toString(std::complex<double> num);
 
 std::string complexVector_toString(std::vector<std::complex<double> > vec);
 
+std::string complexMatrix_toString(
+    std::vector<std::vector<std::complex<double> > > matrix);
+
 #endif  //ORI_SDP_GS_SETTINGS_HPP

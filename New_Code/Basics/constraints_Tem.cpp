@@ -12,7 +12,7 @@
 #include "./constraints.hpp"
 
 //-----------------------------------------------------------------ConsSet---------------
-
+/*
 template<typename MonomialType, typename IndexType>
 Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, size_t j) {
   MonomialType mnI = OpSet[i];
@@ -22,7 +22,7 @@ Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, s
   Polynomial<MonomialType> ans(mnI);
   return ans;
 }
-
+*/
 //-------------------------------------------------------------Other Functions-----------
 
 template<typename MonomialType, typename IndexType>

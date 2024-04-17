@@ -31,17 +31,17 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
     HardCoreMonomial<HardCore1DLadderOp> unitMn(unitOp);
     if (i == 0 || i == sites - 2) {
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.25, 0), MNud);
+          complex<double>(0.5, 0), MNud);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.25, 0), MNdu);
+          complex<double>(0.5, 0), MNdu);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(Jz / 2, 0), MNzz);
+          complex<double>(Jz, 0), MNzz);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(-0.25 * Jz, 0), MNz);
+          complex<double>(-0.5 * Jz, 0), MNz);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(-0.25 * Jz, 0), MNzN);
+          complex<double>(-0.5 * Jz, 0), MNzN);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.125, 0), unitMn);
+          complex<double>(0.25 * Jz, 0), unitMn);
     }
     else {
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
@@ -55,7 +55,7 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
           complex<double>(-0.5 * Jz, 0), MNzN);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.25, 0), unitMn);
+          complex<double>(0.25 * Jz, 0), unitMn);
     }
   }
   return ans;

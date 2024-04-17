@@ -48,7 +48,7 @@ class ConsSet {
   size_t getLength() const { return OpSet.size(); }
   virtual std::string toString() = 0;
   virtual void addBaseSet(ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
-  Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
+  //virtual Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
 };
 
 //-------------------------------------------------------------Other Functions-----------

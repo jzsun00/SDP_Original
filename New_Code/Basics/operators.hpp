@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Apr 16, 2024
 
   Class:
   Operator, Ladderop, SpinOp, Monomial, Polynomial.

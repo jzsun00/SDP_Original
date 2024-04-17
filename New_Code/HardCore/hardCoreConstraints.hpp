@@ -29,8 +29,13 @@ class HardCore1DConsBaseSet
 
 class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int> {
  public:
+  HardCore1DConsSet() : ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int>() {
+    HardCore1DLadderOp unit(true);
+    OpSet.push_back(unit);
+  }
   virtual std::string toString();
   virtual void addBaseSet(ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > getIJPoly(size_t i, size_t j);
 };
 
 //-------------------------------------------------------------Other Functions-----------

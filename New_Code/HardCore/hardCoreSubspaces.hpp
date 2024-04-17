@@ -28,8 +28,12 @@ class HardCore1DOpSubBasis
 
 class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int> {
  public:
-  HardCore1DOpBasis() : OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {}
+  HardCore1DOpBasis() : OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {
+    HardCore1DLadderOp unit(true);
+    Basis.push_back(unit);
+  }
   ~HardCore1DOpBasis() {}
+  HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
   virtual std::string toString();
   virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
 };

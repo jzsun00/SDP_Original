@@ -36,6 +36,30 @@ std::string complexVector_toString(std::vector<std::complex<double> > vec) {
     if (i < vec.size() - 1) {
       ans += "\n";
     }
+    else {
+      ans += "  ]";
+    }
+    count++;
+  }
+  return ans;
+}
+
+std::string complexMatrix_toString(
+    std::vector<std::vector<std::complex<double> > > matrix) {
+  std::string ans = "[ ";
+  size_t count = 1;
+  for (size_t i = 0; i < matrix.size(); ++i) {
+    ans += (std::to_string(count) + "    ");
+    for (size_t j = 0; j < matrix.size(); ++j) {
+      ans += complex_toString(matrix[i][j]);
+      ans += "    ";
+    }
+    if (i < matrix.size() - 1) {
+      ans += "\n";
+    }
+    else {
+      ans += "  ]";
+    }
     count++;
   }
   return ans;
