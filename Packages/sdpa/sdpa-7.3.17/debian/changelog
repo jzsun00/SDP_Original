@@ -1,0 +1,186 @@
+sdpa (7.3.17) unstable; urgency=low
+
+  * New upstream
+    + Change MUMPS from 5.5.0 to 5.5.1
+
+ -- Makoto Yamashita <Makoto.Yamashita@c.titech.ac.jp>  Thu, 22 Jun 2023 09:00:00 +0900
+
+sdpa (7.3.16-1) unstable; urgency=low
+
+  * New upstream
+    + Change MUMPS from 5.3.5 to 5.5.0
+  * Update copyright file
+  * Change liboctave-dev to octave-dev (Closes: 1014142)
+  * Remove libopenblas-dev
+  * Update Standards-Version to 4.6.1
+
+ -- Makoto Yamashita <Makoto.Yamashita@c.titech.ac.jp>  Tue, 05 Jul 2022 09:00:00 +0900
+
+sdpa (7.3.15+dfsg-1) unstable; urgency=low
+
+  * New upstream
+    + Change MUMPS from 5.2.1 to 5.3.5
+  * Ack previous NMU from Sebastian Ramacher, thanks!
+  * Stop copying usr/share/sdpa/mex/*.m usr/lib/sdpa/mex/
+  * Change compat level to 10
+  * Update copyright file
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Sat, 12 Dec 2020 09:00:00 +0900
+
+sdpa (7.3.14+dfsg-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload
+
+  [ Peter Michael Green ]
+  * Use only the first two parts of version number when generating libmumps-seq dependency
+    (Closes: 973825)
+  * Bump build-dependency on libmumps-seq-dev to >= 5.3.4
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Sat, 21 Nov 2020 09:34:51 +0100
+
+sdpa (7.3.14+dfsg-1) unstable; urgency=low
+
+   * New upstream
+     + Change 2004-2017 to 2004-2020
+   * Fix rules to dynamically evaluate mumps version on binNMU (Closes: #953158)
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Sat, 14 Mar 2020 09:00:00 +0900
+
+sdpa (7.3.13+dfsg-1) unstable; urgency=low
+
+   * New upstream
+     + Change MUMPS from 5.1.2 to 5.2.1
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Wed, 04 Mar 2020 16:00:00 +0900
+
+sdpa (7.3.12+dfsg-1) unstable; urgency=low
+
+   * New upstream
+     + Change MUMPS from 5.1.1 to 5.1.2
+   * Fix debian/rules (closes: #944221)
+   * Change priority from extra to optional
+   * Change libopenblas-dev to libopenblas-pthread-dev
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Fri, 06 Dec 2019 16:00:00 +0900
+
+sdpa (7.3.11+dfsg-1) unstable; urgency=low
+
+    * New upstream
+      + Add SDPA::resetParameters() function (provided by Tristan Gally)
+    * Fix debian/control (closes: #883128)
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Wed, 06 Dec 2017 08:00:00 +0900
+
+
+sdpa (7.3.10+dfsg-2) unstable; urgency=low
+
+    * Fix debian/rules (closes: #876632)
+    * Change priority from extra to optional
+    * Update Standards-Version to 4.1.1
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Thu, 19 Oct 2017 16:00:00 +0900
+
+sdpa (7.3.10+dfsg-1) unstable; urgency=low
+   * New upstream
+     + Remove small bugs
+     + Change MUMPS from 4.9.10 to 5.1.1
+     + Fix some spell miss
+   * Update Standards-Version to 4.1.0
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Sun, 01 Oct 2017 10:00:00 +0900
+
+sdpa (7.3.9+dfsg-1) unstable; urgency=low
+   * New upstream
+     + Assign the library files to link by full paths
+     + Rename configure.in to configure.ac
+     + Add CPPFLAGS to configure.ac
+   * Change the compilation by gcc-4.8 (closes: #701356)
+   * Update Standards-Version to 3.9.4
+   * Update debian/copyright into the DEP5 format
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Sun, 07 Jul 2013 10:00:00 +0900
+
+sdpa (7.3.8+dfsg-1) unstable; urgency=low
+   * New upstream
+     + Fix inside 'index' to 'index2'
+        in changeIndex of mexReadSDPAToSedumi.cpp (closes: #667369)
+   * Change Dependency from octave3.2 to octave (closes: #666927)
+   * Change Dendency from openblas to atlas
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Sat, 07 Apr 2012 10:00:00 +0900
+
+sdpa (7.3.7+dfsg-1) unstable; urgency=low
+   * New upstream
+     + Fix some spell-miss
+     + Modify sdpa.1 to remove the warning hyphen-used-as-minus-sign
+   * Change debian/rules to link with
+        libatlas-base-dev 3.8 and 3.6
+   * Change dfsg version name from period to plus
+        to remove the warning dfsg-version-with-period
+   * Remove Section:math in sdpa and sdpam from debian/control
+        to remove the warning binary-control-field-duplicates-source
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Mon, 12 Mar 2012 10:00:00 +0900
+
+sdpa (7.3.6.dfsg-2) unstable; urgency=low
+   * Change Dendency so that if openblas is available,
+       use openblas; otherwise atlas. (closes: #660596)
+   * Update Standards-Version to 3.9.3
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Mon, 05 Mar 2012 10:00:00 +0900
+
+sdpa (7.3.6.dfsg-1) unstable; urgency=low
+
+   * New upstream
+     + Print error messages for reading errors
+     + Fix bugs for some SDPs
+     + Fix some spell-miss
+     + Delete DIMACS_PRINT macro (already replaced by --dimacs option)
+   * Change Dependency from libmumps-seq-4.9.2 to libmumps-seq-4.10.0
+   * Change Dependency from libatlas-dev to libopenblas-dev and liblapack-pic
+   * Change the copyright-years to include the year 2012
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Wed, 01 Feb 2012 14:00:00 +0900
+
+sdpa (7.3.5.dfsg-1) unstable; urgency=low
+
+   * New upstream
+     + Add option --version
+     + Fix bugs for some SDPs
+     + Remove MUMPS tar.gz in upstream file
+     + Change official homepage to sourceforge
+   * Change priority from optional to extra
+   * Update Homepage field
+   * Update Standards-Version to 3.9.2
+   * Remove Guillaume Yziquel from Uploaders
+   * Change the copyright-years to include the year 2011
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Thu, 05 May 2011 19:00:00 +0900
+
+sdpa (7.3.4.dfsg-1) unstable; urgency=low
+
+   * New upstream
+   * Modify debian/rules for some architectures
+   * Change the configure script for mingw envrionment
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Mon, 06 Dec 2010 15:00:00 +0900
+
+sdpa (7.3.3.dfsg-1) unstable; urgency=low
+
+  * New upstream
+  * Change the configure script for MUMPS
+  * Change the short descriptions of libsdpa-dev and sdpam
+  * Add the dependency of octave3.2-common and
+     octave3.2-headers to sdpam (closes: #603715)
+  * Fix bugs for some architectures
+  * Add some matlab source codes in mex directory
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Wed, 23 Nov 2010 19:00:00 +0900
+
+sdpa (7.3.2.dfsg-1) unstable; urgency=low
+
+  * New package release (closes: #594463)
+  * MUMPS_4.8.4.tar.gz was removed from the upstream tar.gz
+  * Prototype packaing for 7.3.1 was by Guillaume Yziquel
+
+ -- Makoto Yamashita <Makoto.Yamashita@is.titech.ac.jp>  Tue, 31 Aug 2010 14:26:08 +0900

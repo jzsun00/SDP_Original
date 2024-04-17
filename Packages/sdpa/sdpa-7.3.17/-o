@@ -1,0 +1,102 @@
+SDPA start at [Wed Jan 31 14:51:09 2024]
+param  is ./param.sdpa 
+data   is example2.dat  : dense
+*Example 2:
+*mDim = 5, nBLOCK = 3, {2,3,-2}
+initial is example2.out  : dense
+out    is -o
+NumThreads  is set as 1
+Schur computation : DENSE 
+   mu      thetaP  thetaD  objP      objD      alphaP  alphaD  beta 
+ 0 -2.9e-01 1.0e+00 1.0e+00 +8.64e+03 +3.88e+01 0.0e+00 0.0e+00 2.00e-01
+
+phase.value  = noINFO    
+   Iteration = 0
+          mu = -2.8571428571428570e-01
+relative gap = +1.9821220813030611e+00
+        gap  = +8.6035000000000000e+03
+     digits  = -2.9713039969692046e-01
+objValPrimal = +8.6422999999999993e+03
+objValDual   = +3.8799999999999990e+01
+p.feas.error = +1.5064400000000000e+04
+d.feas.error = +6.4900000000000006e+01
+total time   = 0.000803
+** Parameters **
+maxIteration = 100
+epsilonStar  = +9.9999999999999995e-08
+lambdaStar   = +1.0000000000000000e+02
+omegaStar    = +2.0000000000000000e+00
+lowerBound   = -1.0000000000000000e+05
+upperBound   = +1.0000000000000000e+05
+betaStar     = +1.0000000000000001e-01
+betaBar      = +2.0000000000000001e-01
+gammaStar    = +9.0000000000000002e-01
+epsilonDash  = +9.9999999999999995e-08
+xPrint       = %+8.3e 
+XPrint       = %+8.3e 
+YPrint       = %+8.3e 
+infPrint     = %+10.16e 
+
+                         Time(sec)  Ratio(% : MainLoop) 
+ Predictor time  =       0.000000,  0.000000
+ Corrector time  =       0.000000,  0.000000
+ Make bMat time  =       0.000459,  75.993377
+ Make bDia time  =       0.000001,  0.165563
+ Make bF1  time  =       0.000000,  0.000000
+ Make bF2  time  =       0.000000,  0.000000
+ Make bF3  time  =       0.000000,  0.000000
+ Make bPRE time  =       0.000008,  1.324503
+ Make rMat time  =       0.000001,  0.165563
+ Make gVec Mul   =       0.000003,  0.496689
+ Make gVec time  =       0.000004,  0.662252
+ Cholesky bMat   =       0.000000,  0.000000
+ Ste Pre time    =       0.000000,  0.000000
+ Ste Cor time    =       0.000000,  0.000000
+ solve           =       0.000000,  0.000000
+ sumDz           =       0.000000,  0.000000
+ makedX          =       0.000000,  0.000000
+ symmetriseDx    =       0.000000,  0.000000
+ makedXdZ        =       0.000000,  0.000000
+ xMatTime        =       0.000026,  4.304636
+ zMatTime        =       0.000014,  2.317881
+ invzMatTime     =       0.000000,  0.000000
+ xMatzMatTime    =       0.000000,  0.000000
+ EigxMatTime     =       0.000000,  0.000000
+ EigzMatTime     =       0.000000,  0.000000
+ EigxMatzMatTime =       0.000000,  0.000000
+ updateRes       =       0.000000,  0.000000
+ EigTime         =       0.000000,  0.000000
+ sub_total_bMat  =       0.000145,  24.006623
+ Main Loop       =       0.000604,  100.000000
+ File Check      =       0.000000,  0.000000
+ File Change     =       0.000003,  0.496689
+ File Read       =       0.000196,  32.450331
+ Total           =       0.000803,  132.947020
+
+xVec = 
+{+3.100e+01,+1.400e+01,+4.800e+01,+7.000e+00,+2.024e+03}
+xMat = 
+{
+{ {+2.000e+00,+2.000e+00 },
+  {+2.000e+00,+3.000e+00 }   }
+{ {+2.000e+00,+3.000e+00,-2.000e+00 },
+  {+3.000e+00,-2.000e+00,-2.000e+00 },
+  {-2.000e+00,-2.000e+00,-2.000e+00 }   }
+{-2.000e+00,-2.000e+00}
+}
+yMat = 
+{
+{ {-2.000e+00,-2.000e+00 },
+  {-2.000e+00,-2.000e+00 }   }
+{ {-2.000e+00,-2.000e+00,-2.000e+00 },
+  {-2.000e+00,-2.000e+00,-2.000e+00 },
+  {-2.000e+00,-2.000e+00,-2.000e+00 }   }
+{-2.000e+00,-2.000e+00}
+}
+    main loop time = 0.000604
+        total time = 0.000803
+  file  check time = 0.000000
+  file change time = 0.000003
+  file   read time = 0.000196
+SDPA end at [Wed Jan 31 14:51:09 2024]
+ALL TIME = 0.001810
