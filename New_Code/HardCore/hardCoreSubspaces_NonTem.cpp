@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: May 10, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
@@ -122,6 +122,55 @@ void HardCore1DOpBasis::addSubspace(
     OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
   vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBasis();
   Basis.insert(Basis.end(), sub.begin(), sub.end());
+}
+
+//--------------------------------------------------------------Other Functions----------
+
+vector<pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis) {
+  set<size_t> addedIndex;
+  vector<pair<size_t, size_t> > ans;
+  for (size_t index = 1; index < basis.getLength(); index++) {
+    if (addedIndex.find(index) != addedIndex.end()) {
+      continue;
+    }
+    addedIndex.insert(index);
+    HardCoreMonomial<HardCore1DLadderOp> current = basis[index];
+    HardCoreMonomial<HardCore1DLadderOp> currentCopy(current);
+    currentCopy.herm();
+    if (currentCopy == current) {
+      continue;
+    }
+    for (size_t j = index; j < basis.getLength(); j++) {
+      if (currentCopy == basis[j]) {
+        addedIndex.insert(j);
+        ans.push_back(pair<size_t, size_t>(index, j));
+      }
+    }
+  }
+  return ans;
+}
+
+std::string printHermPairs(vector<pair<size_t, size_t> > & pairs) {
+  std::string ans = "";
+  for (size_t i = 0; i < pairs.size(); i++) {
+    ans += std::to_string(i + 1);
+    ans += "    ";
+    ans += std::to_string(pairs[i].first + 1);
+    ans += ",  ";
+    ans += std::to_string(pairs[i].second + 1);
+    ans += "\n";
+  }
+  return ans;
+}
+
+void transVecToReIm(vector<complex<double> > & vec,
+                    vector<pair<size_t, size_t> > & pairs) {
+  for (size_t i = 0; i < pairs.size(); i++) {
+    complex<double> ori1 = vec[pairs[i].first];
+    complex<double> ori2 = vec[pairs[i].second];
+    vec[pairs[i].first] = ori1 + ori2;
+    vec[pairs[i].second] = complex<double>(0, 1.0) * (ori1 - ori2);
+  }
 }
 
 #endif  //ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP

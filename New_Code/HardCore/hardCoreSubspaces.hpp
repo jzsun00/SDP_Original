@@ -1,13 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: May 10, 2024
 */
 
 #ifndef ORI_SDP_GS_HARDCORESUBSPACES_HPP
 #define ORI_SDP_GS_HARDCORESUBSPACES_HPP
 
+#include <set>
+
 #include "../Basics/subspaces.hpp"
 #include "./hardCoreOperators.hpp"
+
+using std::set;
 
 //-------------------------------------------------------------HardCore1DOpSubBasis------
 
@@ -38,4 +42,13 @@ class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, i
   virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
 };
 
-#endif
+//--------------------------------------------------------------Other Functions----------
+
+vector<pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis);
+
+std::string printHermPairs(vector<pair<size_t, size_t> > & pairs);
+
+void transVecToReIm(vector<complex<double> > & vec,
+                    vector<pair<size_t, size_t> > & pairs);
+
+#endif  //ORI_SDP_GS_HARDCORESUBSPACES_HPP
