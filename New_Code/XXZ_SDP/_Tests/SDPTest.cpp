@@ -7,7 +7,7 @@ using std::endl;
 
 int main(void) {
   size_t sites = 3;
-  double Jz = 0.5;
+  double Jz = 0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   cout << "\nHamiltonian =\n" << poly1.toString() << endl;

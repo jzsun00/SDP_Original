@@ -15,8 +15,8 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
     //SpinHalfOp SzN(i + 1);
     HardCore1DLadderOp Su(i, true);
     HardCore1DLadderOp Sd(i, false);
-    HardCore1DLadderOp SuN(i + 1, true);
-    HardCore1DLadderOp SdN(i + 1, false);
+    HardCore1DLadderOp SuN((i + 1) % sites, true);
+    HardCore1DLadderOp SdN((i + 1) % sites, false);
     HardCoreMonomial<HardCore1DLadderOp> MNud(Su);
     MNud *= SdN;
     HardCoreMonomial<HardCore1DLadderOp> MNdu(Sd);
