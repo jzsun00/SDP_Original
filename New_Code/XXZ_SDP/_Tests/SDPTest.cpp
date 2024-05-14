@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 7;
+  size_t sites = 9;
   double Jz = 0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
