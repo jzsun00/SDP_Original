@@ -175,11 +175,11 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
   if (!inputFile.is_open()) {
     std::cerr << "Failed to open file for writing." << std::endl;
   }
-  inputFile << "\"XXZ Test: mDim = " << matrixNum - 1 << ", nBLOCK = 1, {" << matrixSize
-            << "}\"" << std::endl;
+  inputFile << "\"XXZ Test: mDim = " << matrixNum - 1 << ", nBLOCK = 1, {"
+            << matrixSize * 2 << "}\"" << std::endl;
   inputFile << matrixNum - 1 << "  =  mDIM" << std::endl;
   inputFile << "1  =  nBLOCK" << std::endl;
-  inputFile << matrixSize << "  = bLOCKsTRUCT" << std::endl;
+  inputFile << matrixSize * 2 << "  = bLOCKsTRUCT" << std::endl;
   inputFile << "{";
   for (size_t i = 1; i < ham.size(); i++) {
     inputFile << ham[i].real();
@@ -188,29 +188,47 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
     }
   }
   inputFile << " }" << std::endl;
-  /*
-  inputFile << "{";
-  for (size_t i = 0; i < matrixSize; i++) {
-    inputFile << "{";
-    for (size_t j = 0; j < matrixSize; j++) {
-      if (i == j) {
-        inputFile << -1;
-      }
-      else {
-        inputFile << 0;
-      }
-      if (j < matrixSize - 1) {
-        inputFile << ", ";
-      }
-    }
-    inputFile << "} ";
-  }
-  inputFile << "}" << std::endl;
-  */
   for (size_t num = 0; num < matrixNum; num++) {
-    inputFile << "{";
+    inputFile << "{ ";
     for (size_t i = 0; i < matrixSize; i++) {
       inputFile << "{";
+      // First Block
+      for (size_t j = 0; j < matrixSize; j++) {
+        if (num == 0) {
+          inputFile << -matrices[num][i][j].real();
+        }
+        else {
+          inputFile << matrices[num][i][j].real();
+        }
+        inputFile << ", ";
+      }
+      // Second Block
+      for (size_t j = 0; j < matrixSize; j++) {
+        if (num == 0) {
+          inputFile << matrices[num][i][j].imag();
+        }
+        else {
+          inputFile << -matrices[num][i][j].imag();
+        }
+        if (j < matrixSize - 1) {
+          inputFile << ", ";
+        }
+      }
+      inputFile << "},\n";
+    }
+    for (size_t i = 0; i < matrixSize; i++) {
+      inputFile << "{";
+      // Third Block
+      for (size_t j = 0; j < matrixSize; j++) {
+        if (num == 0) {
+          inputFile << -matrices[num][i][j].imag();
+        }
+        else {
+          inputFile << matrices[num][i][j].imag();
+        }
+        inputFile << ", ";
+      }
+      // Fourth Block
       for (size_t j = 0; j < matrixSize; j++) {
         if (num == 0) {
           inputFile << -matrices[num][i][j].real();
@@ -222,9 +240,14 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
           inputFile << ", ";
         }
       }
-      inputFile << "} ";
+      if (i < matrixSize - 1) {
+        inputFile << "},\n";
+      }
+      else {
+        inputFile << "}";
+      }
     }
-    inputFile << "}" << std::endl;
+    inputFile << " }" << std::endl;
   }
   inputFile.close();
   std::cout << "File has been written successfully." << std::endl;
