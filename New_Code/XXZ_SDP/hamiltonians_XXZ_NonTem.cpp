@@ -10,7 +10,7 @@
 HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
                                                                    double Jz) {
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > ans;
-  for (size_t i = 0; i < sites - 1; i++) {
+  for (size_t i = 0; i < sites; i++) {
     //SpinHalfOp Sz(i);
     //SpinHalfOp SzN(i + 1);
     HardCore1DLadderOp Su(i, true);

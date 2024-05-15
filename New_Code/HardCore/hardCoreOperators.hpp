@@ -1,9 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: May 14, 2024
 
   Class:
   HardCoreLadderOp, HardCore1DLadderOp, HardCoreMonomial, HardCorePolynomial.
+
+  Function:
 
   Define ladder operators, monomials and polynomials for hard core Boson systems.
 */

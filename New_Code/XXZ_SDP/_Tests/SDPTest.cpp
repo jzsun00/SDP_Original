@@ -6,15 +6,15 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 8;
-  double Jz = 2;
+  size_t sites = 6;
+  double Jz = 0.8;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
-  cout << "\nHamiltonian =\n" << poly1.toString() << endl;
+  //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
   poly1.normalize();
-  cout << "\nUse Normal Order:\n"
-       << "Hamiltonian =\n"
-       << poly1.toString() << endl;
+  //cout << "\nUse Normal Order:\n"
+  //     << "Hamiltonian =\n"
+  //     << poly1.toString() << endl;
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub1(0, sites - 1, 1);
@@ -28,18 +28,19 @@ int main(void) {
   basis.addSubspace(sub2);
   basis.addSubspace(sub4);
   cout << "Operator Basis:" << endl;
-  cout << basis.toString() << endl;
+  //cout << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = findHermPairs(basis);
-  cout << "\nHermitian Conjugate Pairs:\n" << printHermPairs(pairs) << endl;
+  //cout << "\nHermitian Conjugate Pairs:\n" << printHermPairs(pairs) << endl;
   /////////////////////////////////////////////////////
   vector<complex<double> > ham = basis.projPoly(poly1);
   cout << "Hamiltonian Vector:" << endl;
-  cout << complexVector_toString(ham) << endl;
+  //cout << complexVector_toString(ham) << endl;
   transVecToReIm(ham, pairs);
   cout << "\nAfter Transform To Real And Imaginary Parts Of Green's "
           "Functions\nHamiltonian Vector:"
        << endl;
-  cout << complexVector_toString(ham) << endl;
+  cout << "Identity Constant:\n" << complex_toString(ham[0]) << endl;
+  //cout << complexVector_toString(ham) << endl;
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
@@ -50,7 +51,7 @@ int main(void) {
   fullSet.addBaseSet(base1);
   fullSet.addBaseSet(base2);
   cout << "Constraint operator set:" << endl;
-  cout << fullSet.toString() << endl;
+  //cout << fullSet.toString() << endl;
   std::string fileName = "N_" + std::to_string(sites) + ".dat";
   printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
   /////////////////////////////////////////////////////
