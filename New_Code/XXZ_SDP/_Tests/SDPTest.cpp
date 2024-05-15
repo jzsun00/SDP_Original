@@ -6,8 +6,8 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 6;
-  double Jz = 0.8;
+  size_t sites = 8;
+  double Jz = 4.0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -53,7 +53,10 @@ int main(void) {
   cout << "Constraint operator set:" << endl;
   //cout << fullSet.toString() << endl;
   std::string fileName = "N_" + std::to_string(sites) + ".dat";
-  printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
+  std::string fileNameS = "N_" + std::to_string(sites) + ".dat-s";
+  cout << "\nNow start writing data files" << endl;
+  //printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
+  printSparseMatrixHardCore1D(fullSet, basis, fileNameS, ham, pairs);
   /////////////////////////////////////////////////////
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;

@@ -46,6 +46,12 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
                            vector<complex<double> > ham,
                            vector<pair<size_t, size_t> > & pairs);
 
+void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
+                                 HardCore1DOpBasis & basis,
+                                 std::string fileName,
+                                 vector<complex<double> > ham,
+                                 vector<pair<size_t, size_t> > & pairs);
+
 void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
                     vector<pair<size_t, size_t> > & pairs);
 

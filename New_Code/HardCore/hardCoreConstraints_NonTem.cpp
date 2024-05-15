@@ -253,6 +253,103 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
   std::cout << "File has been written successfully." << std::endl;
 }
 
+void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
+                                 HardCore1DOpBasis & basis,
+                                 std::string fileName,
+                                 vector<complex<double> > ham,
+                                 vector<pair<size_t, size_t> > & pairs) {
+  size_t matrixNum = basis.getLength();
+  size_t matrixSize = constraints.getLength();
+  vector<vector<vector<complex<double> > > > matrices(
+      matrixNum,
+      vector<vector<complex<double> > >(matrixSize,
+                                        vector<complex<double> >(matrixSize)));
+  for (size_t i = 0; i < matrixSize; i++) {
+    for (size_t j = 0; j < matrixSize; j++) {
+      HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > polyIJ =
+          constraints.getIJPoly(i, j);
+      vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
+      for (size_t k = 0; k < matrixNum; k++) {
+        matrices[k][i][j] = entryIJ[k];
+      }
+    }
+  }
+  transMatToReIm(matrices, pairs);
+  std::ofstream inputFile(fileName);
+  if (!inputFile.is_open()) {
+    std::cerr << "Failed to open file for writing." << std::endl;
+  }
+  inputFile << "\"XXZ Test: mDim = " << matrixNum - 1 << ", nBLOCK = 1, {"
+            << matrixSize * 2 << "}\"" << std::endl;
+  inputFile << matrixNum - 1 << "  =  mDIM" << std::endl;
+  inputFile << "1  =  nBLOCK" << std::endl;
+  inputFile << matrixSize * 2 << "  = bLOCKsTRUCT" << std::endl;
+  inputFile << "{";
+  for (size_t i = 1; i < ham.size(); i++) {
+    inputFile << ham[i].real();
+    if (i < ham.size() - 1) {
+      inputFile << ", ";
+    }
+  }
+  inputFile << " }" << std::endl;
+  for (size_t num = 0; num < matrixNum; num++) {
+    for (size_t i = 0; i < matrixSize; i++) {
+      // First Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j]) < ERROR) {
+          continue;
+        }
+        if (num == 0) {
+          inputFile << num << " "
+                    << "1 " << i + 1 << " " << j + 1 << " " << -matrices[num][i][j].real()
+                    << std::endl;
+        }
+        else {
+          inputFile << num << " "
+                    << "1 " << i + 1 << " " << j + 1 << " " << matrices[num][i][j].real()
+                    << std::endl;
+        }
+      }
+      // Second Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j]) < ERROR) {
+          continue;
+        }
+        if (num == 0) {
+          inputFile << num << " "
+                    << "1 " << i + 1 << " " << j + 1 + matrixSize << " "
+                    << matrices[num][i][j].imag() << std::endl;
+        }
+        else {
+          inputFile << num << " "
+                    << "1 " << i + 1 << " " << j + 1 + matrixSize << " "
+                    << -matrices[num][i][j].imag() << std::endl;
+        }
+      }
+    }
+    for (size_t i = 0; i < matrixSize; i++) {
+      // Fourth Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j]) < ERROR) {
+          continue;
+        }
+        if (num == 0) {
+          inputFile << num << " "
+                    << "1 " << i + 1 + matrixSize << " " << j + 1 + matrixSize << " "
+                    << -matrices[num][i][j].real() << std::endl;
+        }
+        else {
+          inputFile << num << " "
+                    << "1 " << i + 1 + matrixSize << " " << j + 1 + matrixSize << " "
+                    << matrices[num][i][j].real() << std::endl;
+        }
+      }
+    }
+  }
+  inputFile.close();
+  std::cout << "File has been written successfully." << std::endl;
+}
+
 void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
                     vector<pair<size_t, size_t> > & pairs) {
   for (size_t n = 0; n < pairs.size(); n++) {
