@@ -140,8 +140,16 @@ vector<pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis) {
     if (currentCopy == current) {
       continue;
     }
+    HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > PolyCurrent(current);
+    HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > PolyCurrentCopy(
+        currentCopy);
+    PolyCurrentCopy.normalize();
+    if (PolyCurrent == PolyCurrentCopy) {
+      continue;
+    }
     for (size_t j = index; j < basis.getLength(); j++) {
-      if (currentCopy == basis[j]) {
+      HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > PolyBasis(basis[j]);
+      if (PolyCurrentCopy == PolyBasis) {
         addedIndex.insert(j);
         ans.push_back(pair<size_t, size_t>(index, j));
       }

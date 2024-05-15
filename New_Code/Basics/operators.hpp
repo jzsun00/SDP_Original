@@ -174,6 +174,7 @@ class Polynomial {
   std::string toString() const;
   /*Overload operators.*/
   Polynomial & operator=(Polynomial const & rhs);
+  bool operator==(Polynomial const & rhs) { return Terms == rhs.Terms; }
   // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations
   Polynomial & operator+=(MonomialType const & rhs);
   Polynomial & operator+=(TermType const & rhs);

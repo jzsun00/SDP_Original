@@ -6,8 +6,8 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 9;
-  double Jz = 0;
+  size_t sites = 8;
+  double Jz = 2;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -22,11 +22,11 @@ int main(void) {
   HardCore1DOpSubBasis sub4(0, sites - 1, 4);
   sub1.init();
   sub2.init();
-  //sub4.init();
+  sub4.init();
   HardCore1DOpBasis basis;
   //basis.addSubspace(sub1);
   basis.addSubspace(sub2);
-  //basis.addSubspace(sub4);
+  basis.addSubspace(sub4);
   cout << "Operator Basis:" << endl;
   cout << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = findHermPairs(basis);
@@ -45,10 +45,10 @@ int main(void) {
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
   HardCore1DConsBaseSet base2(0, sites - 1, 2);
   base1.init();
-  //base2.init();
+  base2.init();
   HardCore1DConsSet fullSet;
   fullSet.addBaseSet(base1);
-  //fullSet.addBaseSet(base2);
+  fullSet.addBaseSet(base2);
   cout << "Constraint operator set:" << endl;
   cout << fullSet.toString() << endl;
   std::string fileName = "N_" + std::to_string(sites) + ".dat";

@@ -9,7 +9,7 @@ EXE_DIR := ./_Exes
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
 #LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
-LDFLAGS := -lblas -llapack -lgfortran
+LDFLAGS := #-lblas -llapack -lgfortran
 
 # Source files
 SRC_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.cpp))
