@@ -1,28 +1,30 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: May 14, 2024
 
   Implementations of functions:
-  complex_toString().
+  string complex_toString(complex<double> num);
+  string complexVector_toString(vector<complex<double> > vec);
+  string complexMatrix_toString(vector<vector<complex<double> > > matrix);
 */
 
 #ifndef ORI_SDP_GS_SETTINGS_NONTEM_CPP
 #define ORI_SDP_GS_SETTINGS_NONTEM_CPP
 
-#include "settings.hpp"
+#include "./settings.hpp"
 
-//-------------------------------------------------------------complex_toString()-------
+//----------------------------------------------------------------Output Tools-----------
 
 std::string complex_toString(std::complex<double> num) {
   std::ostringstream oss;
-  oss.precision(PRECISION);
-  oss << std::fixed;
+  oss.precision(COMPLEX_PRECISION);
+  oss << std::scientific;
   oss << num.real();
   if (num.imag() >= 0) {
-    oss << " + " << num.imag() << "i";
+    oss << "+" << num.imag() << "i";
   }
   else {
-    oss << " - " << -num.imag() << "i";
+    oss << "-" << -num.imag() << "i";
   }
   return oss.str();
 }

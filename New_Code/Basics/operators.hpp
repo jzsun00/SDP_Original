@@ -1,15 +1,15 @@
 /*
   Jiazheng Sun
-  Updated: Apr 16, 2024
+  Updated: May 14, 2024
 
   Class:
   Operator, Ladderop, SpinOp, Monomial, Polynomial.
 
   Define general operators, monomials and polynomials.
-  Also define ladder operators and spin operators.
+  Also define ladder operators and spin operators inherited from operators.
   That serves as fundamental definitions of operators in the second quantization form
   as well as for spin systems.
-  Fermi or Boson operators should inherit LadderOp, Monomial, Polynomial and
+  Fermi and Boson operators should inherit LadderOp, Monomial, Polynomial and
   add related algebra.
   Spin operators should inherit SpinOp, Monomial, Polynomial and add algebra.
 */
