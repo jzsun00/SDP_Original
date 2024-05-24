@@ -6,15 +6,15 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 8;
-  double Jz = 4.0;
+  size_t sites = 4;
+  double Jz = 0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
-  //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
+  cout << "\nHamiltonian =\n" << poly1.toString() << endl;
   poly1.normalize();
-  //cout << "\nUse Normal Order:\n"
-  //     << "Hamiltonian =\n"
-  //     << poly1.toString() << endl;
+  cout << "\nUse Normal Order:\n"
+       << "Hamiltonian =\n"
+       << poly1.toString() << endl;
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub1(0, sites - 1, 1);
@@ -26,9 +26,9 @@ int main(void) {
   HardCore1DOpBasis basis;
   //basis.addSubspace(sub1);
   basis.addSubspace(sub2);
-  basis.addSubspace(sub4);
+  //basis.addSubspace(sub4);
   cout << "Operator Basis:" << endl;
-  //cout << basis.toString() << endl;
+  cout << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = findHermPairs(basis);
   //cout << "\nHermitian Conjugate Pairs:\n" << printHermPairs(pairs) << endl;
   /////////////////////////////////////////////////////
@@ -49,14 +49,14 @@ int main(void) {
   base2.init();
   HardCore1DConsSet fullSet;
   fullSet.addBaseSet(base1);
-  fullSet.addBaseSet(base2);
+  //fullSet.addBaseSet(base2);
   cout << "Constraint operator set:" << endl;
-  //cout << fullSet.toString() << endl;
-  std::string fileName = "N_" + std::to_string(sites) + ".dat";
+  cout << fullSet.toString() << endl;
+  std::string fileName = "N_" + std::to_string(sites) + "_Jz_" + ".dat";
   std::string fileNameS = "N_" + std::to_string(sites) + ".dat-s";
   cout << "\nNow start writing data files" << endl;
-  //printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
-  printSparseMatrixHardCore1D(fullSet, basis, fileNameS, ham, pairs);
+  printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
+  //printSparseMatrixHardCore1D(fullSet, basis, fileNameS, ham, pairs);
   /////////////////////////////////////////////////////
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;

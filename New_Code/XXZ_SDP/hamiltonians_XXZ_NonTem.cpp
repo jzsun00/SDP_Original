@@ -10,7 +10,7 @@
 HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
                                                                    double Jz) {
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > ans;
-  for (size_t i = 0; i < sites; i++) {
+  for (size_t i = 0; i < sites - 1; i++) {
     //SpinHalfOp Sz(i);
     //SpinHalfOp SzN(i + 1);
     HardCore1DLadderOp Su(i, true);
@@ -29,7 +29,8 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
     MNzz *= MNzN;
     HardCore1DLadderOp unitOp(true);
     HardCoreMonomial<HardCore1DLadderOp> unitMn(unitOp);
-    if (i == 0 || i == sites - 2) {
+    /*
+    if (i == 0 || i == sites - 1) {
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
           complex<double>(0.5, 0), MNud);
       ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
@@ -44,19 +45,19 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
           complex<double>(0.25 * Jz, 0), unitMn);
     }
     else {
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.5, 0), MNud);
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.5, 0), MNdu);
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(Jz, 0), MNzz);
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(-0.5 * Jz, 0), MNz);
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(-0.5 * Jz, 0), MNzN);
-      ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-          complex<double>(0.25 * Jz, 0), unitMn);
-    }
+    */
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(-0.5, 0), MNud);
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(0.5, 0), MNdu);
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(Jz, 0), MNzz);
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(-0.5 * Jz, 0), MNz);
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(-0.5 * Jz, 0), MNzN);
+    ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
+        complex<double>(0.25 * Jz, 0), unitMn);
   }
   return ans;
 }

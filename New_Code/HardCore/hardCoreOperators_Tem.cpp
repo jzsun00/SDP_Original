@@ -150,7 +150,8 @@ HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType
     return ans;
   }
   if (op1.getIndex() != op2.getIndex()) {
-    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
+    //HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
+    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
     return ans;
   }
   else {
