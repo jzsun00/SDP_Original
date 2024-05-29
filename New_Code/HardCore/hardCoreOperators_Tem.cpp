@@ -146,7 +146,8 @@ HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType
   HardCoreMonomial<OpType> mnr(op2);
   mnr *= op1;
   if (op1.getCreatorF() == op2.getCreatorF()) {
-    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
+    //HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(1, 0), mnr);
+    HardCorePolynomial<HardCoreMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
     return ans;
   }
   if (op1.getIndex() != op2.getIndex()) {

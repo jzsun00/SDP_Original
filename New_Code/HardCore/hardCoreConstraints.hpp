@@ -46,6 +46,8 @@ void printMatrixHardCore1D(HardCore1DConsSet & constraints,
                            vector<complex<double> > ham,
                            vector<pair<size_t, size_t> > & pairs);
 
+void printMatrixXX1D(size_t max, std::string fileName);
+
 void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
                                  HardCore1DOpBasis & basis,
                                  std::string fileName,

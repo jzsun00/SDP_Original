@@ -11,6 +11,8 @@
 #ifndef ORI_SDP_GS_SETTINGS_NONTEM_CPP
 #define ORI_SDP_GS_SETTINGS_NONTEM_CPP
 
+#include <string>
+
 #include "./settings.hpp"
 
 //----------------------------------------------------------------Output Tools-----------
