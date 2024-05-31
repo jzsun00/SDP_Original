@@ -25,7 +25,7 @@
 /*Double and complex values below ERROR will be considered zero in computations.*/
 #define ERROR std::pow(10, -12)
 /*Default output precision for complex numbers.*/
-#define COMPLEX_PRECISION 2
+#define COMPLEX_PRECISION 4
 
 //----------------------------------------------------------------Output Tools-----------
 

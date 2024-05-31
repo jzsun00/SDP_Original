@@ -18,7 +18,12 @@ bool HardCore1DLadderOp::operator<(LadderOp const & rhs) const {
     return false;
   }
   if (this->creatorF == rhs.getCreatorF()) {
-    return this->index < rhs.getIndex();
+    if (this->creatorF == false) {
+      return this->index < rhs.getIndex();
+    }
+    else {
+      return this->index > rhs.getIndex();
+    }
   }
   else {
     return this->creatorF < rhs.getCreatorF();

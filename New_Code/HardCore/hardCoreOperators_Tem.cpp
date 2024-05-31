@@ -9,7 +9,7 @@
 #ifndef ORI_SDP_GS_HARDCOREOPERATORS_TEM_CPP
 #define ORI_SDP_GS_HARDCOREOPERATORS_TEM_CPP
 
-#include "hardCoreOperators.hpp"
+#include "./hardCoreOperators.hpp"
 
 //---------------------------------------------------------------HardCoreLadderOp--------
 
@@ -43,6 +43,11 @@ bool HardCoreLadderOp<IndexType>::operator==(
 //---------------------------------------------------------------HardCoreMonomial--------
 
 template<typename OpType>
+void HardCoreMonomial<OpType>::reverse() {
+  std::reverse(this->Expr.begin(), this->Expr.end());
+}
+
+template<typename OpType>
 int HardCoreMonomial<OpType>::findWrongOrder() const {
   for (size_t i = 0; i < this->Expr.size() - 1; i++) {
     if (this->Expr[i] > this->Expr[i + 1]) {
@@ -73,6 +78,33 @@ template<typename OpType>
 HardCoreMonomial<OpType> HardCoreMonomial<OpType>::sliceExprE(size_t index) {
   return HardCoreMonomial<OpType>(
       vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
+}
+
+template<typename OpType>
+bool HardCoreMonomial<OpType>::equiv(HardCoreMonomial<OpType> const & rhs) const {
+  if (this->getSize() != rhs.getSize()) {
+    return false;
+  }
+  HardCoreMonomial<OpType> rhsCopy(rhs);
+  int offset = -rhs[0].getIndex() + this->Expr[0].getIndex();
+  //std::cout << "rhs[0].getIndex() = " << rhs[0].getIndex()
+  //          << ",  this->Expr[0].getIndex() = " << this->Expr[0].getIndex() << std::endl;
+  //std::cout << "offset = " << offset << std::endl;
+  //std::cout << "this = " << this->toString() << std::endl;
+  //std::cout << "rhs = " << rhs.toString() << std::endl;
+  //for (size_t i = 0; i < this->getSize(); i++) {
+  //  rhsCopy[i].moveIndex(offset);
+  //}
+  rhsCopy.moveIndex(offset);
+  //std::cout << "rhsCopy = " << rhsCopy.toString() << std::endl;
+  return (*this) == rhsCopy;
+}
+
+template<typename OpType>
+void HardCoreMonomial<OpType>::moveIndex(int offset) {
+  for (size_t i = 0; i < this->getSize(); i++) {
+    this->Expr[i].moveIndex(offset);
+  }
 }
 
 //--------------------------------------------------------------HardCorePolynomial-------

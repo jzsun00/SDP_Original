@@ -6,6 +6,7 @@
 #ifndef ORI_SDP_GS_HARDCORESUBSPACES_HPP
 #define ORI_SDP_GS_HARDCORESUBSPACES_HPP
 
+#include <complex>
 #include <set>
 
 #include "../Basics/subspaces.hpp"
@@ -26,6 +27,7 @@ class HardCore1DOpSubBasis
   virtual void init();
   ~HardCore1DOpSubBasis() {}
   virtual std::string toString();
+  bool isNew(HardCoreMonomial<HardCore1DLadderOp> const & mn);
 };
 
 //---------------------------------------------------------------HardCore1DOpBasis-------
@@ -40,6 +42,8 @@ class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, i
   HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
   virtual std::string toString();
   virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
+  vector<complex<double> > projPolyInf(
+      HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly);
 };
 
 //--------------------------------------------------------------Other Functions----------

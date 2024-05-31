@@ -6,9 +6,11 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 91;
+  size_t sites = 151;
   std::string fileName = "XX_N_" + std::to_string(sites) + ".dat";
-  printMatrixXX1D(sites, fileName);
+  std::string fileNameS = "XX_N_" + std::to_string(sites) + ".dat-s";
+  //printMatrixXX1D(sites, fileName);
+  printSparseMatrixXX1D(sites, fileNameS);
   /////////////////////////////////////////////////////
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;

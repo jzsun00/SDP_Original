@@ -9,6 +9,8 @@
 #ifndef ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP
 #define ORI_SDP_GS_HARDCORESUBSPACES_NONTEM_CPP
 
+#include <cstddef>
+
 #include "./hardCoreSubspaces.hpp"
 
 //-------------------------------------------------------------HardCore1DOpSubBasis------
@@ -70,12 +72,19 @@ void HardCore1DOpSubBasis::init() {
     else {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
           listMonomials(order - m, start, end, true);
+      for (size_t i = 0; i < creation.size(); i++) {
+        creation[i].reverse();
+      }
       vector<HardCoreMonomial<HardCore1DLadderOp> > annihilation =
           listMonomials(m, start, end, false);
       for (size_t i = 0; i < annihilation.size(); ++i) {
         for (size_t j = 0; j < creation.size(); ++j) {
           HardCoreMonomial<HardCore1DLadderOp> copy(annihilation[i]);
-          Basis.push_back(copy *= creation[j]);
+          copy *= creation[j];
+          //Basis.push_back(copy *= creation[j]);
+          if (isNew(copy)) {
+            Basis.push_back(copy);
+          }
         }
       }
     }
@@ -97,6 +106,15 @@ std::string HardCore1DOpSubBasis::toString() {
     count++;
   }
   return ans;
+}
+
+bool HardCore1DOpSubBasis::isNew(HardCoreMonomial<HardCore1DLadderOp> const & mn) {
+  for (size_t i = 0; i < Basis.size(); i++) {
+    if (mn.equiv(Basis[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 //---------------------------------------------------------------HardCore1DOpBasis-------
@@ -122,6 +140,23 @@ void HardCore1DOpBasis::addSubspace(
     OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
   vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBasis();
   Basis.insert(Basis.end(), sub.begin(), sub.end());
+}
+
+vector<complex<double> > HardCore1DOpBasis::projPolyInf(
+    HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly) {
+  vector<complex<double> > ans(Basis.size());
+  for (size_t index = 0; index < Basis.size(); index++) {
+    HardCoreMonomial<HardCore1DLadderOp> basisMn = Basis[index];
+    for (typename vector<pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> > >::
+             const_iterator it = poly.getBegin();
+         it != poly.getEnd();
+         ++it) {
+      if (it->second.equiv(basisMn)) {
+        ans[index] = it->first;
+      }
+    }
+  }
+  return ans;
 }
 
 //--------------------------------------------------------------Other Functions----------

@@ -62,6 +62,9 @@ void HardCore1DConsBaseSet::init() {
     if (m == 0) {
       vector<HardCoreMonomial<HardCore1DLadderOp> > creation =
           ConslistMonomials(order, start, end, true);
+      for (size_t i = 0; i < creation.size(); i++) {
+        creation[i].reverse();
+      }
       BaseOpSet.insert(BaseOpSet.end(), creation.begin(), creation.end());
     }
     else if (m == order) {
@@ -348,6 +351,96 @@ void printMatrixXX1D(size_t max, std::string fileName) {
   inputFile.close();
   std::cout << "File has been written successfully." << std::endl;
 }
+void printSparseMatrixXX1D(size_t max, std::string fileName) {
+  size_t matrixNum = max * 2;
+  size_t matrixSize = max * 2;
+  vector<vector<vector<complex<double> > > > matrices(
+      matrixNum,
+      vector<vector<complex<double> > >(matrixSize,
+                                        vector<complex<double> >(matrixSize)));
+  for (size_t i = max; i < matrixSize; i++) {
+    matrices[0][i][i] = -1;
+  }
+  for (size_t i = 0; i < max; i++) {
+    matrices[1][i][i] = 1;
+    matrices[1][i + max][i + max] = -1;
+  }
+  for (size_t dist = 1; dist < max; dist++) {
+    size_t Num = max - dist;
+    //std::cout << "dist = " << dist << ",  Num = " << Num << std::endl;
+    for (size_t i = 0; i < Num; i++) {
+      //std::cout << "i = " << i << std::endl;
+      matrices[dist + 1][i][dist + i] = 1;
+      matrices[dist + 1][dist + i][i] = 1;
+      matrices[dist + 1][i + max][dist + i + max] = -1;
+      matrices[dist + 1][dist + i + max][i + max] = -1;
+      matrices[dist + max][i][dist + i] = complex<double>(0, -1);
+      matrices[dist + max][dist + i][i] = complex<double>(0, 1);
+      matrices[dist + max][i + max][dist + i + max] = complex<double>(0, -1);
+      matrices[dist + max][dist + i + max][i + max] = complex<double>(0, 1);
+    }
+  }
+  std::ofstream inputFile(fileName);
+  if (!inputFile.is_open()) {
+    std::cerr << "Failed to open file for writing." << std::endl;
+  }
+  inputFile << "\"XXZ Test: mDim = " << matrixNum - 1 << ", nBLOCK = 1, {"
+            << matrixSize * 2 << "}\"" << std::endl;
+  inputFile << matrixNum - 1 << "  =  mDIM" << std::endl;
+  inputFile << "1  =  nBLOCK" << std::endl;
+  inputFile << matrixSize * 2 << "  = bLOCKsTRUCT" << std::endl;
+  inputFile << "{";
+  for (size_t i = 1; i < 2 * max; i++) {
+    if (i == 2) {
+      //inputFile << max - 1;
+      inputFile << 1;
+    }
+    else {
+      inputFile << 0;
+    }
+    if (i < 2 * max - 1) {
+      inputFile << ", ";
+    }
+  }
+  inputFile << " }" << std::endl;
+  for (size_t num = 0; num < matrixNum; num++) {
+    for (size_t i = 0; i < matrixSize; i++) {
+      // First Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j].real()) < ERROR) {
+          continue;
+        }
+        inputFile << num << " "
+                  << "1 " << i + 1 << " " << j + 1 << " " << matrices[num][i][j].real()
+                  << std::endl;
+      }
+      // Second Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j].imag()) < ERROR) {
+          continue;
+        }
+
+        inputFile << num << " "
+                  << "1 " << i + 1 << " " << j + 1 + matrixSize << " "
+                  << -matrices[num][i][j].imag() << std::endl;
+      }
+    }
+    for (size_t i = 0; i < matrixSize; i++) {
+      // Fourth Block
+      for (size_t j = i; j < matrixSize; j++) {
+        if (std::abs(matrices[num][i][j].real()) < ERROR) {
+          continue;
+        }
+
+        inputFile << num << " "
+                  << "1 " << i + 1 + matrixSize << " " << j + 1 + matrixSize << " "
+                  << matrices[num][i][j].real() << std::endl;
+      }
+    }
+  }
+  inputFile.close();
+  std::cout << "File has been written successfully." << std::endl;
+}
 //////////////////////////////////////////////////////////////////////////////////
 void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
                                  HardCore1DOpBasis & basis,
@@ -364,7 +457,8 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     for (size_t j = 0; j < matrixSize; j++) {
       HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > polyIJ =
           constraints.getIJPoly(i, j);
-      vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
+      //vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
+      vector<complex<double> > entryIJ = basis.projPolyInf(polyIJ);
       for (size_t k = 0; k < matrixNum; k++) {
         matrices[k][i][j] = entryIJ[k];
       }
@@ -382,7 +476,12 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
   inputFile << matrixSize * 2 << "  = bLOCKsTRUCT" << std::endl;
   inputFile << "{";
   for (size_t i = 1; i < ham.size(); i++) {
-    inputFile << ham[i].real();
+    if (i == 1) {
+      inputFile << 2 * ham[i].real();
+    }
+    else {
+      inputFile << ham[i].real();
+    }
     if (i < ham.size() - 1) {
       inputFile << ", ";
     }
@@ -392,7 +491,7 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     for (size_t i = 0; i < matrixSize; i++) {
       // First Block
       for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j]) < ERROR) {
+        if (std::abs(matrices[num][i][j].real()) < ERROR) {
           continue;
         }
         if (num == 0) {
@@ -408,7 +507,7 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
       }
       // Second Block
       for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j]) < ERROR) {
+        if (std::abs(matrices[num][i][j].imag()) < ERROR) {
           continue;
         }
         if (num == 0) {
@@ -426,7 +525,7 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     for (size_t i = 0; i < matrixSize; i++) {
       // Fourth Block
       for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j]) < ERROR) {
+        if (std::abs(matrices[num][i][j].real()) < ERROR) {
           continue;
         }
         if (num == 0) {

@@ -54,6 +54,7 @@ class HardCore1DLadderOp : public HardCoreLadderOp<int> {
   /*Overload operators.*/
   // If same type, compare index; if not same type, creator is always larger.
   virtual bool operator<(LadderOp<int> const & rhs) const;
+  void moveIndex(int i) { this->index += i; }
 };
 
 //---------------------------------------------------------------HardCoreMonomial--------
@@ -68,10 +69,14 @@ class HardCoreMonomial : public Monomial<OpType> {
   HardCoreMonomial(Monomial<OpType> const & rhs) : Monomial<OpType>(rhs) {}
   ~HardCoreMonomial() {}
   /*Tools for normalization.*/
+  void reverse();
   int findWrongOrder() const;
   bool isNorm() const;
   HardCoreMonomial<OpType> sliceExprS(size_t index);
   HardCoreMonomial<OpType> sliceExprE(size_t index);
+  /*Tools for infinite chain.*/
+  void moveIndex(int i);
+  bool equiv(HardCoreMonomial<OpType> const & rhs) const;
 };
 
 //--------------------------------------------------------------HardCorePolynomial-------

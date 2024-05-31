@@ -47,9 +47,9 @@ HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
     else {
     */
     ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-        complex<double>(-0.5, 0), MNud);
+        complex<double>(0.5, 0), MNud);
     ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
-        complex<double>(0.5, 0), MNdu);
+        complex<double>(-0.5, 0), MNdu);
     ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(
         complex<double>(Jz, 0), MNzz);
     ans += pair<complex<double>, HardCoreMonomial<HardCore1DLadderOp> >(

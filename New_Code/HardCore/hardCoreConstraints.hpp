@@ -30,8 +30,8 @@ class HardCore1DConsBaseSet
 class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int> {
  public:
   HardCore1DConsSet() : ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int>() {
-    //HardCore1DLadderOp unit(true);
-    //OpSet.push_back(unit);
+    HardCore1DLadderOp unit(true);
+    OpSet.push_back(unit);
   }
   virtual std::string toString();
   virtual void addBaseSet(ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
@@ -53,6 +53,8 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
                                  std::string fileName,
                                  vector<complex<double> > ham,
                                  vector<pair<size_t, size_t> > & pairs);
+
+void printSparseMatrixXX1D(size_t max, std::string fileName);
 
 void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
                     vector<pair<size_t, size_t> > & pairs);
