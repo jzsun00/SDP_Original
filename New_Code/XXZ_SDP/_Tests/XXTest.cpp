@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 21;
+  size_t sites = 4;
   std::string fileName = "XX_N_" + std::to_string(sites) + ".dat";
   std::string fileNameS = "XX_N_" + std::to_string(sites) + ".dat-s";
   //printMatrixXX1D(sites, fileName);

@@ -6,8 +6,8 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 48;
-  double Jz = -1.0;
+  size_t sites = 96;
+  double Jz = 1.0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -19,8 +19,8 @@ int main(void) {
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub1(0, sites - 1, 1);
   HardCore1DOpSubBasis sub2(0, sites - 1, 2);
-  HardCore1DOpSubBasis sub4(19, sites - 20, 4);
-  HardCore1DOpSubBasis sub6(22, sites - 23, 6);
+  HardCore1DOpSubBasis sub4(43, sites - 44, 4);
+  HardCore1DOpSubBasis sub6(46, sites - 46, 6);
   //sub1.init();
   sub2.init();
   sub4.init();
@@ -47,8 +47,8 @@ int main(void) {
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
-  HardCore1DConsBaseSet base2(19, sites - 20, 2);
-  HardCore1DConsBaseSet base3(22, sites - 23, 3);
+  HardCore1DConsBaseSet base2(43, sites - 44, 2);
+  HardCore1DConsBaseSet base3(46, sites - 46, 3);
   base1.init();
   base2.init();
   base3.init();
