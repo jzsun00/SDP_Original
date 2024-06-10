@@ -1,13 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: May 14, 2024
+  Updated: Jun 10, 2024
 
   Class:
+  COOMatrix, CSRMatrix
   
   Function:
-  string complex_toString(complex<double> num);
-  string complexVector_toString(vector<complex<double> > vec);
-  string complexMatrix_toString(vector<vector<complex<double> > > matrix);
+  string complex_toString(const complex<double> & num);
+  string complexVector_toString(const vector<complex<double> > & vec);
+  string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 
   Define general settings that can be used for the entire project.
 */
@@ -16,27 +17,39 @@
 #define ORI_SDP_GS_SETTINGS_HPP
 
 #include <complex>
-#include <sstream>
+#include <cstddef>
 #include <string>
 #include <vector>
 
-//--------------------------------------------------------------Macro Definitions--------
+//------------------------------------------------------------Constant Definitions-------
 
-/*Double and complex values below ERROR will be considered zero in computations.*/
-#define ERROR std::pow(10, -12)
+/*Double and complex values less than ERROR will be considered zero in computations.*/
+const double ERROR = std::pow(10, -12);
 /*Default output precision for complex numbers.*/
-#define COMPLEX_PRECISION 4
+const size_t COMPLEX_PRECISION = 4;
+
+//--------------------------------------------------------------Sparse Matrices----------
+
+template<typename DataType>
+class COOMatrix {
+ public:
+  COOMatrix() {}
+  ~COOMatrix() {}
+};
+
+template<typename DataType>
+class CSRMatrix {};
 
 //----------------------------------------------------------------Output Tools-----------
 
 /*Convert a single complex number to std::string.*/
-std::string complex_toString(std::complex<double> num);
+std::string complex_toString(const std::complex<double> & num);
 
 /*Convert an std::vector of complex numbers to std::string.*/
-std::string complexVector_toString(std::vector<std::complex<double> > vec);
+std::string complexVector_toString(const std::vector<std::complex<double> > & vec);
 
-/*Convert a matrix of complex numbers to std::string.*/
+/*Convert a dense matrix of complex numbers to std::string.*/
 std::string complexMatrix_toString(
-    std::vector<std::vector<std::complex<double> > > matrix);
+    const std::vector<std::vector<std::complex<double> > > & matrix);
 
 #endif  //ORI_SDP_GS_SETTINGS_HPP

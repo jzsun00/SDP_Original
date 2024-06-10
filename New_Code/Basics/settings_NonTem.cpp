@@ -1,23 +1,25 @@
 /*
   Jiazheng Sun
-  Updated: May 14, 2024
+  Updated: Jun 10, 2024
 
   Implementations of functions:
-  string complex_toString(complex<double> num);
-  string complexVector_toString(vector<complex<double> > vec);
-  string complexMatrix_toString(vector<vector<complex<double> > > matrix);
+  string complex_toString(const complex<double> & num);
+  string complexVector_toString(const vector<complex<double> > & vec);
+  string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 */
 
 #ifndef ORI_SDP_GS_SETTINGS_NONTEM_CPP
 #define ORI_SDP_GS_SETTINGS_NONTEM_CPP
 
-#include <string>
+#include <cstddef>
+#include <sstream>
 
 #include "./settings.hpp"
 
 //----------------------------------------------------------------Output Tools-----------
 
-std::string complex_toString(std::complex<double> num) {
+/*Convert a single complex number to std::string.*/
+std::string complex_toString(const std::complex<double> & num) {
   std::ostringstream oss;
   oss.precision(COMPLEX_PRECISION);
   oss << std::scientific;
@@ -31,13 +33,15 @@ std::string complex_toString(std::complex<double> num) {
   return oss.str();
 }
 
-std::string complexVector_toString(std::vector<std::complex<double> > vec) {
+/*Convert an std::vector of complex numbers to std::string.*/
+std::string complexVector_toString(const std::vector<std::complex<double> > & vec) {
   std::string ans = "[ ";
   size_t count = 1;
-  for (size_t i = 0; i < vec.size(); ++i) {
+  const size_t len = vec.size();
+  for (size_t i = 0; i < len; ++i) {
     ans += (std::to_string(count) + "    ");
     ans += complex_toString(vec[i]);
-    if (i < vec.size() - 1) {
+    if (i != len - 1) {
       ans += "\n";
     }
     else {
@@ -48,17 +52,19 @@ std::string complexVector_toString(std::vector<std::complex<double> > vec) {
   return ans;
 }
 
+/*Convert a dense matrix of complex numbers to std::string.*/
 std::string complexMatrix_toString(
-    std::vector<std::vector<std::complex<double> > > matrix) {
+    const std::vector<std::vector<std::complex<double> > > & matrix) {
   std::string ans = "[ ";
   size_t count = 1;
-  for (size_t i = 0; i < matrix.size(); ++i) {
+  const size_t len = matrix.size();
+  for (size_t i = 0; i < len; ++i) {
     ans += (std::to_string(count) + "    ");
-    for (size_t j = 0; j < matrix.size(); ++j) {
+    for (size_t j = 0; j < len; ++j) {
       ans += complex_toString(matrix[i][j]);
       ans += "    ";
     }
-    if (i < matrix.size() - 1) {
+    if (i != matrix.size() - 1) {
       ans += "\n";
     }
     else {
