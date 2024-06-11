@@ -18,8 +18,12 @@
 
 #include <complex>
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <vector>
+
+using std::complex;
+using std::vector;
 
 //------------------------------------------------------------Constant Definitions-------
 
@@ -43,13 +47,12 @@ class CSRMatrix {};
 //----------------------------------------------------------------Output Tools-----------
 
 /*Convert a single complex number to std::string.*/
-std::string complex_toString(const std::complex<double> & num);
+std::string complex_toString(const complex<double> & num);
 
 /*Convert an std::vector of complex numbers to std::string.*/
-std::string complexVector_toString(const std::vector<std::complex<double> > & vec);
+std::string complexVector_toString(const vector<complex<double> > & vec);
 
 /*Convert a dense matrix of complex numbers to std::string.*/
-std::string complexMatrix_toString(
-    const std::vector<std::vector<std::complex<double> > > & matrix);
+std::string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 
 #endif  //ORI_SDP_GS_SETTINGS_HPP

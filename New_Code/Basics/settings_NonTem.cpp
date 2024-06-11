@@ -19,7 +19,7 @@
 //----------------------------------------------------------------Output Tools-----------
 
 /*Convert a single complex number to std::string.*/
-std::string complex_toString(const std::complex<double> & num) {
+std::string complex_toString(const complex<double> & num) {
   std::ostringstream oss;
   oss.precision(COMPLEX_PRECISION);
   oss << std::scientific;
@@ -34,7 +34,7 @@ std::string complex_toString(const std::complex<double> & num) {
 }
 
 /*Convert an std::vector of complex numbers to std::string.*/
-std::string complexVector_toString(const std::vector<std::complex<double> > & vec) {
+std::string complexVector_toString(const vector<complex<double> > & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();
@@ -53,18 +53,18 @@ std::string complexVector_toString(const std::vector<std::complex<double> > & ve
 }
 
 /*Convert a dense matrix of complex numbers to std::string.*/
-std::string complexMatrix_toString(
-    const std::vector<std::vector<std::complex<double> > > & matrix) {
+std::string complexMatrix_toString(const vector<vector<complex<double> > > & matrix) {
   std::string ans = "[ ";
   size_t count = 1;
-  const size_t len = matrix.size();
-  for (size_t i = 0; i < len; ++i) {
+  const size_t lenRow = matrix.size();
+  const size_t lenCol = matrix[0].size();
+  for (size_t i = 0; i < lenRow; ++i) {
     ans += (std::to_string(count) + "    ");
-    for (size_t j = 0; j < len; ++j) {
+    for (size_t j = 0; j < lenCol; ++j) {
       ans += complex_toString(matrix[i][j]);
       ans += "    ";
     }
-    if (i != matrix.size() - 1) {
+    if (i != lenRow - 1) {
       ans += "\n";
     }
     else {
