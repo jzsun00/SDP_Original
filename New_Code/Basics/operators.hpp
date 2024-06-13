@@ -7,8 +7,8 @@
 
   Define general operators, monomials and polynomials.
   Also define ladder operators and spin operators inherited from operators.
-  That serves as fundamental definitions of operators in the second quantization form
-  as well as for spin systems.
+  That serves as fundamental definitions of operators in the second quantization
+  form as well as for spin systems.
   Fermi and Boson operators should inherit LadderOp, Monomial, Polynomial and
   add related algebra.
   Spin operators should inherit SpinOp, Monomial, Polynomial and add algebra.
@@ -18,20 +18,11 @@
 #define ORI_SDP_GS_OPERATORS_HPP
 
 #include <algorithm>
-#include <complex>
 #include <cstdlib>
-#include <iostream>
 #include <limits>
 #include <stdexcept>
-#include <string>
-#include <utility>
-#include <vector>
 
 #include "./settings.hpp"
-
-using std::complex;
-using std::pair;
-using std::vector;
 
 //---------------------------------------------------------------Operator---------------
 

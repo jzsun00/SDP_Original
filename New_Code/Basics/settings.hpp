@@ -1,9 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Jun 10, 2024
+  Updated: Jun 12, 2024
 
   Class:
-  COOMatrix, CSRMatrix
+  DenseMatrix<DataType>
+  COOMatrix<DataType>
+  CSRMatrix<DataType>
   
   Function:
   string complex_toString(const complex<double> & num);
@@ -19,32 +21,83 @@
 #include <complex>
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 using std::complex;
+using std::pair;
 using std::vector;
 
 //------------------------------------------------------------Constant Definitions-------
 
-/*Double and complex values less than ERROR will be considered zero in computations.*/
+/*Double values less than ERROR will be considered zero in computations.*/
 const double ERROR = std::pow(10, -12);
 /*Default output precision for complex numbers.*/
 const size_t COMPLEX_PRECISION = 4;
 
-//--------------------------------------------------------------Sparse Matrices----------
+//------------------------------------------------------------------Matrices-------------
 
+/*Regular dense matrix.*/
 template<typename DataType>
-class COOMatrix {
+class DenseMatrix {
+ protected:
+  size_t nrows;                    //Number of rows
+  size_t ncols;                    //Number of columns
+  vector<vector<DataType> > data;  //Values of elements
  public:
-  COOMatrix() {}
-  ~COOMatrix() {}
+  DenseMatrix() : nrows(0), ncols(0), data() {}
+  DenseMatrix(size_t nrows, size_t ncols);
+  DenseMatrix(const DenseMatrix<DataType> & rhs) :
+      nrows(rhs.nrows), ncols(rhs.ncols), data(rhs.data) {}
+  ~DenseMatrix() {}
+  /*Get information of the matrix.*/
+  pair<size_t, size_t> getDim() const { return pair<size_t, size_t>(nrows, ncols); }
+  vector<vector<DataType> > getMatrix() const { return data; }
+  DataType getData(size_t i, size_t j) const { return data[i][j]; }
+  virtual std::string toString() const = 0;
 };
 
+/*Coordinate Format (COO) sparse matrix.*/
+template<typename DataType>
+class COOMatrix {
+ private:
+  size_t nrows;           //Number of rows
+  size_t ncols;           //Number of columns
+  size_t nnz;             //Number of non-zero elements
+  vector<size_t> rows;    //Row indices of non-zero elements
+  vector<size_t> cols;    //Column indices of non-zero elements
+  vector<DataType> data;  //Values of non-zero elements
+
+ public:
+  COOMatrix() : nrows(0), ncols(0), nnz(0), rows(), cols(), data() {}
+  COOMatrix(size_t nrows, size_t ncols) :
+      nrows(nrows), ncols(ncols), nnz(0), rows(), cols(), data() {}
+  COOMatrix(const COOMatrix<DataType> & rhs) :
+      nrows(rhs.nrows),
+      ncols(rhs.ncols),
+      nnz(rhs.nnz),
+      rows(rhs.rows),
+      cols(rhs.cols),
+      data(rhs.data) {}
+  ~COOMatrix() {}
+  /*Get information of the matrix.*/
+  pair<size_t, size_t> getDim() const { return pair<size_t, size_t>(nrows, ncols); }
+  size_t getNnz() const { return nnz; }
+  vector<size_t> getRows() const { return rows; }
+  vector<size_t> getCols() const { return cols; }
+  vector<DataType> getData() const { return data; }
+  std::string toString() const = 0;
+  /*Modify the matrix.*/
+  void addData(size_t rowId, size_t colId, DataType newData);
+};
+
+/*Compressed Sparse Row (CSR) sparse matrix.*/
 template<typename DataType>
 class CSRMatrix {};
 
-//----------------------------------------------------------------Output Tools-----------
+//----------------------------------------------------------------Output Tools----------
 
 /*Convert a single complex number to std::string.*/
 std::string complex_toString(const complex<double> & num);
