@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 13, 2024
+  Updated: Jun 14, 2024
 
   Class Implementations:
   DoubleDenseMatrix
@@ -11,6 +11,9 @@
 
 #include <cblas.h>
 #include <lapacke.h>
+
+#include <cstddef>
+#include <cstdlib>
 
 #include "./dense.hpp"
 
@@ -36,6 +39,12 @@ std::string DoubleDenseMatrix::toString() const {
   return ans;
 }
 
+void DoubleDenseMatrix::fillRandomNum() {
+  for (size_t i = 0; i < data.size(); ++i) {
+    data[i] = std::rand() % rand_max;
+  }
+}
+
 DoubleDenseMatrix DoubleDenseMatrix::operator*(const DoubleDenseMatrix & rhs) const {
   DoubleDenseMatrix ans(nrows, rhs.ncols);
   cblas_dgemm(CblasColMajor,
@@ -46,12 +55,12 @@ DoubleDenseMatrix DoubleDenseMatrix::operator*(const DoubleDenseMatrix & rhs) co
               ncols,
               1.0,
               data.data(),
-              ncols,
+              nrows,
               rhs.data.data(),
-              rhs.ncols,
+              rhs.nrows,
               0.0,
               ans.data.data(),
-              ans.ncols);
+              ans.nrows);
   return ans;
 }
 

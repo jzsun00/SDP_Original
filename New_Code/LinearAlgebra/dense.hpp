@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 13, 2024
+  Updated: Jun 14, 2024
 
   Class:
   DenseMatrix<DataType>
@@ -18,6 +18,10 @@
 #include <vector>
 
 using std::vector;
+
+//----------------------------------------------------------------Constants-----------
+
+const size_t rand_max = 100;  //Maximum value for generated random number
 
 //---------------------------------------------------------------DenseMatrix----------
 
@@ -57,6 +61,9 @@ class DoubleDenseMatrix : public DenseMatrix<double> {
   ~DoubleDenseMatrix() {}
   /*Get information of the matrix.*/
   virtual std::string toString() const;
+  /*Modify the matrix.*/
+  void fillRandomNum();
+  /**/
   DoubleDenseMatrix operator*(const DoubleDenseMatrix & rhs) const;
 };
 

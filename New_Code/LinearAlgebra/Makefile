@@ -9,7 +9,7 @@ OBJ_DIR := ./_Objs
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic
-LDFLAGS := -lgfortran -lblas -llapack -lopenblas
+LDFLAGS := -lopenblas
 
 # Source files
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 13, 2024
+  Updated: Jun 14, 2024
 
   Class Implementations:
   DenseMatrix<DataType>
