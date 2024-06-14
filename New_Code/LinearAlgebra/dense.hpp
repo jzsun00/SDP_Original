@@ -1,46 +1,63 @@
 /*
   Jiazheng Sun
-  Updated: Jun 12, 2024
+  Updated: Jun 13, 2024
 
   Class:
   DenseMatrix<DataType>
+  DoubleDenseMatrix
 
-  Define general settings that can be used for the entire project.
+  Define tools for dense matrix operations using BLAS and LAPACK.
 */
 
 #ifndef LA_DENSE_HPP
 #define LA_DENSE_HPP
 
-#include <complex>
 #include <cstddef>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <utility>
 #include <vector>
 
-using std::complex;
-using std::pair;
 using std::vector;
 
-/*Regular dense matrix.*/
+//---------------------------------------------------------------DenseMatrix----------
+
+/*General dense matrix.
+  Use column-major ordering for BLAS and LAPACK interface.*/
 template<typename DataType>
 class DenseMatrix {
  protected:
-  size_t nrows;                    //Number of rows
-  size_t ncols;                    //Number of columns
-  vector<vector<DataType> > data;  //Values of elements
+  size_t nrows;           //Number of rows
+  size_t ncols;           //Number of columns
+  vector<DataType> data;  //Values of elements
  public:
   DenseMatrix() : nrows(0), ncols(0), data() {}
-  DenseMatrix(size_t nrows, size_t ncols);
+  DenseMatrix(size_t nrows, size_t ncols) :
+      nrows(nrows), ncols(ncols), data(nrows * ncols) {}
   DenseMatrix(const DenseMatrix<DataType> & rhs) :
       nrows(rhs.nrows), ncols(rhs.ncols), data(rhs.data) {}
   ~DenseMatrix() {}
   /*Get information of the matrix.*/
-  pair<size_t, size_t> getDim() const { return pair<size_t, size_t>(nrows, ncols); }
-  vector<vector<DataType> > getMatrix() const { return data; }
-  DataType getData(size_t i, size_t j) const { return data[i][j]; }
+  size_t getNrows() const { return nrows; }
+  size_t getNcols() const { return ncols; }
+  vector<DataType> getAllData() const { return data; }
+  DataType operator()(size_t rowIdx, size_t colIdx) const;
   virtual std::string toString() const = 0;
+  /*Modify the matrix.*/
+  void setData(size_t rowIdx, size_t colIdx, DataType value);
+};
+
+//-----------------------------------------------------------DoubleDenseMatrix--------
+
+/*Double valued dense matrix.*/
+class DoubleDenseMatrix : public DenseMatrix<double> {
+ public:
+  DoubleDenseMatrix() : DenseMatrix<double>() {}
+  DoubleDenseMatrix(size_t nrows, size_t ncols) : DenseMatrix<double>(nrows, ncols) {}
+  DoubleDenseMatrix(const DoubleDenseMatrix & rhs) : DenseMatrix<double>(rhs) {}
+  ~DoubleDenseMatrix() {}
+  /*Get information of the matrix.*/
+  virtual std::string toString() const;
+  DoubleDenseMatrix operator*(const DoubleDenseMatrix & rhs) const;
 };
 
 #endif  //LA_DENSE_HPP
