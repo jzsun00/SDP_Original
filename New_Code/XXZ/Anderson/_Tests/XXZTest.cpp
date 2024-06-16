@@ -4,18 +4,18 @@
 
 #include "../../../XXZ/hamiltonians_XXZ.hpp"
 #include "../../hamiltonians_XXZ.hpp"
-#include "arcomp.h"
-#include "arlnsmat.h"
-#include "arlscomp.h"
-#include "lcompsol.h"
+#include "../include/arcomp.h"
+#include "../include/arlnsmat.h"
+#include "../include/arlscomp.h"
+#include "../matrices/complex/lcompsol.h"
 
 using std::complex;
 using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 12;
-  double Jz = -1.2;
+  size_t sites = 7;
+  double Jz = 0;
   int dim = std::pow(2, sites);
   std::cout << "dim = " << dim << std::endl;
 

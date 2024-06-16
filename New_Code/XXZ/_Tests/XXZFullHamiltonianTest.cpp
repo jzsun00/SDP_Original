@@ -1,7 +1,7 @@
 #include "../hamiltonians_XXZ.hpp"
 
 int main(void) {
-  size_t sites = 5;
+  size_t sites = 3;
   double Jz = 0.2;
   std::cout << "sites = " << sites << ", Jz = " << Jz << std::endl;
   SpinHalfPolynomial poly = makePoly(sites, Jz);

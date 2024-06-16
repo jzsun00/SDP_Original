@@ -13,15 +13,6 @@
 
 #include "./settings.hpp"
 
-//----------------------------------------------------------------DenseMatrix------------
-
-template<typename DataType>
-DenseMatrix<DataType>::DenseMatrix(size_t nrows, size_t ncols) :
-    nrows(nrows),
-    ncols(ncols),
-    data(vector<vector<DataType> >(nrows, vector<DataType>(ncols))) {
-}
-
 //-----------------------------------------------------------------COOMatrix-------------
 
 template<typename DataType>

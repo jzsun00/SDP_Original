@@ -10,6 +10,7 @@
 #define ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
 
 #include <fstream>
+#include <iostream>
 
 #include "./hardCoreConstraints.hpp"
 
@@ -457,6 +458,9 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     for (size_t j = 0; j < matrixSize; j++) {
       HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > polyIJ =
           constraints.getIJPoly(i, j);
+      //if ((polyIJ.getSize() % 2) != 0) {
+      //  continue;
+      //}
       //vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
       vector<complex<double> > entryIJ = basis.projPolyInf(polyIJ);
       for (size_t k = 0; k < matrixNum; k++) {
@@ -465,6 +469,8 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     }
   }
   transMatToReIm(matrices, pairs);
+  std::cout << "\nMatrix construction completed" << std::endl
+            << "Start writing file" << std::endl;
   std::ofstream inputFile(fileName);
   if (!inputFile.is_open()) {
     std::cerr << "Failed to open file for writing." << std::endl;

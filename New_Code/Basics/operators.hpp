@@ -1,10 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Jun 10, 2024
+  Updated: Jun 15, 2024
 
   Class:
-  Operator, Ladderop, SpinOp, Monomial, Polynomial.
-
+  Operator<IndexType>
+  LadderOp<IndexType>
+  SpinOp<IndexType>
+  Monomial<OpType>
+  Polynomial<MonomialType>
+  
   Define general operators, monomials and polynomials.
   Also define ladder operators and spin operators inherited from operators.
   That serves as fundamental definitions of operators in the second quantization
@@ -36,7 +40,7 @@ class Operator {
     Default constructor use random value index.*/
   Operator() {}
   Operator(IndexType index) : index(index) {}
-  Operator(Operator const & rhs) : index(rhs.index) {}
+  Operator(Operator<IndexType> const & rhs) : index(rhs.index) {}
   ~Operator() {}
   /*Get information of the operator.*/
   IndexType getIndex() const { return index; }
@@ -80,28 +84,33 @@ class SpinOp : public Operator<IndexType> {
  protected:
   bool isZ;
   bool isPlus;
+  bool isUnit;
 
  public:
   /*Construct a spin operator with specified index,
     default constructor use INT_MIN and Sz.
     If passing in one int, it's Sz;
     if passing in one int and one bool, it's S+ or S-.*/
-  SpinOp() : Operator<IndexType>(), isZ(true), isPlus(false) {}
-  SpinOp(IndexType index) : Operator<IndexType>(index), isZ(true), isPlus(false) {}
+  SpinOp() : Operator<IndexType>(), isZ(true), isPlus(false), isUnit(false) {}
+  SpinOp(bool isUnit) :
+      Operator<IndexType>(), isZ(false), isPlus(false), isUnit(isUnit) {}
+  SpinOp(IndexType index) :
+      Operator<IndexType>(index), isZ(true), isPlus(false), isUnit(false) {}
   SpinOp(IndexType index, bool isPlus) :
-      Operator<IndexType>(index), isZ(false), isPlus(isPlus) {}
+      Operator<IndexType>(index), isZ(false), isPlus(isPlus), isUnit(false) {}
   SpinOp(IndexType index, bool isZ, bool isPlus) :
-      Operator<IndexType>(index), isZ(isZ), isPlus(isPlus) {}
-  SpinOp(SpinOp const & rhs) :
-      Operator<IndexType>(rhs), isZ(rhs.isZ), isPlus(rhs.isPlus) {}
+      Operator<IndexType>(index), isZ(isZ), isPlus(isPlus), isUnit(false) {}
+  SpinOp(SpinOp<IndexType> const & rhs) :
+      Operator<IndexType>(rhs), isZ(rhs.isZ), isPlus(rhs.isPlus), isUnit(rhs.isUnit) {}
   ~SpinOp() {}
-  /*Get information of the ladder operator.*/
+  /*Get information of the spin operator.*/
   bool getIsZ() const { return isZ; }
   bool getIsPlus() const { return isPlus; }
+  bool getIsUnit() const { return isUnit; }
   virtual std::string toString() const;
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
-  SpinOp & operator=(SpinOp const & rhs);
+  SpinOp<IndexType> & operator=(SpinOp<IndexType> const & rhs);
   bool operator==(SpinOp const & rhs) const;
   virtual void herm();
 };
@@ -147,10 +156,10 @@ class Polynomial {
     Default constructor use an empty vector.*/
   Polynomial() : Terms() {}
   Polynomial(MonomialType const & mn) : Terms() {
-    Terms.push_back(TermType(complex<double>(1, 0), mn));
+    Terms.push_back(pair<complex<double>, MonomialType>(complex<double>(1, 0), mn));
   }
   Polynomial(complex<double> pref, MonomialType const & mn) : Terms() {
-    Terms.push_back(TermType(pref, mn));
+    Terms.push_back(pair<complex<double>, MonomialType>(pref, mn));
   }
   Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
   ~Polynomial() {}

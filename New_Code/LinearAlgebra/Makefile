@@ -36,4 +36,4 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
 .PHONY: all clean
 
 clean:
-	rm -rf $(SRC_DIR)/*.cpp~ $(SRC_DIR)/*.hpp~ $(TEST_DIR)/*.cpp~
+	rm -rf ./*~ $(SRC_DIR)/*.cpp~ $(SRC_DIR)/*.hpp~ $(TEST_DIR)/*.cpp~

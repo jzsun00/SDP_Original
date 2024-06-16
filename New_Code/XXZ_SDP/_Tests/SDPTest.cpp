@@ -7,7 +7,7 @@ using std::endl;
 
 int main(void) {
   size_t sites = 96;
-  double Jz = 1.0;
+  double Jz = 0.125;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -17,19 +17,16 @@ int main(void) {
   //     << poly1.toString() << endl;
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
-  HardCore1DOpSubBasis sub1(0, sites - 1, 1);
   HardCore1DOpSubBasis sub2(0, sites - 1, 2);
-  HardCore1DOpSubBasis sub4(43, sites - 44, 4);
-  HardCore1DOpSubBasis sub6(46, sites - 46, 6);
-  //sub1.init();
+  HardCore1DOpSubBasis sub4(42, sites - 43, 4);
+  //HardCore1DOpSubBasis sub6(48, sites - 48, 6);
   sub2.init();
   sub4.init();
-  sub6.init();
+  //sub6.init();
   HardCore1DOpBasis basis;
-  //basis.addSubspace(sub1);
   basis.addSubspace(sub2);
   basis.addSubspace(sub4);
-  basis.addSubspace(sub6);
+  //basis.addSubspace(sub6);
   cout << "Operator Basis:" << endl;
   //cout << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = findHermPairs(basis);
@@ -47,18 +44,18 @@ int main(void) {
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
-  HardCore1DConsBaseSet base2(43, sites - 44, 2);
-  HardCore1DConsBaseSet base3(46, sites - 46, 3);
+  HardCore1DConsBaseSet base2(42, sites - 43, 2);
+  //HardCore1DConsBaseSet base3(48, sites - 48, 3);
   base1.init();
   base2.init();
-  base3.init();
+  //base3.init();
   HardCore1DConsSet fullSet;
   fullSet.addBaseSet(base2);
   fullSet.addBaseSet(base1);
-  fullSet.addBaseSet(base3);
+  //fullSet.addBaseSet(base3);
   cout << "Constraint operator set:" << endl;
   //cout << fullSet.toString() << endl;
-  std::string fileName = "N_" + std::to_string(sites) + "_Jz_" + ".dat";
+  //std::string fileName = "N_" + std::to_string(sites) + "_Jz_" + ".dat";
   std::string fileNameS = "N_" + std::to_string(sites) + ".dat-s";
   cout << "\nNow start writing data files" << endl;
   //printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
