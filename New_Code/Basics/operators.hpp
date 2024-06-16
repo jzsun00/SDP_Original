@@ -18,8 +18,8 @@
   Spin operators should inherit SpinOp, Monomial, Polynomial and add algebra.
 */
 
-#ifndef ORI_SDP_GS_OPERATORS_HPP
-#define ORI_SDP_GS_OPERATORS_HPP
+#ifndef QM_OPERATORS_HPP
+#define QM_OPERATORS_HPP
 
 #include <algorithm>
 #include <cstdlib>
@@ -40,8 +40,8 @@ class Operator {
     Default constructor use random value index.*/
   Operator() {}
   Operator(IndexType index) : index(index) {}
-  Operator(Operator<IndexType> const & rhs) : index(rhs.index) {}
-  ~Operator() {}
+  Operator(const Operator<IndexType> & rhs) : index(rhs.index) {}
+  virtual ~Operator() {}
   /*Get information of the operator.*/
   IndexType getIndex() const { return index; }
   virtual std::string toString() const = 0;
@@ -67,7 +67,7 @@ class LadderOp : public Operator<IndexType> {
   LadderOp(bool isUnit) : Operator<IndexType>(), isUnit(isUnit) {}
   LadderOp(LadderOp const & rhs) :
       Operator<IndexType>(rhs), isUnit(rhs.isUnit), creatorF(rhs.creatorF) {}
-  ~LadderOp() {}
+  virtual ~LadderOp() {}
   /*Get information of the ladder operator.*/
   bool getCreatorF() const { return creatorF; }
   bool getIsUnit() const { return isUnit; }
@@ -88,9 +88,10 @@ class SpinOp : public Operator<IndexType> {
 
  public:
   /*Construct a spin operator with specified index,
-    default constructor use INT_MIN and Sz.
-    If passing in one int, it's Sz;
-    if passing in one int and one bool, it's S+ or S-.*/
+    default constructor use random value index and Sz.
+    If only passing in a bool value, it's identity operator;
+    If only passing in an index, it's Sz with the specified index;
+    if passing in one index and one bool, it's S+ or S-.*/
   SpinOp() : Operator<IndexType>(), isZ(true), isPlus(false), isUnit(false) {}
   SpinOp(bool isUnit) :
       Operator<IndexType>(), isZ(false), isPlus(false), isUnit(isUnit) {}
@@ -100,9 +101,9 @@ class SpinOp : public Operator<IndexType> {
       Operator<IndexType>(index), isZ(false), isPlus(isPlus), isUnit(false) {}
   SpinOp(IndexType index, bool isZ, bool isPlus) :
       Operator<IndexType>(index), isZ(isZ), isPlus(isPlus), isUnit(false) {}
-  SpinOp(SpinOp<IndexType> const & rhs) :
+  SpinOp(const SpinOp<IndexType> & rhs) :
       Operator<IndexType>(rhs), isZ(rhs.isZ), isPlus(rhs.isPlus), isUnit(rhs.isUnit) {}
-  ~SpinOp() {}
+  virtual ~SpinOp() {}
   /*Get information of the spin operator.*/
   bool getIsZ() const { return isZ; }
   bool getIsPlus() const { return isPlus; }
@@ -110,8 +111,8 @@ class SpinOp : public Operator<IndexType> {
   virtual std::string toString() const;
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
-  SpinOp<IndexType> & operator=(SpinOp<IndexType> const & rhs);
-  bool operator==(SpinOp const & rhs) const;
+  SpinOp<IndexType> & operator=(const SpinOp<IndexType> & rhs);
+  bool operator==(const SpinOp & rhs) const;
   virtual void herm();
 };
 
@@ -123,23 +124,23 @@ class Monomial {
   vector<OpType> Expr;
 
  public:
-  /*Construct a monomial with one ladder operator or copy another.
+  /*Construct a monomial with one operator or a vector of operators.
     Default constructor use an empty vector.*/
   Monomial() : Expr() {}
   Monomial(OpType & Op) : Expr(1, Op) {}
-  Monomial(vector<OpType> const & Expr) : Expr(Expr) {}
-  Monomial(Monomial<OpType> const & rhs) { Expr = rhs.Expr; }
-  ~Monomial() {}
+  Monomial(const vector<OpType> & Expr) : Expr(Expr) {}
+  Monomial(const Monomial<OpType> & rhs) : Expr(rhs.Expr) {}
+  virtual ~Monomial() {}
   /*Get information of the monomial.*/
   size_t getSize() const { return Expr.size(); }
   std::string toString() const;
   /*Overload operators.*/
-  Monomial<OpType> & operator=(Monomial<OpType> const & rhs);
-  bool operator==(Monomial<OpType> const & rhs) const { return Expr == rhs.Expr; }
-  bool operator!=(Monomial<OpType> const & rhs) const { return !(*this == rhs); }
+  Monomial<OpType> & operator=(const Monomial<OpType> & rhs);
+  bool operator==(const Monomial<OpType> & rhs) const { return Expr == rhs.Expr; }
+  bool operator!=(const Monomial<OpType> & rhs) const { return !(*this == rhs); }
   OpType operator[](size_t n) const { return Expr[n]; }
-  Monomial<OpType> & operator*=(Monomial<OpType> const & rhs);
-  Monomial<OpType> & operator*=(OpType const & rhs);
+  Monomial<OpType> & operator*=(const Monomial<OpType> & rhs);
+  Monomial<OpType> & operator*=(const OpType & rhs);
   void herm();
 };
 
@@ -152,17 +153,14 @@ class Polynomial {
 
  public:
   typedef pair<complex<double>, MonomialType> TermType;
-  /*Construct a polynomial with one monomial or copy another.
+  /*Construct a polynomial with one monomial.
     Default constructor use an empty vector.*/
   Polynomial() : Terms() {}
-  Polynomial(MonomialType const & mn) : Terms() {
-    Terms.push_back(pair<complex<double>, MonomialType>(complex<double>(1, 0), mn));
-  }
-  Polynomial(complex<double> pref, MonomialType const & mn) : Terms() {
-    Terms.push_back(pair<complex<double>, MonomialType>(pref, mn));
-  }
-  Polynomial(Polynomial const & rhs) { Terms = rhs.Terms; }
-  ~Polynomial() {}
+  Polynomial(const MonomialType & mn) : Terms(1, TermType(complex<double>(1.0, 0), mn)) {}
+  Polynomial(complex<double> pref, const MonomialType & mn) :
+      Terms(1, TermType(pref, mn)) {}
+  Polynomial(const Polynomial & rhs) : Terms(rhs.Terms) {}
+  virtual ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
   typename vector<pair<complex<double>, MonomialType> >::const_iterator getBegin() const {
@@ -175,7 +173,6 @@ class Polynomial {
   /*Overload operators.*/
   Polynomial & operator=(Polynomial const & rhs);
   bool operator==(Polynomial const & rhs) { return Terms == rhs.Terms; }
-  // If the prefactor of rhs is less than 10^(-12), ignore += and -= operations
   Polynomial & operator+=(MonomialType const & rhs);
   Polynomial & operator+=(TermType const & rhs);
   Polynomial & operator+=(Polynomial const & rhs);
@@ -197,6 +194,4 @@ class Polynomial {
       MonomialType const & mn);
 };
 
-#include "operators_Tem.cpp"
-
-#endif  //ORI_SDP_GS_OPERATORS_HPP
+#endif  //QM_OPERATORS_HPP

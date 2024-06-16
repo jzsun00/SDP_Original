@@ -1,13 +1,16 @@
 /*
   Jiazheng Sun
-  Updated: May 14, 2024
+  Updated: Jun 15, 2024
 
-  Implementations of methods in class:
-  LadderOp, SpinOp, Monomial, Polynomial.
- */
+  Class Implementations:
+  LadderOp<IndexType>
+  SpinOp<IndexType>
+  Monomial<OpType>
+  Polynomial<MonomialType>
+*/
 
-#ifndef ORI_SDP_GS_OPERATORS_TEM_CPP
-#define ORI_SDP_GS_OPERATORS_TEM_CPP
+#ifndef QM_OPERATORS_TEM_CPP
+#define QM_OPERATORS_TEM_CPP
 
 #include "./operators.hpp"
 
@@ -51,22 +54,23 @@ std::string SpinOp<IndexType>::toString() const {
 }
 
 template<typename IndexType>
-SpinOp<IndexType> & SpinOp<IndexType>::operator=(SpinOp<IndexType> const & rhs) {
+SpinOp<IndexType> & SpinOp<IndexType>::operator=(const SpinOp<IndexType> & rhs) {
   this->index = rhs.index;
   this->isZ = rhs.isZ;
   this->isPlus = rhs.isPlus;
+  this->isUnit = rhs.isUnit;
   return *this;
 }
 
 template<typename IndexType>
 bool SpinOp<IndexType>::operator==(SpinOp<IndexType> const & rhs) const {
   return (this->index == rhs.index) && (this->isZ == rhs.isZ) &&
-         (this->isPlus == rhs.isPlus);
+         (this->isPlus == rhs.isPlus) && (this->isUnit == rhs.isUnit);
 }
 
 template<typename IndexType>
 void SpinOp<IndexType>::herm() {
-  if (isZ) {
+  if (isZ || isUnit) {
     return;
   }
   else {
@@ -87,13 +91,13 @@ std::string Monomial<OpType>::toString() const {
 }
 
 template<typename OpType>
-Monomial<OpType> & Monomial<OpType>::operator=(Monomial<OpType> const & rhs) {
+Monomial<OpType> & Monomial<OpType>::operator=(const Monomial<OpType> & rhs) {
   Expr = rhs.Expr;
   return *this;
 }
 
 template<typename OpType>
-Monomial<OpType> & Monomial<OpType>::operator*=(Monomial<OpType> const & rhs) {
+Monomial<OpType> & Monomial<OpType>::operator*=(const Monomial<OpType> & rhs) {
   if (rhs.getSize() == 1 && rhs[0].getIsUnit()) {
     return *this;
   }
@@ -106,7 +110,7 @@ Monomial<OpType> & Monomial<OpType>::operator*=(Monomial<OpType> const & rhs) {
 }
 
 template<typename OpType>
-Monomial<OpType> & Monomial<OpType>::operator*=(OpType const & toAdd) {
+Monomial<OpType> & Monomial<OpType>::operator*=(const OpType & toAdd) {
   if (toAdd.getIsUnit() && Expr.size() > 0) {
     return *this;
   }
@@ -303,4 +307,4 @@ void Polynomial<MonomialType>::eraseZeros() {
               Terms.end());
 }
 
-#endif  //ORI_SDP_GS_OPERATORS_TEM_CPP
+#endif  //QM_OPERATORS_TEM_CPP
