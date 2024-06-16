@@ -1,3 +1,10 @@
+/*
+  Jiazheng Sun
+  Updated: Jun 16, 2024
+
+  Calculate Anderson bound of XXZ model ground state energy.
+*/
+
 #include <cstdio>
 #include <string>
 #include <vector>

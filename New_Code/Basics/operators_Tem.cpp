@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 15, 2024
+  Updated: Jun 16, 2024
 
   Class Implementations:
   LadderOp<IndexType>

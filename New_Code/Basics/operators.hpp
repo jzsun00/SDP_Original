@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 15, 2024
+  Updated: Jun 16, 2024
 
   Class:
   Operator<IndexType>
@@ -27,6 +27,7 @@
 #include <stdexcept>
 
 #include "./settings.hpp"
+#include "./settings_Tem.cpp"
 
 //---------------------------------------------------------------Operator---------------
 

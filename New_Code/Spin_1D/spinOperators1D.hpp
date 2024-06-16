@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 15, 2024
+  Updated: Jun 16, 2024
 
   Class:
   SpinHalfOp
@@ -16,9 +16,10 @@
 #include <string>
 
 #include "../Basics/operators.hpp"
+#include "../Basics/operators_Tem.cpp"
 #include "./spinStates1D.hpp"
 
-//--------------------------------------------------------------- ---SpinHalfOp----------
+//-------------------------------------------------------------------SpinHalfOp----------
 
 class SpinHalfOp : public SpinOp<int> {
  public:
