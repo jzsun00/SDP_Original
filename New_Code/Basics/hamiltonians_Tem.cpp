@@ -1,17 +1,18 @@
 /*
   Jiazheng Sun
-  Updated: Mar 17, 2024
+  Updated: Jun 17, 2024
 
-  Implementations of methods in class:
-  SparseHamiltonian, FullHamiltonian.
+  Class Implementations:
+  SparseHamiltonian<PolyType, BaseStateType>
+  FullHamiltonian.<PolyType, BaseStateType>
  */
 
-#ifndef ORI_SDP_GS_HAMILTONIANS_TEM_CPP
-#define ORI_SDP_GS_HAMILTONIANS_TEM_CPP
+#ifndef QM_HAMILTONIANS_TEM_CPP
+#define QM_HAMILTONIANS_TEM_CPP
 
 #include "./hamiltonians.hpp"
 
-//-------------------------------------------------------------SparseHamiltonian---------
+//------------------------------------SparseHamiltonian<PolyType, BaseStateType>---------
 
 template<typename PolyType, typename BaseStateType>
 std::string SparseHamiltonian<PolyType, BaseStateType>::toString() {
@@ -36,6 +37,7 @@ std::string SparseHamiltonian<PolyType, BaseStateType>::toString() {
 template<typename polyType, typename BaseStateType>
 void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
     Basis<BaseStateType> & basis) {
+  dim = basis.getSize();
   pcol.push_back(0);
   for (long unsigned j = 0; j < dim; j++) {
     State<BaseStateType> mid = poly * basis[j];
@@ -53,7 +55,7 @@ void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
   //pcol.push_back(nnz);
 }
 
-//-------------------------------------------------------------FullHamiltonian-----------
+//-------------------------------------FullHamiltonian<PolyType, BaseStateType>----------
 
 template<typename PolyType, typename BaseStateType>
 std::string FullHamiltonian<PolyType, BaseStateType>::toString() {
@@ -88,4 +90,4 @@ void FullHamiltonian<PolyType, BaseStateType>::createMatrix(
   }
 }
 
-#endif  //ORI_SDP_GS_HAMILTONIANS_TEM_CPP
+#endif  //QM_HAMILTONIANS_TEM_CPP

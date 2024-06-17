@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -138,6 +139,7 @@ class Basis {
   /*Fill the basis.*/
   virtual void init() = 0;
   /*Get information of the basis.*/
+  size_t getSize() const { return States.size(); }
   virtual std::string toString() = 0;
   typename vector<BaseStateType>::const_iterator getBegin() const {
     return States.begin();

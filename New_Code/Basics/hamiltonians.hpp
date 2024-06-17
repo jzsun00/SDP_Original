@@ -1,22 +1,25 @@
 /*
   Jiazheng Sun
-  Updated: Mar 17, 2024
+  Updated: Jun 17, 2024
 
   Class:
-  Sparsehamiltonian, FullHamiltonian.
+  SparseHamiltonian<PolyType, BaseStateType>
+  FullHamiltonian<PolyType, BaseStateType>
 
   Define Hamiltonian matrices.
   SparseHamiltonian can be used for ARPACK++,
   FullHamiltonian is mainly for testing and verification.
 */
 
-#ifndef ORI_SDP_GS_HAMILTONIANS_HPP
-#define ORI_SDP_GS_HAMILTONIANS_HPP
+#ifndef QM_HAMILTONIANS_HPP
+#define QM_HAMILTONIANS_HPP
 
 #include "./operators.hpp"
+#include "./operators_Tem.cpp"
 #include "./states.hpp"
+#include "./states_Tem.cpp"
 
-//-------------------------------------------------------------SparseHamiltonian---------
+//------------------------------------SparseHamiltonian<PolyType, BaseStateType>---------
 
 template<typename PolyType, typename BaseStateType>
 class SparseHamiltonian {
@@ -43,13 +46,13 @@ class SparseHamiltonian {
   vector<int> getPcol() const { return pcol; }
   int getPcol(size_t i) const { return pcol[i]; }
   vector<complex<double> > getNzVal() const { return nzVal; }
-  complex<double> getNzVal(size_t i) const { return getNzVal[i]; }
+  complex<double> getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/
   void createMatrix(Basis<BaseStateType> & basis);
 };
 
-//-------------------------------------------------------------FullHamiltonian-----------
+//-------------------------------------FullHamiltonian<PolyType, BaseStateType>----------
 
 template<typename PolyType, typename BaseStateType>
 class FullHamiltonian {
@@ -75,6 +78,4 @@ class FullHamiltonian {
   void createMatrix(Basis<BaseStateType> const & basis);
 };
 
-#include "./hamiltonians_Tem.cpp"
-
-#endif  //ORI_SDP_GS_HAMILTONIANS_HPP
+#endif  //QM_HAMILTONIANS_HPP

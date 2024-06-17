@@ -9,6 +9,7 @@
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
 
 #include "../Basics/hamiltonians.hpp"
+#include "../Basics/hamiltonians_Tem.cpp"
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
 
