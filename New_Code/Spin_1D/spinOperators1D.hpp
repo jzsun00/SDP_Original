@@ -1,69 +1,68 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jun 17, 2024
 
   Class:
-  SpinHalfOp
-  SpinHalfMonomial
-  SpinHalfPolynomial.
+  SpinHalfOp1D
+  SpinHalfMonomial1D
+  SpinHalfPolynomial1D
 
   Define operators, monomials and polynomials for spin-1/2 systems.
 */
 
-#ifndef ORI_SDP_GS_SPINOPERATORS1D_HPP
-#define ORI_SDP_GS_SPINOPERATORS1D_HPP
-
-#include <string>
+#ifndef QM_SPINOPERATORS1D_HPP
+#define QM_SPINOPERATORS1D_HPP
 
 #include "../Basics/operators.hpp"
 #include "../Basics/operators_Tem.cpp"
 #include "./spinStates1D.hpp"
 
-//-------------------------------------------------------------------SpinHalfOp----------
+//--------------------------------------------------------------SpinHalfOp1D-------------
 
-class SpinHalfOp : public SpinOp<int> {
+class SpinHalfOp1D : public SpinOp<int> {
  public:
   /*Construct a spin-1/2 operator with specified index and type,
    default constructor use INT_MIN and z-component.*/
-  SpinHalfOp() : SpinOp<int>() {}
-  SpinHalfOp(int index) : SpinOp<int>(index) {}
-  SpinHalfOp(int index, bool isPlus) : SpinOp<int>(index, isPlus) {}
-  SpinHalfOp(int index, bool isZ, bool isPlus) : SpinOp<int>(index, isZ, isPlus) {}
-  SpinHalfOp(SpinHalfOp const & rhs) : SpinOp<int>(rhs) {}
-  ~SpinHalfOp() {}
+  SpinHalfOp1D() : SpinOp<int>() {}
+  SpinHalfOp1D(int index) : SpinOp<int>(index) {}
+  SpinHalfOp1D(int index, bool isPlus) : SpinOp<int>(index, isPlus) {}
+  SpinHalfOp1D(int index, bool isZ, bool isPlus) : SpinOp<int>(index, isZ, isPlus) {}
+  SpinHalfOp1D(SpinHalfOp1D const & rhs) : SpinOp<int>(rhs) {}
+  ~SpinHalfOp1D() {}
   /*Get information of the spin operator.*/
   virtual std::string indexToString() const { return std::to_string(index); }
   /*Overload operators.*/
-  SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
-  SpinHalfState operator*(SpinHalfState const & rhs) const;
+  SpinHalfState1D operator*(SpinHalfBaseState1D const & rhs) const;
+  SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
 };
 
-//----------------------------------------------------------------SpinHalfMonomial-------
+//-----------------------------------------------------------SpinHalfMonomial1D----------
 
-class SpinHalfMonomial : public Monomial<SpinHalfOp> {
+class SpinHalfMonomial1D : public Monomial<SpinHalfOp1D> {
  public:
-  SpinHalfMonomial() : Monomial<SpinHalfOp>() {}
-  SpinHalfMonomial(SpinHalfOp & Op) : Monomial<SpinHalfOp>(Op) {}
-  SpinHalfMonomial(SpinHalfMonomial const & rhs) : Monomial<SpinHalfOp>(rhs) {}
-  ~SpinHalfMonomial() {}
+  SpinHalfMonomial1D() : Monomial<SpinHalfOp1D>() {}
+  SpinHalfMonomial1D(SpinHalfOp1D & Op) : Monomial<SpinHalfOp1D>(Op) {}
+  SpinHalfMonomial1D(SpinHalfMonomial1D const & rhs) : Monomial<SpinHalfOp1D>(rhs) {}
+  ~SpinHalfMonomial1D() {}
   /*Overload operators.*/
-  SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
-  SpinHalfState operator*(SpinHalfState const & rhs) const;
+  SpinHalfState1D operator*(SpinHalfBaseState1D const & rhs) const;
+  SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
 };
 
-//---------------------------------------------------------------SpinHalfPolynomial------
+//----------------------------------------------------------SpinHalfPolynomial1D---------
 
-class SpinHalfPolynomial : public Polynomial<SpinHalfMonomial> {
+class SpinHalfPolynomial1D : public Polynomial<SpinHalfMonomial1D> {
  public:
-  SpinHalfPolynomial() : Polynomial<SpinHalfMonomial>() {}
-  SpinHalfPolynomial(SpinHalfMonomial const & mn) : Polynomial<SpinHalfMonomial>(mn) {}
-  SpinHalfPolynomial(Polynomial<SpinHalfMonomial> const & rhs) :
-      Polynomial<SpinHalfMonomial>(rhs) {}
-  ~SpinHalfPolynomial() {}
+  SpinHalfPolynomial1D() : Polynomial<SpinHalfMonomial1D>() {}
+  SpinHalfPolynomial1D(SpinHalfMonomial1D const & mn) :
+      Polynomial<SpinHalfMonomial1D>(mn) {}
+  SpinHalfPolynomial1D(Polynomial<SpinHalfMonomial1D> const & rhs) :
+      Polynomial<SpinHalfMonomial1D>(rhs) {}
+  ~SpinHalfPolynomial1D() {}
   /*Overload operators.*/
-  SpinHalfPolynomial & operator=(SpinHalfPolynomial const & rhs);
-  SpinHalfState operator*(SpinHalfBaseState const & rhs) const;
-  SpinHalfState operator*(SpinHalfState const & rhs) const;
+  SpinHalfPolynomial1D & operator=(SpinHalfPolynomial1D const & rhs);
+  SpinHalfState1D operator*(SpinHalfBaseState1D const & rhs) const;
+  SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
 };
 
-#endif  //ORI_SDP_GS_SPINOPERATORS1D_HPP
+#endif  //QM_SPINOPERATORS1D_HPP

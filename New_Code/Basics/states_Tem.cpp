@@ -1,14 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Mar 16, 2024
+  Updated: Jun 16, 2024
+  
+  Class Implementations:
+  Fockstate
+  State
+  SpinBaseState
+  
+  Function Implementations:
+*/
 
-  Implementations of methods in class:
-  Fockstate, State, SpinBaseState.
-  Also implementations of inner product.
- */
-
-#ifndef ORI_SDP_GS_STATES_TEM_CPP
-#define ORI_SDP_GS_STATES_TEM_CPP
+#ifndef QM_STATES_TEM_CPP
+#define QM_STATES_TEM_CPP
 
 #include "states.hpp"
 
@@ -42,7 +45,7 @@ std::string SpinBaseState<NumsType>::toString() const {
   for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
        ++it) {
     ans += " ";
-    ans += std::to_string(*it);
+    ans += numToString(*it);
     ans += ",";
   }
   ans.pop_back();
@@ -237,4 +240,4 @@ complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs) {
   return ans;
 }
 
-#endif  //ORI_SDP_GS_STATES_TEM_CPP
+#endif  //QM_STATES_TEM_CPP

@@ -1,50 +1,52 @@
 /*
   Jiazheng Sun
-  Updated: Mar 16, 2024
+  Updated: Jun 17, 2024
 
-  Implementations of methods in class:
-  SpinHalfOp, SpinHalfMonomial, SpinHalfPolynomial.
+  Class Implementations:
+  SpinHalfOp1D
+  SpinHalfMonomial1D
+  SpinHalfPolynomial1D
 */
 
-#ifndef ORI_SDP_GS_SPINOPERATORS1D_NONTEM_CPP
-#define ORI_SDP_GS_SPINOPERATORS1D_NONTEM_CPP
+#ifndef QM_SPINOPERATORS1D_NONTEM_CPP
+#define QM_SPINOPERATORS1D_NONTEM_CPP
 
 #include "spinOperators1D.hpp"
 
-//------------------------------------------------------------------SpinHalfOp----------
+//--------------------------------------------------------------SpinHalfOp1D-------------
 
-SpinHalfState SpinHalfOp::operator*(SpinHalfBaseState const & rhs) const {
+SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfBaseState1D const & rhs) const {
   if (isZ) {
     if (rhs[index]) {
-      return SpinHalfState(complex<double>(0.5, 0), rhs);
+      return SpinHalfState1D(complex<double>(0.5, 0), rhs);
     }
     else {
-      return SpinHalfState(complex<double>(-0.5, 0), rhs);
+      return SpinHalfState1D(complex<double>(-0.5, 0), rhs);
     }
   }
   else {
     if (isPlus) {
       if (rhs[index]) {
-        return SpinHalfState(complex<double>(0, 0), rhs);
+        return SpinHalfState1D(complex<double>(0, 0), rhs);
       }
       vector<bool> Nums = rhs.getNums();
       Nums[index] = true;
-      return SpinHalfState(complex<double>(1.0, 0), SpinHalfBaseState(Nums));
+      return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
     }
     else {
       if (!rhs[index]) {
-        return SpinHalfState(complex<double>(0, 0), rhs);
+        return SpinHalfState1D(complex<double>(0, 0), rhs);
       }
       vector<bool> Nums = rhs.getNums();
       Nums[index] = false;
-      return SpinHalfState(complex<double>(1.0, 0), SpinHalfBaseState(Nums));
+      return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
     }
   }
 }
 
-SpinHalfState SpinHalfOp::operator*(SpinHalfState const & rhs) const {
-  SpinHalfState ans;
-  for (vector<pair<complex<double>, SpinHalfBaseState> >::const_iterator it =
+SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfState1D const & rhs) const {
+  SpinHalfState1D ans;
+  for (vector<pair<complex<double>, SpinHalfBaseState1D> >::const_iterator it =
            rhs.getBegin();
        it != rhs.getEnd();
        ++it) {
@@ -53,34 +55,34 @@ SpinHalfState SpinHalfOp::operator*(SpinHalfState const & rhs) const {
   return ans;
 }
 
-//-------------------------------------------------------------------SpinMonomial--------
+//-----------------------------------------------------------SpinHalfMonomial1D----------
 
-SpinHalfState SpinHalfMonomial::operator*(SpinHalfBaseState const & rhs) const {
-  SpinHalfState ans(rhs);
-  for (vector<SpinHalfOp>::const_iterator it = Expr.begin(); it != Expr.end(); ++it) {
+SpinHalfState1D SpinHalfMonomial1D::operator*(SpinHalfBaseState1D const & rhs) const {
+  SpinHalfState1D ans(rhs);
+  for (vector<SpinHalfOp1D>::const_iterator it = Expr.begin(); it != Expr.end(); ++it) {
     ans = (*it) * ans;
   }
   return ans;
 }
 
-SpinHalfState SpinHalfMonomial::operator*(SpinHalfState const & rhs) const {
-  SpinHalfState ans(rhs);
-  for (vector<SpinHalfOp>::const_iterator it = Expr.begin(); it != Expr.end(); ++it) {
+SpinHalfState1D SpinHalfMonomial1D::operator*(SpinHalfState1D const & rhs) const {
+  SpinHalfState1D ans(rhs);
+  for (vector<SpinHalfOp1D>::const_iterator it = Expr.begin(); it != Expr.end(); ++it) {
     ans = (*it) * ans;
   }
   return ans;
 }
 
-//------------------------------------------------------------------SpinPolynomial-------
+//----------------------------------------------------------SpinHalfPolynomial1D---------
 
-SpinHalfPolynomial & SpinHalfPolynomial::operator=(SpinHalfPolynomial const & rhs) {
+SpinHalfPolynomial1D & SpinHalfPolynomial1D::operator=(SpinHalfPolynomial1D const & rhs) {
   Terms = rhs.Terms;
   return *this;
 }
 
-SpinHalfState SpinHalfPolynomial::operator*(SpinHalfBaseState const & rhs) const {
-  SpinHalfState ans;
-  for (vector<pair<complex<double>, SpinHalfMonomial> >::const_iterator it =
+SpinHalfState1D SpinHalfPolynomial1D::operator*(SpinHalfBaseState1D const & rhs) const {
+  SpinHalfState1D ans;
+  for (vector<pair<complex<double>, SpinHalfMonomial1D> >::const_iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {
@@ -89,9 +91,9 @@ SpinHalfState SpinHalfPolynomial::operator*(SpinHalfBaseState const & rhs) const
   return ans;
 }
 
-SpinHalfState SpinHalfPolynomial::operator*(SpinHalfState const & rhs) const {
-  SpinHalfState ans;
-  for (vector<pair<complex<double>, SpinHalfMonomial> >::const_iterator it =
+SpinHalfState1D SpinHalfPolynomial1D::operator*(SpinHalfState1D const & rhs) const {
+  SpinHalfState1D ans;
+  for (vector<pair<complex<double>, SpinHalfMonomial1D> >::const_iterator it =
            Terms.begin();
        it != Terms.end();
        ++it) {
@@ -100,4 +102,4 @@ SpinHalfState SpinHalfPolynomial::operator*(SpinHalfState const & rhs) const {
   return ans;
 }
 
-#endif  //ORI_SDP_GS_SPINOPERATORS1D_NONTEM_CPP
+#endif  //QM_SPINOPERATORS1D_NONTEM_CPP

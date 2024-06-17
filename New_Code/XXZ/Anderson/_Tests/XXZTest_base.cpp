@@ -77,7 +77,7 @@ int main() {
   size_t sites = 3;
   double Jz = 0.2;
   size_t dim = std::pow(2, sites);
-  SpinHalfBasis basis(sites);
+  SpinHalfBasis1D basis(sites);
   //std::cout << "Full Basis:\n" << basis.toString() << std::endl;
   //XXZFullHamiltonian ham0;
   //SpinHalfPolynomial XXZPoly = ham0.makePoly(sites, Jz);

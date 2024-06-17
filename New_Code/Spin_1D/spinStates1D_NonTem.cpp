@@ -1,43 +1,74 @@
 /*
   Jiazheng Sun
-  Updated: Mar 16, 2024
+  Updated: Jun 17, 2024
+  
+  Class Implementations:
+  SpinHalfBaseState1D
+  SpinHalfState1D
+  SpinHalfBasis1D
+*/
 
-  Implementations of methods in class:
-  FermiFockstate, FermiState, FermiBasis.
- */
+#ifndef QM_SPINSTATES1D_NONTEM_CPP
+#define QM_SPINSTATES1D_NONTEM_CPP
 
-#ifndef ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
-#define ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
+#include <cstddef>
 
-#include "spinStates1D.hpp"
+#include "./spinStates1D.hpp"
 
-//----------------------------------------------------------------SpinHalfState----------
+//-------------------------------------------------------------SpinHalfState1D-----------
 
-SpinHalfState & SpinHalfState::operator=(SpinHalfState const & rhs) {
+SpinHalfState1D & SpinHalfState1D::operator=(const SpinHalfState1D & rhs) {
   Terms = rhs.Terms;
   return *this;
 }
 
-//-------------------------------------------------------------------SpinHalfBasis-------
+//-------------------------------------------------------------SpinHalfBasis1D-----------
 
-void SpinHalfBasis::init() {
-  size_t total = std::pow(2, Sites);
+void SpinHalfBasis1D::init() {
+  size_t total = std::pow(2, SitesNum);
   for (size_t i = 0; i < total; i++) {
     std::bitset<32> bits(i);
-    vector<bool> newState(Sites);
-    for (size_t j = 0; j < Sites; j++) {
-      newState[Sites - j - 1] = bits[j];
+    vector<bool> newState(SitesNum);
+    for (size_t j = 0; j < SitesNum; j++) {
+      newState[SitesNum - j - 1] = bits[j];
     }
-    SpinHalfBaseState toAdd(newState);
+    SpinHalfBaseState1D toAdd(newState);
     States.push_back(toAdd);
   }
 }
 
-std::string SpinHalfBasis::toString() {
-  std::string ans = "Sites = ";
-  ans += std::to_string(Sites);
+void SpinHalfBasis1D::init(int SzTotal) {
+  size_t total = std::pow(2, SitesNum);
+  for (size_t i = 0; i < total; i++) {
+    std::bitset<32> bits(i);
+    int Sz = 0;
+    for (size_t j = 0; j < SitesNum; j++) {
+      if (bits[j]) {
+        Sz += 1;
+      }
+      else {
+        Sz -= 1;
+      }
+    }
+    if (Sz != SzTotal) {
+      continue;
+    }
+    vector<bool> newState(SitesNum);
+    for (size_t j = 0; j < SitesNum; j++) {
+      newState[SitesNum - j - 1] = bits[j];
+    }
+
+    SpinHalfBaseState1D toAdd(newState);
+    States.push_back(toAdd);
+  }
+}
+
+std::string SpinHalfBasis1D::toString() {
+  std::string ans = "SitesNum = ";
+  ans += std::to_string(SitesNum);
   ans += "\nFull Basis:\n";
-  for (vector<SpinHalfBaseState>::const_iterator it = States.begin(); it != States.end();
+  for (vector<SpinHalfBaseState1D>::const_iterator it = States.begin();
+       it != States.end();
        ++it) {
     ans += it->toString();
     ans += "\n";
@@ -45,4 +76,4 @@ std::string SpinHalfBasis::toString() {
   return ans;
 }
 
-#endif  //ORI_SDP_GS_SPINSTATES1D_NONTEM_CPP
+#endif  //QM_SPINSTATES1D_NONTEM_CPP

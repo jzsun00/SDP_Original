@@ -1,4 +1,7 @@
 /*
+  Jiazheng Sun
+  Updated: Jun 17, 2024
+
   Define Hamiltonian matrices.
 */
 
@@ -12,41 +15,43 @@
 //------------------------------------------------------------XXZSparseHamiltonian-------
 
 class XXZSparseHamiltonian
-    : public SparseHamiltonian<SpinHalfPolynomial, SpinHalfBaseState> {
+    : public SparseHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D> {
  private:
   size_t sites;
   double Jz;
 
  public:
-  XXZSparseHamiltonian() : SparseHamiltonian<SpinHalfPolynomial, SpinHalfBaseState>() {}
-  XXZSparseHamiltonian(SpinHalfPolynomial poly, size_t dim) :
-      SparseHamiltonian<SpinHalfPolynomial, SpinHalfBaseState>(poly, dim) {}
-  XXZSparseHamiltonian(SpinHalfPolynomial poly, size_t sites, double Jz) :
+  XXZSparseHamiltonian() :
+      SparseHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>() {}
+  XXZSparseHamiltonian(SpinHalfPolynomial1D poly, size_t dim) :
+      SparseHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>(poly, dim) {}
+  XXZSparseHamiltonian(SpinHalfPolynomial1D poly, size_t sites, double Jz) :
       SparseHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
   ~XXZSparseHamiltonian() {}
 };
 
 //-------------------------------------------------------------XXZFullHamiltonian--------
 
-class XXZFullHamiltonian : public FullHamiltonian<SpinHalfPolynomial, SpinHalfBaseState> {
+class XXZFullHamiltonian
+    : public FullHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D> {
  private:
   size_t sites;
   double Jz;
 
  public:
-  XXZFullHamiltonian() : FullHamiltonian<SpinHalfPolynomial, SpinHalfBaseState>() {}
-  XXZFullHamiltonian(SpinHalfPolynomial poly, size_t dim) :
-      FullHamiltonian<SpinHalfPolynomial, SpinHalfBaseState>(poly, dim) {}
-  XXZFullHamiltonian(SpinHalfPolynomial poly, size_t sites, double Jz) :
+  XXZFullHamiltonian() : FullHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>() {}
+  XXZFullHamiltonian(SpinHalfPolynomial1D poly, size_t dim) :
+      FullHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>(poly, dim) {}
+  XXZFullHamiltonian(SpinHalfPolynomial1D poly, size_t sites, double Jz) :
       FullHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
   ~XXZFullHamiltonian() {}
-  void initPoly(SpinHalfPolynomial poly) { this->poly = poly; };
+  void initPoly(SpinHalfPolynomial1D poly) { this->poly = poly; };
   size_t getSites() const { return sites; }
   size_t getJz() const { return Jz; }
 };
 
 //----------------------------------------------------------------Other Functions--------
 
-SpinHalfPolynomial makePoly(size_t sites, double Jz);
+SpinHalfPolynomial1D makePoly(size_t sites, double Jz);
 
 #endif  //ORI_SDP_GS_HAMILTONIANS_XXZ_HPP

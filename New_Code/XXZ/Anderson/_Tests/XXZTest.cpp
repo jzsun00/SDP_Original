@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jun 17, 2024
 
   Calculate Anderson bound of XXZ model ground state energy.
 */
@@ -9,28 +9,28 @@
 #include <string>
 #include <vector>
 
-#include "../../../XXZ/hamiltonians_XXZ.hpp"
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arcomp.h"
 #include "../include/arlnsmat.h"
 #include "../include/arlscomp.h"
 #include "../matrices/complex/lcompsol.h"
 
-using std::complex;
-using std::vector;
+using std::cout;
+using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 7;
+  size_t sites = 4;
   double Jz = 0;
   int dim = std::pow(2, sites);
   std::cout << "dim = " << dim << std::endl;
 
   /*Construct polynomial and basis.*/
-  SpinHalfPolynomial poly = makePoly(sites, Jz);
-  SpinHalfBasis basis(sites);
-  basis.init();
+  SpinHalfPolynomial1D poly = makePoly(sites, Jz);
+  SpinHalfBasis1D basis(sites);
+  basis.init(0);
   std::cout << "Basis construction complete!" << std::endl;
+  std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
 
   /*Consruct sparse Hamiltonian.*/
   XXZSparseHamiltonian ham(poly, sites, Jz);

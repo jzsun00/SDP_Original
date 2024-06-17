@@ -1,21 +1,22 @@
 /*
   Jiazheng Sun
-  Updated: Mar 18, 2024
+  Updated: Jun 17, 2024
 
   Class:
-  FockState, SpinBaseState, State, Basis.
-
+  FockState<NumsType>
+  SpinBaseState<NumsType>
+  State<StateType>
+  Basis<BaseStateType>
+  
   Define basis states: FockState for Fermions and Bosons,
   SpinBaseState for spin systems.
-  Also define general quantum states.
+  Also define general quantum states as superposition of basis states.
   Fermi and Boson systems should inherit FockState and State.
   Spin systems should inherit SpinBaseState and State.
-
-  Implementations for all classes are in states_Tem.cpp.
 */
 
-#ifndef ORI_SDP_GS_STATES_HPP
-#define ORI_SDP_GS_STATES_HPP
+#ifndef QM_STATES_HPP
+#define QM_STATES_HPP
 
 #include <algorithm>
 #include <complex>
@@ -26,12 +27,9 @@
 #include <vector>
 
 #include "./settings.hpp"
+#include "./settings_Tem.cpp"
 
-using std::complex;
-using std::pair;
-using std::vector;
-
-//-------------------------------------------------------------------FockState-----------
+//----------------------------------------------------------FockState<NumsType>----------
 
 template<typename NumsType>
 class FockState {
@@ -55,7 +53,7 @@ class FockState {
   bool operator[](size_t n) const { return Nums[n]; }
 };
 
-//----------------------------------------------------------------SpinBaseState----------
+//-------------------------------------------------------SpinBaseState<NumsType>---------
 
 template<typename NumsType>
 class SpinBaseState {
@@ -63,22 +61,24 @@ class SpinBaseState {
   vector<NumsType> Nums;
 
  public:
-  /*Construct a pure base state for general spin system.*/
+  /*Construct a base state for general spin system.
+    Default constructor uses an empty vector.*/
   SpinBaseState() : Nums() {}
-  SpinBaseState(vector<NumsType> & input) : Nums(input) {}
-  SpinBaseState(SpinBaseState const & rhs) : Nums(rhs.Nums) {}
-  ~SpinBaseState() {}
+  SpinBaseState(const vector<NumsType> & input) : Nums(input) {}
+  SpinBaseState(const SpinBaseState<NumsType> & rhs) : Nums(rhs.Nums) {}
+  virtual ~SpinBaseState() {}
   /*Get information of the spin base state.*/
   size_t getSize() const { return Nums.size(); }
   vector<NumsType> getNums() const { return Nums; };
   std::string toString() const;
+  virtual std::string numToString(NumsType num) const = 0;
   /*Overload operators.*/
-  SpinBaseState & operator=(SpinBaseState const & rhs);
-  bool operator==(SpinBaseState const & rhs) const { return Nums == rhs.Nums; }
+  SpinBaseState & operator=(const SpinBaseState & rhs);
+  bool operator==(const SpinBaseState & rhs) const { return Nums == rhs.Nums; }
   bool operator[](size_t n) const { return Nums[n]; }
 };
 
-//-----------------------------------------------------------------------State-----------
+//-----------------------------------------------------------State<StateType>------------
 
 template<typename StateType>
 class State {
@@ -87,17 +87,12 @@ class State {
 
  public:
   typedef pair<complex<double>, StateType> TermType;
-  /*Construct a general quantum state.*/
+  /*Construct a general quantum state.
+    Default constructor uses an empty vector.*/
   State() : Terms() {}
-  State(StateType const & fs) : Terms(1) {
-    Terms[0].first = complex<double>(1, 0);
-    Terms[0].second = fs;
-  }
-  State(complex<double> pref, StateType const & fs) : Terms(1) {
-    Terms[0].first = pref;
-    Terms[0].second = fs;
-  }
-  State(State const & rhs) : Terms(rhs.Terms) {}
+  State(const StateType & fs) : Terms(1, TermType(complex<double>(1.0, 0), fs)) {}
+  State(complex<double> pref, const StateType & fs) : Terms(1, TermType(pref, fs)) {}
+  State(const State & rhs) : Terms(rhs.Terms) {}
   ~State() {}
   /*Get information of the general quantum state.*/
   size_t getSize() const { return Terms.size(); }
@@ -128,7 +123,7 @@ class State {
       StateType const & fs);
 };
 
-//----------------------------------------------------------------------Basis------------
+//--------------------------------------------------------Basis<BaseStateType>-----------
 
 template<typename BaseStateType>
 class Basis {
@@ -136,9 +131,11 @@ class Basis {
   vector<BaseStateType> States;
 
  public:
-  /*Construct a basis, default use empty vector.*/
+  /*Construct a basis.
+    Default constructor uses an empty vector.*/
   Basis() : States() {}
-  ~Basis() {}
+  virtual ~Basis() {}
+  /*Fill the basis.*/
   virtual void init() = 0;
   /*Get information of the basis.*/
   virtual std::string toString() = 0;
@@ -146,10 +143,11 @@ class Basis {
     return States.begin();
   }
   typename vector<BaseStateType>::const_iterator getEnd() const { return States.end(); }
+  /*Overload operators.*/
   BaseStateType operator[](size_t n) const { return States[n]; }
 };
 
-//-------------------------------------------------------------------Inner Product-------
+//------------------------------------------------------------Inner Product--------------
 template<typename StateType>
 double innerProduct(StateType lhs, StateType rhs);
 
@@ -162,6 +160,4 @@ complex<double> innerProduct(State<StateType> lhs, StateType rhs);
 template<typename StateType>
 complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs);
 
-#include "states_Tem.cpp"
-
-#endif  //ORI_SDP_GS_STATES_HPP
+#endif  //QM_STATES_HPP

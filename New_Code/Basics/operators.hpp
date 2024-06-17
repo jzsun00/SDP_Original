@@ -29,7 +29,7 @@
 #include "./settings.hpp"
 #include "./settings_Tem.cpp"
 
-//---------------------------------------------------------------Operator---------------
+//----------------------------------------------------------Operator<IndexType>---------
 
 template<typename IndexType>
 class Operator {
@@ -51,7 +51,7 @@ class Operator {
   virtual void herm() = 0;
 };
 
-//---------------------------------------------------------------LadderOp---------------
+//----------------------------------------------------------LadderOp<IndexType>---------
 
 template<typename IndexType>
 class LadderOp : public Operator<IndexType> {
@@ -78,7 +78,7 @@ class LadderOp : public Operator<IndexType> {
   virtual void herm() { creatorF ^= 1; }
 };
 
-//------------------------------------------------------------------SpinOp--------------
+//-----------------------------------------------------------SpinOp<IndexType>----------
 
 template<typename IndexType>
 class SpinOp : public Operator<IndexType> {
@@ -117,7 +117,7 @@ class SpinOp : public Operator<IndexType> {
   virtual void herm();
 };
 
-//---------------------------------------------------------------Monomial---------------
+//------------------------------------------------------------Monomial<OpType>----------
 
 template<typename OpType>
 class Monomial {
@@ -145,7 +145,7 @@ class Monomial {
   void herm();
 };
 
-//---------------------------------------------------------------Polynomial-------------
+//-------------------------------------------------------Polynomial<MonomialType>-------
 
 template<typename MonomialType>
 class Polynomial {

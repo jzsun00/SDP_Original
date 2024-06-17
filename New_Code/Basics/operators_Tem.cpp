@@ -14,7 +14,7 @@
 
 #include "./operators.hpp"
 
-//---------------------------------------------------------------LadderOp---------------
+//----------------------------------------------------------LadderOp<IndexType>---------
 
 template<typename IndexType>
 std::string LadderOp<IndexType>::toString() const {
@@ -31,7 +31,7 @@ std::string LadderOp<IndexType>::toString() const {
   return ans;
 }
 
-//------------------------------------------------------------------SpinOp--------------
+//-----------------------------------------------------------SpinOp<IndexType>----------
 
 template<typename IndexType>
 std::string SpinOp<IndexType>::toString() const {
@@ -78,7 +78,7 @@ void SpinOp<IndexType>::herm() {
   }
 }
 
-//---------------------------------------------------------------Monomial---------------
+//------------------------------------------------------------Monomial<OpType>----------
 
 template<typename OpType>
 std::string Monomial<OpType>::toString() const {
@@ -126,7 +126,7 @@ void Monomial<OpType>::herm() {
   }
 }
 
-//---------------------------------------------------------------Polynomial-------------
+//-------------------------------------------------------Polynomial<MonomialType>-------
 
 template<typename MonomialType>
 std::string Polynomial<MonomialType>::toString() const {

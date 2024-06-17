@@ -1,9 +1,8 @@
 /*
   Jiazheng Sun
-  Updated: Jun 12, 2024
+  Updated: Jun 16, 2024
 
   Class:
-  DenseMatrix<DataType>
   COOMatrix<DataType>
   CSRMatrix<DataType>
   

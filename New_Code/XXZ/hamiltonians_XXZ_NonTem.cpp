@@ -7,30 +7,30 @@
 
 #include "./hamiltonians_XXZ.hpp"
 
-SpinHalfPolynomial makePoly(size_t sites, double Jz) {
-  SpinHalfPolynomial ans;
+SpinHalfPolynomial1D makePoly(size_t sites, double Jz) {
+  SpinHalfPolynomial1D ans;
   for (size_t i = 0; i < sites - 1; i++) {
-    SpinHalfOp Sz(i);
-    SpinHalfOp SzN(i + 1);
-    SpinHalfOp Su(i, true);
-    SpinHalfOp Sd(i, false);
-    SpinHalfOp SuN(i + 1, true);
-    SpinHalfOp SdN(i + 1, false);
-    SpinHalfMonomial MNud(Su);
+    SpinHalfOp1D Sz(i);
+    SpinHalfOp1D SzN(i + 1);
+    SpinHalfOp1D Su(i, true);
+    SpinHalfOp1D Sd(i, false);
+    SpinHalfOp1D SuN(i + 1, true);
+    SpinHalfOp1D SdN(i + 1, false);
+    SpinHalfMonomial1D MNud(Su);
     MNud *= SdN;
-    SpinHalfMonomial MNdu(Sd);
+    SpinHalfMonomial1D MNdu(Sd);
     MNdu *= SuN;
-    SpinHalfMonomial MNz(Sz);
+    SpinHalfMonomial1D MNz(Sz);
     MNz *= SzN;
     if (i == 0 || i == sites - 2) {
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.25, 0), MNud);
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.25, 0), MNdu);
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(Jz / 2, 0), MNz);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.25, 0), MNud);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.25, 0), MNdu);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(Jz / 2, 0), MNz);
     }
     else {
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNud);
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(0.5, 0), MNdu);
-      ans += pair<complex<double>, SpinHalfMonomial>(complex<double>(Jz, 0), MNz);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.5, 0), MNud);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.5, 0), MNdu);
+      ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(Jz, 0), MNz);
     }
   }
   return ans;
