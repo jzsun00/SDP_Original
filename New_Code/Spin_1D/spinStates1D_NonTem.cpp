@@ -15,6 +15,25 @@
 
 #include "./spinStates1D.hpp"
 
+//----------------------------------------------------------SpinHalfBaseState1D----------
+
+unsigned long vectorBoolToDecimal(const std::vector<bool> & vec) {
+  unsigned long decimalValue = 0;
+  unsigned long base = 1;
+  // Traverse the vector in reverse (least significant bit first)
+  for (auto it = vec.rbegin(); it != vec.rend(); ++it) {
+    if (*it) {
+      decimalValue += base;
+    }
+    base <<= 1;  // Efficiently multiply base by 2
+  }
+  return decimalValue;
+}
+
+bool SpinHalfBaseState1D::operator<(const SpinHalfBaseState1D & rhs) const {
+  return vectorBoolToDecimal(this->Nums) < vectorBoolToDecimal(rhs.Nums);
+}
+
 //-------------------------------------------------------------SpinHalfState1D-----------
 
 SpinHalfState1D & SpinHalfState1D::operator=(const SpinHalfState1D & rhs) {
@@ -74,6 +93,10 @@ std::string SpinHalfBasis1D::toString() {
     ans += "\n";
   }
   return ans;
+}
+
+int SpinHalfBasis1D::findBaseState(const SpinHalfBaseState1D & baseState) {
+  return findIndex(States, baseState);
 }
 
 #endif  //QM_SPINSTATES1D_NONTEM_CPP

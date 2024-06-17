@@ -5,7 +5,7 @@
   Class Implementations:
   SparseHamiltonian<PolyType, BaseStateType>
   FullHamiltonian.<PolyType, BaseStateType>
- */
+*/
 
 #ifndef QM_HAMILTONIANS_TEM_CPP
 #define QM_HAMILTONIANS_TEM_CPP

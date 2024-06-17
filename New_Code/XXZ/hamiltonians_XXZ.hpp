@@ -29,6 +29,7 @@ class XXZSparseHamiltonian
   XXZSparseHamiltonian(SpinHalfPolynomial1D poly, size_t sites, double Jz) :
       SparseHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
   ~XXZSparseHamiltonian() {}
+  virtual void createMatrix(SpinHalfBasis1D & basis);
 };
 
 //-------------------------------------------------------------XXZFullHamiltonian--------

@@ -23,7 +23,7 @@
 
 template<typename PolyType, typename BaseStateType>
 class SparseHamiltonian {
- private:
+ protected:
   PolyType poly;
   size_t dim;
   int nnz;                         // Number of non-zero elements
@@ -49,7 +49,7 @@ class SparseHamiltonian {
   complex<double> getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/
-  void createMatrix(Basis<BaseStateType> & basis);
+  virtual void createMatrix(Basis<BaseStateType> & basis);
 };
 
 //-------------------------------------FullHamiltonian<PolyType, BaseStateType>----------

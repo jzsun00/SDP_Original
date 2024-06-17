@@ -36,6 +36,8 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
   virtual ~SpinHalfBaseState1D() {}
   /*Get information of the spin base state.*/
   virtual std::string numToString(bool num) const { return std::to_string(num); }
+  /*Overload operators.*/
+  bool operator<(const SpinHalfBaseState1D & rhs) const;
 };
 
 //-------------------------------------------------------------SpinHalfState1D-----------
@@ -72,6 +74,7 @@ class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
   void init(int SzTotal);
   /*Get information of the full basis.*/
   virtual std::string toString();
+  int findBaseState(const SpinHalfBaseState1D & baseState);
 };
 
 #endif  //QM_SPINSTATES1D_HPP

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 12, 2024
+  Updated: Jun 17, 2024
 
   Implementations of classes:
   DenseMatrix<DataType>
@@ -21,6 +21,19 @@ void COOMatrix<DataType>::addData(size_t rowId, size_t colId, DataType newData) 
   cols.push_back(colId);
   data.push_back(newData);
   nnz++;
+}
+
+template<typename T>
+int findIndex(const std::vector<T> & vec, const T & value) {
+  auto it = std::lower_bound(vec.begin(), vec.end(), value);
+
+  // Check if the element is present in the vector
+  if (it != vec.end() && *it == value) {
+    return std::distance(vec.begin(), it);
+  }
+  else {
+    return -1;  // Element not found
+  }
 }
 
 #endif  //ORI_SDP_GS_SETTINGS_TEM_CPP

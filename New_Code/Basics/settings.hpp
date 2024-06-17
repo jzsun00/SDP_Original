@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jun 17, 2024
 
   Class:
   COOMatrix<DataType>
@@ -75,6 +75,9 @@ class COOMatrix {
 template<typename DataType>
 class CSRMatrix {};
 
+template<typename T>
+int findIndex(const std::vector<T> & vec, const T & value);
+
 //----------------------------------------------------------------Output Tools----------
 
 /*Convert a single complex number to std::string.*/
@@ -85,5 +88,8 @@ std::string complexVector_toString(const vector<complex<double> > & vec);
 
 /*Convert a dense matrix of complex numbers to std::string.*/
 std::string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
+
+/*Convert an std::vector of integer numbers to std::string.*/
+std::string intVector_toString(const vector<int> & vec);
 
 #endif  //ORI_SDP_GS_SETTINGS_HPP

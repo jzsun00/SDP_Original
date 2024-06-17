@@ -8,8 +8,6 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdio>
-#include <string>
-#include <vector>
 
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arcomp.h"
@@ -22,15 +20,17 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 12;
+  size_t sites = 20;
   double Jz = 0;
-  //int dim = std::pow(2, sites);
-  //std::cout << "dim = " << dim << std::endl;
+  cout << "Number of sites = " << sites << endl;
+  cout << "Jz = " << Jz << endl << endl;
 
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
   SpinHalfBasis1D basis(sites);
+  auto start_basis_init = std::chrono::high_resolution_clock::now();
   basis.init(0);
+  auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
   //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
   size_t dim = basis.getSize();
@@ -38,7 +38,9 @@ int main() {
 
   /*Consruct sparse Hamiltonian.*/
   XXZSparseHamiltonian ham(poly, sites, Jz);
+  auto start_matrix_init = std::chrono::high_resolution_clock::now();
   ham.createMatrix(basis);
+  auto end_matrix_init = std::chrono::high_resolution_clock::now();
   std::cout << "Hamiltonian construction complete!" << std::endl;
   //std::cout << "Full Basis:\n" << basis.toString() << std::endl;
 
@@ -57,6 +59,9 @@ int main() {
   vector<int> irowVec = ham.getIrow();
   vector<int> pcolVec = ham.getPcol();
   vector<complex<double> > valAVec = ham.getNzVal();
+  //cout << "irow = " << intVector_toString(irowVec) << endl;
+  //cout << "pcol = " << intVector_toString(pcolVec) << endl;
+  //cout << "valA = " << complexVector_toString(valAVec) << endl;
 
   for (int i = 0; i < nnz; i++) {
     irow[i] = irowVec[i];
@@ -75,8 +80,18 @@ int main() {
   auto start_solve = std::chrono::high_resolution_clock::now();
   dprob.FindEigenvectors();
   auto end_solve = std::chrono::high_resolution_clock::now();
+
+  // Record time.
+  auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+      end_basis_init - start_basis_init);
+  auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+      end_matrix_init - start_matrix_init);
   auto duration_solve =
       std::chrono::duration_cast<std::chrono::milliseconds>(end_solve - start_solve);
+  cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
+       << endl;
+  cout << "\nInitiating Matrix Running Time: " << duration_matrix_init.count() << " ms"
+       << endl;
   cout << "\nSolving Running Time: " << duration_solve.count() << " ms" << endl;
 
   // Printing solution.
