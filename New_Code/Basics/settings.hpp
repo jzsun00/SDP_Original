@@ -20,11 +20,13 @@
 #include <complex>
 #include <cstddef>
 #include <iostream>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
 using std::complex;
+using std::map;
 using std::pair;
 using std::vector;
 

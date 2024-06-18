@@ -35,10 +35,10 @@ UMFPACK_DIR  = $(ARPACKPP_INC)
 # arpack++ on another environment.
 
 ARPACK_LIB   = -larpack
-LAPACK_LIB   = -llapack
+LAPACK_LIB   = -lopenblas #-llapack
 UMFPACK_LIB  = #-lumfpack
 SUPERLU_LIB  = -lsuperlu
-BLAS_LIB     = -lblas
+BLAS_LIB     = #-lblas
 FORTRAN_LIBS = -lgfortran
 
 # Defining g++ flags and directories.

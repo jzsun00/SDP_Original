@@ -16,6 +16,7 @@
 
 #include <bitset>
 #include <cmath>
+#include <cstddef>
 #include <numeric>
 #include <string>
 
@@ -61,11 +62,12 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
 class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
  protected:
   size_t SitesNum;
+  map<SpinHalfBaseState1D, size_t> IndexTable;
 
  public:
   /*Construct the entire basis of spin-1/2 systems.*/
-  SpinHalfBasis1D() : Basis(), SitesNum(0) {}
-  SpinHalfBasis1D(size_t n) : Basis(), SitesNum(n) {}
+  SpinHalfBasis1D() : Basis(), SitesNum(0), IndexTable() {}
+  SpinHalfBasis1D(size_t n) : Basis(), SitesNum(n), IndexTable() {}
   virtual ~SpinHalfBasis1D() {}
   /*Fill the basis.
     If pass in an int SzTotal (should divide by 2 for actual Sz),
@@ -75,6 +77,7 @@ class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
   /*Get information of the full basis.*/
   virtual std::string toString();
   int findBaseState(const SpinHalfBaseState1D & baseState);
+  size_t lookUpBaseState(const SpinHalfBaseState1D & baseState);
 };
 
 #endif  //QM_SPINSTATES1D_HPP

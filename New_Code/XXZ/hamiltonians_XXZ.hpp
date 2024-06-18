@@ -8,6 +8,8 @@
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
 
+#include <cstddef>
+
 #include "../Basics/hamiltonians.hpp"
 #include "../Basics/hamiltonians_Tem.cpp"
 #include "../Spin_1D/spinOperators1D.hpp"
@@ -55,5 +57,7 @@ class XXZFullHamiltonian
 //----------------------------------------------------------------Other Functions--------
 
 SpinHalfPolynomial1D makePoly(size_t sites, double Jz);
+
+SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs);
 
 #endif  //ORI_SDP_GS_HAMILTONIANS_XXZ_HPP

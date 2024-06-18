@@ -76,9 +76,9 @@ void SpinHalfBasis1D::init(int SzTotal) {
     for (size_t j = 0; j < SitesNum; j++) {
       newState[SitesNum - j - 1] = bits[j];
     }
-
     SpinHalfBaseState1D toAdd(newState);
     States.push_back(toAdd);
+    //IndexTable[toAdd] = States.size() - 1;
   }
 }
 
@@ -97,6 +97,10 @@ std::string SpinHalfBasis1D::toString() {
 
 int SpinHalfBasis1D::findBaseState(const SpinHalfBaseState1D & baseState) {
   return findIndex(States, baseState);
+}
+
+size_t SpinHalfBasis1D::lookUpBaseState(const SpinHalfBaseState1D & baseState) {
+  return IndexTable[baseState];
 }
 
 #endif  //QM_SPINSTATES1D_NONTEM_CPP
