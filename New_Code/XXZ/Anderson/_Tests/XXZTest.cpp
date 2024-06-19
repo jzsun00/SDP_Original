@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 18, 2024
 
   Calculate Anderson bound of XXZ model ground state energy.
 */
@@ -20,7 +20,7 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 18;
+  size_t sites = 24;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;

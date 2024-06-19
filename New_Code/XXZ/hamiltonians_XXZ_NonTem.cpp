@@ -1,12 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 18, 2024
 
   Define dense and sparse Hamiltonian matrices for 1D XXZ model.
 */
 
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
+
+#include <omp.h>
 
 #include <chrono>
 #include <cstddef>
@@ -20,26 +22,41 @@
 void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   dim = basis.getSize();
   pcol.push_back(0);
-  //Use j = 0 to text performance
-  for (long unsigned j = 0; j < 1; j++) {
+  vector<SpinHalfState1D> midStates(dim);
+
+  auto start_calc_all_mid = std::chrono::high_resolution_clock::now();
+#pragma omp parallel for
+  for (long unsigned j = 0; j < dim; j++) {
+    midStates[j] = makeMidState(sites, Jz, basis[j]);
+  }
+  auto end_calc_all_mid = std::chrono::high_resolution_clock::now();
+  auto duration_calc_all_mid = std::chrono::duration_cast<std::chrono::milliseconds>(
+      end_calc_all_mid - start_calc_all_mid);
+  std::cout << "\nCalculating all mid Running Time: " << duration_calc_all_mid.count()
+            << " ms" << std::endl;
+
+  //Use j = 0 to test performance
+  for (long unsigned j = 0; j < 2; j++) {
     auto start_calc_mid = std::chrono::high_resolution_clock::now();
     //SpinHalfState1D mid = poly * basis[j];
-    SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
+    //SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
+    //SpinHalfState1D mid = midStates[j];
     auto end_calc_mid = std::chrono::high_resolution_clock::now();
     //mid.eraseZeros();
     std::vector<int> indices;
     std::map<int, complex<double> > elements;
     auto start_fill_map = std::chrono::high_resolution_clock::now();
-    for (size_t k = 0; k < mid.getSize(); k++) {
-      int index = basis.findBaseState(mid[k].second);
-      complex<double> value = mid[k].first;
+    for (size_t k = 0; k < midStates[j].getSize(); k++) {
+      //int index = basis.findBaseState(mid[k].second);
+      size_t index = basis.lookUpBaseState(midStates[j][k].second);
+      complex<double> value = midStates[j][k].first;
       indices.push_back(index);
       elements[index] = value;
     }
     auto end_fill_map = std::chrono::high_resolution_clock::now();
     std::sort(indices.begin(), indices.end());
     auto start_fill_matrix = std::chrono::high_resolution_clock::now();
-    for (size_t k = 0; k < mid.getSize(); k++) {
+    for (size_t k = 0; k < midStates[j].getSize(); k++) {
       nnz++;
       nzVal.push_back(elements[indices[k]]);
       irow.push_back(indices[k]);
@@ -65,20 +82,22 @@ void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   }
 
   //Continue from j = 1
-  for (long unsigned j = 1; j < dim; j++) {
+  for (long unsigned j = 2; j < dim; j++) {
     //SpinHalfState1D mid = poly * basis[j];
-    SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
+    //SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
+    //SpinHalfState1D mid = midStates[j];
     //mid.eraseZeros();
     std::vector<int> indices;
     std::map<int, complex<double> > elements;
-    for (size_t k = 0; k < mid.getSize(); k++) {
-      int index = basis.findBaseState(mid[k].second);
-      complex<double> value = mid[k].first;
+    for (size_t k = 0; k < midStates[j].getSize(); k++) {
+      //int index = basis.findBaseState(mid[k].second);
+      size_t index = basis.lookUpBaseState(midStates[j][k].second);
+      complex<double> value = midStates[j][k].first;
       indices.push_back(index);
       elements[index] = value;
     }
     std::sort(indices.begin(), indices.end());
-    for (size_t k = 0; k < mid.getSize(); k++) {
+    for (size_t k = 0; k < midStates[j].getSize(); k++) {
       nnz++;
       nzVal.push_back(elements[indices[k]]);
       irow.push_back(indices[k]);
@@ -119,55 +138,78 @@ SpinHalfPolynomial1D makePoly(size_t sites, double Jz) {
   return ans;
 }
 
-SpinHalfState1D Sud(size_t index, const SpinHalfBaseState1D & rhs) {
-  vector<bool> Nums(rhs.getNums());
+inline SpinHalfState1D Sud(size_t index, vector<bool> & Nums, double pref) {
   Nums[index] = true;
   Nums[index + 1] = false;
-  return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
+  return SpinHalfState1D(complex<double>(pref, 0), SpinHalfBaseState1D(Nums));
 }
 
-SpinHalfState1D Sdu(size_t index, const SpinHalfBaseState1D & rhs) {
-  vector<bool> Nums(rhs.getNums());
+inline SpinHalfState1D Sdu(size_t index, vector<bool> & Nums, double pref) {
   Nums[index] = false;
   Nums[index + 1] = true;
-  return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
+  return SpinHalfState1D(complex<double>(pref, 0), SpinHalfBaseState1D(Nums));
 }
 
-SpinHalfState1D Szz(size_t index, const SpinHalfBaseState1D & rhs) {
-  if (rhs[index] == rhs[index + 1]) {
-    return SpinHalfState1D(complex<double>(0.25, 0), rhs);
+inline SpinHalfState1D Szz(size_t index, vector<bool> & Nums, double pref) {
+  if (Nums[index] == Nums[index + 1]) {
+    return SpinHalfState1D(complex<double>(0.25 * pref, 0), SpinHalfBaseState1D(Nums));
   }
   else {
-    return SpinHalfState1D(complex<double>(-0.25, 0), rhs);
+    return SpinHalfState1D(complex<double>(-0.25 * pref, 0), SpinHalfBaseState1D(Nums));
   }
 }
 
 SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs) {
   SpinHalfState1D ans;
+  vector<bool> Nums(rhs.getNums());
   for (size_t i = 0; i < sites - 1; i++) {
     if (i == 0 || i == sites - 2) {
-      if (rhs[i] == false && rhs[i + 1] == true) {
-        //ans += (Sud(i, rhs) *= 0.25);
-        ans += Sud(i, rhs);
+      if (Nums[i] == false && Nums[i + 1] == true) {
+        Nums[i] = true;
+        Nums[i + 1] = false;
+        ans += SpinHalfState1D(complex<double>(0.25, 0), SpinHalfBaseState1D(Nums));
+        Nums[i] = false;
+        Nums[i + 1] = true;
       }
-      if (rhs[i] == true && rhs[i + 1] == false) {
-        //ans += (Sdu(i, rhs) *= 0.25);
-        ans += Sdu(i, rhs);
+      else if (Nums[i] == true && Nums[i + 1] == false) {
+        Nums[i] = false;
+        Nums[i + 1] = true;
+        ans += SpinHalfState1D(complex<double>(0.25, 0), SpinHalfBaseState1D(Nums));
+        Nums[i] = true;
+        Nums[i + 1] = false;
       }
-      //ans += (Szz(i, rhs) *= (0.5 * Jz));
-      ans += Szz(i, rhs);
+      if (Nums[i] == Nums[i + 1]) {
+        ans += SpinHalfState1D(complex<double>(0.25 * 0.5 * Jz, 0),
+                               SpinHalfBaseState1D(Nums));
+      }
+      else {
+        ans += SpinHalfState1D(complex<double>(-0.25 * 0.5 * Jz, 0),
+                               SpinHalfBaseState1D(Nums));
+      }
+      //ans += Szz(i, Nums, 0.5 * Jz);
     }
     else {
-      if (rhs[i] == false && rhs[i + 1] == true) {
-        //ans += (Sud(i, rhs) *= 0.5);
-        ans += Sud(i, rhs);
+      if (Nums[i] == false && Nums[i + 1] == true) {
+        Nums[i] = true;
+        Nums[i + 1] = false;
+        ans += SpinHalfState1D(complex<double>(0.5, 0), SpinHalfBaseState1D(Nums));
+        Nums[i] = false;
+        Nums[i + 1] = true;
       }
-      if (rhs[i] == true && rhs[i + 1] == false) {
-        //ans += (Sdu(i, rhs) *= 0.5);
-        ans += Sdu(i, rhs);
+      else if (Nums[i] == true && Nums[i + 1] == false) {
+        Nums[i] = false;
+        Nums[i + 1] = true;
+        ans += SpinHalfState1D(complex<double>(0.5, 0), SpinHalfBaseState1D(Nums));
+        Nums[i] = true;
+        Nums[i + 1] = false;
       }
-      //ans += (Szz(i, rhs) *= Jz);
-      ans += Szz(i, rhs);
+      if (Nums[i] == Nums[i + 1]) {
+        ans += SpinHalfState1D(complex<double>(0.25 * Jz, 0), SpinHalfBaseState1D(Nums));
+      }
+      else {
+        ans += SpinHalfState1D(complex<double>(-0.25 * Jz, 0), SpinHalfBaseState1D(Nums));
+      }
+      //ans += Szz(i, Nums, Jz);
     }
   }
   return ans;

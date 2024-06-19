@@ -17,8 +17,11 @@
 #include <bitset>
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <numeric>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "../Basics/states.hpp"
 #include "../Basics/states_Tem.cpp"
@@ -59,15 +62,26 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------
 
+struct VectorBoolHash {
+  size_t operator()(const SpinHalfBaseState1D & baseState) const {
+    size_t hash = 0;
+    vector<bool> vec = baseState.getNums();
+    for (bool b : vec) {
+      hash = (hash << 1) ^ std::hash<bool>()(b);
+    }
+    return hash;
+  }
+};
+
 class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
  protected:
   size_t SitesNum;
-  map<SpinHalfBaseState1D, size_t> IndexTable;
+  std::unordered_map<SpinHalfBaseState1D, size_t, VectorBoolHash> lookupTable;
 
  public:
   /*Construct the entire basis of spin-1/2 systems.*/
-  SpinHalfBasis1D() : Basis(), SitesNum(0), IndexTable() {}
-  SpinHalfBasis1D(size_t n) : Basis(), SitesNum(n), IndexTable() {}
+  SpinHalfBasis1D() : Basis(), SitesNum(0), lookupTable() {}
+  SpinHalfBasis1D(size_t n) : Basis(), SitesNum(n), lookupTable() {}
   virtual ~SpinHalfBasis1D() {}
   /*Fill the basis.
     If pass in an int SzTotal (should divide by 2 for actual Sz),

@@ -44,14 +44,14 @@ FORTRAN_LIBS = -lgfortran
 # Defining g++ flags and directories.
 
 # CPP_WARNINGS = -fpermissive 
-CPP_WARNINGS = -Wall -std=c++11 -pedantic-errors
+CPP_WARNINGS = -Wall -std=c++17 -pedantic-errors
 CPP_DEBUG    = -g
 CPP_OPTIM    = -O
 CPP_LIBS     = 
 CPP_INC      = 
 
 CPP_FLAGS    = $(CPP_DEBUG) -D$(PLAT) -I$(ARPACKPP_INC) -I$(CPP_INC) \
-               $(CPP_WARNINGS)
+               $(CPP_WARNINGS) -fopenmp
 
 # Putting all libraries together.
 

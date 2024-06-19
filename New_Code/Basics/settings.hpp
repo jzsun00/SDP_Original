@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 18, 2024
 
   Class:
   COOMatrix<DataType>
@@ -17,6 +17,9 @@
 #ifndef ORI_SDP_GS_SETTINGS_HPP
 #define ORI_SDP_GS_SETTINGS_HPP
 
+#include <omp.h>
+
+#include <chrono>
 #include <complex>
 #include <cstddef>
 #include <iostream>
@@ -26,7 +29,6 @@
 #include <vector>
 
 using std::complex;
-using std::map;
 using std::pair;
 using std::vector;
 
