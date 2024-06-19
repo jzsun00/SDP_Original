@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 18, 2024
+  Updated: Jun 19, 2024
 
   Define dense and sparse Hamiltonian matrices for 1D XXZ model.
 */
@@ -8,12 +8,7 @@
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 
-#include <omp.h>
-
-#include <chrono>
 #include <cstddef>
-#include <map>
-#include <vector>
 
 #include "./hamiltonians_XXZ.hpp"
 
@@ -25,9 +20,13 @@ void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   vector<SpinHalfState1D> midStates(dim);
 
   auto start_calc_all_mid = std::chrono::high_resolution_clock::now();
-#pragma omp parallel for
-  for (long unsigned j = 0; j < dim; j++) {
-    midStates[j] = makeMidState(sites, Jz, basis[j]);
+//omp_set_num_threads(8);
+#pragma omp parallel
+  {
+#pragma omp for
+    for (long unsigned j = 0; j < dim; j++) {
+      midStates[j] = makeMidState(sites, Jz, basis[j]);
+    }
   }
   auto end_calc_all_mid = std::chrono::high_resolution_clock::now();
   auto duration_calc_all_mid = std::chrono::duration_cast<std::chrono::milliseconds>(

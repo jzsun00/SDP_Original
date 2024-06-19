@@ -34,6 +34,25 @@ std::string complex_toString(const complex<double> & num) {
   return oss.str();
 }
 
+/*Convert an std::vector of integer numbers to std::string.*/
+std::string intVector_toString(const vector<int> & vec) {
+  std::string ans = "[ ";
+  size_t count = 1;
+  const size_t len = vec.size();
+  for (size_t i = 0; i < len; ++i) {
+    ans += (std::to_string(count) + "    ");
+    ans += std::to_string(vec[i]);
+    if (i != len - 1) {
+      ans += "\n";
+    }
+    else {
+      ans += "  ]";
+    }
+    count++;
+  }
+  return ans;
+}
+
 /*Convert an std::vector of complex numbers to std::string.*/
 std::string complexVector_toString(const vector<complex<double> > & vec) {
   std::string ans = "[ ";
@@ -66,25 +85,6 @@ std::string complexMatrix_toString(const vector<vector<complex<double> > > & mat
       ans += "    ";
     }
     if (i != lenRow - 1) {
-      ans += "\n";
-    }
-    else {
-      ans += "  ]";
-    }
-    count++;
-  }
-  return ans;
-}
-
-/*Convert an std::vector of integer numbers to std::string.*/
-std::string intVector_toString(const vector<int> & vec) {
-  std::string ans = "[ ";
-  size_t count = 1;
-  const size_t len = vec.size();
-  for (size_t i = 0; i < len; ++i) {
-    ans += (std::to_string(count) + "    ");
-    ans += std::to_string(vec[i]);
-    if (i != len - 1) {
       ans += "\n";
     }
     else {

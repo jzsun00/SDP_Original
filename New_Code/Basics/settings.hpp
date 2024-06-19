@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 18, 2024
+  Updated: Jun 19, 2024
 
   Class:
   COOMatrix<DataType>
@@ -8,6 +8,7 @@
   
   Function:
   string complex_toString(const complex<double> & num);
+  string intVector_toString(const vector<int> & vec);
   string complexVector_toString(const vector<complex<double> > & vec);
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 
@@ -19,6 +20,7 @@
 
 #include <omp.h>
 
+#include <algorithm>
 #include <chrono>
 #include <complex>
 #include <cstddef>
@@ -87,13 +89,13 @@ int findIndex(const std::vector<T> & vec, const T & value);
 /*Convert a single complex number to std::string.*/
 std::string complex_toString(const complex<double> & num);
 
+/*Convert an std::vector of integer numbers to std::string.*/
+std::string intVector_toString(const vector<int> & vec);
+
 /*Convert an std::vector of complex numbers to std::string.*/
 std::string complexVector_toString(const vector<complex<double> > & vec);
 
 /*Convert a dense matrix of complex numbers to std::string.*/
 std::string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
-
-/*Convert an std::vector of integer numbers to std::string.*/
-std::string intVector_toString(const vector<int> & vec);
 
 #endif  //ORI_SDP_GS_SETTINGS_HPP

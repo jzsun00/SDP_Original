@@ -1,13 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jun 19, 2024
   
   Class Implementations:
-  Fockstate
-  State
-  SpinBaseState
+  FockState<NumsType>
+  SpinBaseState<NumsType>
+  State<StateType>
   
   Function Implementations:
+  double innerProduct(StateType lhs, StateType rhs);
+  complex<double> innerProduct(StateType lhs, State<StateType> rhs);
+  complex<double> innerProduct(State<StateType> lhs, StateType rhs);
+  complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs);
 */
 
 #ifndef QM_STATES_TEM_CPP
@@ -95,7 +99,7 @@ State<StateType> & State<StateType>::operator=(State<StateType> const & rhs) {
 
 template<typename StateType>
 typename vector<pair<complex<double>, StateType> >::iterator
-State<StateType>::findSameFockState(StateType const & ffs) {
+State<StateType>::findSameFockState(const StateType & ffs) {
   for (typename vector<pair<complex<double>, StateType> >::iterator it = Terms.begin();
        it != Terms.end();
        ++it) {

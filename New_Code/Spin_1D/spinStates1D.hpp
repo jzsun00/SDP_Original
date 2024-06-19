@@ -1,14 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 19, 2024
 
   Class:
   SpinHalfBaseState1D
   SpinHalfState1D
   SpinHalfBasis1D
 
-  Define base states, states and basis for 1D spin-1/2 systems.
-  Define the full basis for a 1D spin chain system.
+  Define base states, states and basis for 1D spin systems.
 */
 
 #ifndef QM_SPINSTATES1D_HPP
@@ -16,12 +15,9 @@
 
 #include <bitset>
 #include <cmath>
-#include <cstddef>
 #include <functional>
 #include <numeric>
-#include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "../Basics/states.hpp"
 #include "../Basics/states_Tem.cpp"
@@ -34,14 +30,15 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
     Bool value 'true' for spin-up, 'false' for spin-down.
     Added constructor: if passing in size_t N, construct state with all spin-down.*/
   SpinHalfBaseState1D() : SpinBaseState() {}
-  SpinHalfBaseState1D(size_t N) : SpinBaseState() { Nums = vector<bool>(N, false); }
-  SpinHalfBaseState1D(vector<bool> & input) : SpinBaseState(input) {}
+  SpinHalfBaseState1D(size_t N) : SpinBaseState(vector<bool>(N, false)) {}
+  SpinHalfBaseState1D(const vector<bool> & input) : SpinBaseState(input) {}
   SpinHalfBaseState1D(const SpinBaseState & rhs) : SpinBaseState(rhs) {}
   virtual ~SpinHalfBaseState1D() {}
-  /*Get information of the spin base state.*/
+  /*Get information of the 1D spin-1/2 base state.*/
   virtual std::string numToString(bool num) const { return std::to_string(num); }
+  unsigned long toDecimal() const;  //Corresponding decimal value
   /*Overload operators.*/
-  bool operator<(const SpinHalfBaseState1D & rhs) const;
+  bool operator<(const SpinHalfBaseState1D & rhs) const;  //Based on decimal value
 };
 
 //-------------------------------------------------------------SpinHalfState1D-----------
@@ -57,7 +54,7 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
   SpinHalfState1D(const SpinHalfState1D & rhs) : State(rhs) {}
   virtual ~SpinHalfState1D() {}
   /*Overload operators.*/
-  SpinHalfState1D & operator=(const SpinHalfState1D & rhs);
+  //SpinHalfState1D & operator=(const SpinHalfState1D & rhs);
 };
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------

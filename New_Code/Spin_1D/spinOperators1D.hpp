@@ -1,13 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 19, 2024
 
   Class:
   SpinHalfOp1D
   SpinHalfMonomial1D
   SpinHalfPolynomial1D
 
-  Define operators, monomials and polynomials for spin-1/2 systems.
+  Define operators, monomials and polynomials for 1D spin systems.
 */
 
 #ifndef QM_SPINOPERATORS1D_HPP

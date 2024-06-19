@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 19, 2024
   
   Class Implementations:
   SpinHalfBaseState1D
@@ -17,11 +17,11 @@
 
 //----------------------------------------------------------SpinHalfBaseState1D----------
 
-unsigned long vectorBoolToDecimal(const std::vector<bool> & vec) {
+unsigned long SpinHalfBaseState1D::toDecimal() const {
   unsigned long decimalValue = 0;
   unsigned long base = 1;
   // Traverse the vector in reverse (least significant bit first)
-  for (auto it = vec.rbegin(); it != vec.rend(); ++it) {
+  for (auto it = Nums.rbegin(); it != Nums.rend(); ++it) {
     if (*it) {
       decimalValue += base;
     }
@@ -31,15 +31,17 @@ unsigned long vectorBoolToDecimal(const std::vector<bool> & vec) {
 }
 
 bool SpinHalfBaseState1D::operator<(const SpinHalfBaseState1D & rhs) const {
-  return vectorBoolToDecimal(this->Nums) < vectorBoolToDecimal(rhs.Nums);
+  return this->toDecimal() < rhs.toDecimal();
 }
 
 //-------------------------------------------------------------SpinHalfState1D-----------
 
+/*
 SpinHalfState1D & SpinHalfState1D::operator=(const SpinHalfState1D & rhs) {
   Terms = rhs.Terms;
   return *this;
 }
+*/
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------
 

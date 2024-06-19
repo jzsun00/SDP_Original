@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 19, 2024
 
   Class:
   FockState<NumsType>
@@ -19,13 +19,10 @@
 #define QM_STATES_HPP
 
 #include <algorithm>
-#include <complex>
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
-#include <string>
 #include <utility>
-#include <vector>
 
 #include "./settings.hpp"
 #include "./settings_Tem.cpp"
@@ -94,34 +91,29 @@ class State {
   State(const StateType & fs) : Terms(1, TermType(complex<double>(1.0, 0), fs)) {}
   State(complex<double> pref, const StateType & fs) : Terms(1, TermType(pref, fs)) {}
   State(const State & rhs) : Terms(rhs.Terms) {}
-  ~State() {}
+  virtual ~State() {}
   /*Get information of the general quantum state.*/
   size_t getSize() const { return Terms.size(); }
-  typename vector<pair<complex<double>, StateType> >::const_iterator getBegin() const {
-    return Terms.begin();
-  }
-  typename vector<pair<complex<double>, StateType> >::const_iterator getEnd() const {
-    return Terms.end();
-  }
+  typename vector<TermType>::const_iterator getBegin() const { return Terms.begin(); }
+  typename vector<TermType>::const_iterator getEnd() const { return Terms.end(); }
   std::string toString() const;
   /*Overload operators.*/
   pair<complex<double>, StateType> operator[](size_t n) const;
-  State & operator=(State const & rhs);
-  State & operator+=(StateType const & rhs);
-  State & operator+=(TermType const & rhs);
-  State & operator+=(State const & rhs);
-  State & operator-=(StateType const & rhs);
-  State & operator-=(TermType const & rhs);
-  State & operator-=(State const & rhs);
+  State & operator=(const State & rhs);
+  State & operator+=(const StateType & rhs);
+  State & operator+=(const TermType & rhs);
+  State & operator+=(const State & rhs);
+  State & operator-=(const StateType & rhs);
+  State & operator-=(const TermType & rhs);
+  State & operator-=(const State & rhs);
   State & operator*=(complex<double> pref);
   void eraseZeros();
 
  protected:
-  /*Find the same Fock state for += operation.
+  /*Find the same Fock state for += and -= operation.
     Return the corresponding iterator if same Fock state is found,
     otherwise return Terms.end().*/
-  typename vector<pair<complex<double>, StateType> >::iterator findSameFockState(
-      StateType const & fs);
+  typename vector<TermType>::iterator findSameFockState(const StateType & fs);
 };
 
 //--------------------------------------------------------Basis<BaseStateType>-----------

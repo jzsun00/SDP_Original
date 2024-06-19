@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 18, 2024
+  Updated: Jun 19, 2024
 
   Calculate Anderson bound of XXZ model ground state energy.
 */
@@ -20,10 +20,12 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 24;
+  size_t sites = 20;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
+
+  omp_set_num_threads(12);
 
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
@@ -74,10 +76,11 @@ int main() {
   ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
 
   // Defining what we need: the 5 lowest eigenvalues of A.
-  ARluCompStdEig<double> dprob(5L, A, "SR");
+  ARluCompStdEig<double> dprob(3L, A, "SR");
 
   // Finding eigenvalues and eigenvectors.
   auto start_solve = std::chrono::high_resolution_clock::now();
+  //omp_set_num_threads(4);
   dprob.FindEigenvectors();
   auto end_solve = std::chrono::high_resolution_clock::now();
 
