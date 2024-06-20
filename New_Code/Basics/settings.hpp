@@ -40,6 +40,7 @@ using std::vector;
 const double ERROR = std::pow(10, -12);
 /*Default output precision for complex numbers.*/
 const size_t COMPLEX_PRECISION = 4;
+const double PI = 3.1415926536;
 
 //------------------------------------------------------------------Matrices-------------
 

@@ -20,8 +20,8 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 20;
-  double Jz = 0;
+  size_t sites = 16;
+  double Jz = -1.2;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
@@ -75,8 +75,8 @@ int main() {
 
   ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
 
-  // Defining what we need: the 5 lowest eigenvalues of A.
-  ARluCompStdEig<double> dprob(3L, A, "SR");
+  // Defining what we need: the 3 lowest eigenvalues of A.
+  ARluCompStdEig<double> dprob(5L, A, "SR");
 
   // Finding eigenvalues and eigenvectors.
   auto start_solve = std::chrono::high_resolution_clock::now();
@@ -99,5 +99,13 @@ int main() {
 
   // Printing solution.
   Solution(A, dprob);
+  double gs = dprob.Eigenvalue(0).real();
+  for (size_t i = 1; i <= 2; i++) {
+    if (dprob.Eigenvalue(i).real() < gs) {
+      gs = dprob.Eigenvalue(i).real();
+    }
+  }
+  gs /= (sites - 2);
+  cout << "\nGround State Energy = " << gs << endl;
 
 }  // main
