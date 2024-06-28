@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jun 20, 2024
 
   Calculate Anderson bound of XXZ model ground state energy.
 */
@@ -20,8 +20,8 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 12;
-  double Jz = -1.2;
+  size_t sites = 24;
+  double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
@@ -29,42 +29,44 @@ int main() {
 
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
-  SpinHalfBasis1D basis(sites);
+  SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
-  basis.init(0);
+  basis->init(0);
   auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
   //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
-  size_t dim = basis.getSize();
+  size_t dim = basis->getSize();
   std::cout << "dim = " << dim << std::endl;
 
   /*Consruct sparse Hamiltonian.*/
-  XXZSparseHamiltonian ham(poly, sites, Jz);
+  XXZSparseHamiltonian * ham = new XXZSparseHamiltonian(poly, sites, Jz);
   auto start_matrix_init = std::chrono::high_resolution_clock::now();
-  ham.createMatrix(basis);
+  ham->createMatrix(*basis);
   auto end_matrix_init = std::chrono::high_resolution_clock::now();
   std::cout << "Hamiltonian construction complete!" << std::endl;
+  delete basis;
   //std::cout << "Full Basis:\n" << basis.toString() << std::endl;
 
-  int nnz = ham.getNumNonZero();
+  int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
-  int * irow = new int[nnz];
+  //int * irow = new int[nnz];
   //irow = ham.getIrow().data();
   //std::cout << "size(irow) = " << ham.getIrow().size() << std::endl;
-  int * pcol = new int[dim + 1];
+  //int * pcol = new int[dim + 1];
   //pcol = ham.getPcol().data();
   //std::cout << "size(pcol) = " << ham.getPcol().size() << std::endl;
-  complex<double> * valA = new complex<double>[nnz];
+  //complex<double> * valA = new complex<double>[nnz];
   //valA = ham.getNzVal().data();
   //std::cout << "size(valA) = " << ham.getNzVal().size() << std::endl;
 
-  vector<int> irowVec = ham.getIrow();
-  vector<int> pcolVec = ham.getPcol();
-  vector<complex<double> > valAVec = ham.getNzVal();
+  vector<int> irowVec = ham->getIrow();
+  vector<int> pcolVec = ham->getPcol();
+  vector<complex<double> > valAVec = ham->getNzVal();
+  delete ham;
   //cout << "irow = " << intVector_toString(irowVec) << endl;
   //cout << "pcol = " << intVector_toString(pcolVec) << endl;
   //cout << "valA = " << complexVector_toString(valAVec) << endl;
-
+  /*
   for (int i = 0; i < nnz; i++) {
     irow[i] = irowVec[i];
     valA[i] = valAVec[i];
@@ -72,8 +74,11 @@ int main() {
   for (int i = 0; i < dim + 1; i++) {
     pcol[i] = pcolVec[i];
   }
+  */
 
-  ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
+  //ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
+  ARluNonSymMatrix<complex<double>, double> A(
+      dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
 
   // Defining what we need: the 3 lowest eigenvalues of A.
   ARluCompStdEig<double> dprob(5L, A, "SR");
@@ -100,7 +105,7 @@ int main() {
   // Printing solution.
   Solution(A, dprob);
   double gs = dprob.Eigenvalue(0).real();
-  for (size_t i = 1; i <= 2; i++) {
+  for (size_t i = 1; i < 5; i++) {
     if (dprob.Eigenvalue(i).real() < gs) {
       gs = dprob.Eigenvalue(i).real();
     }

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jun 20, 2024
 
   Define dense and sparse Hamiltonian matrices for 1D XXZ model.
 */
@@ -16,92 +16,44 @@
 
 void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   dim = basis.getSize();
+  size_t batchSize = 200000;
+  size_t batchNum = dim / batchSize + 1;
   pcol.push_back(0);
-  vector<SpinHalfState1D> midStates(dim);
 
-  auto start_calc_all_mid = std::chrono::high_resolution_clock::now();
+  for (size_t batchIdx = 0; batchIdx < batchNum; batchIdx++) {
+    size_t currentSize = batchSize;
+    if (batchIdx == batchNum - 1) {
+      currentSize = dim % batchSize;
+    }
+    vector<SpinHalfState1D> midStates(currentSize);
+
 //omp_set_num_threads(8);
 #pragma omp parallel
-  {
+    {
 #pragma omp for
-    for (long unsigned j = 0; j < dim; j++) {
-      midStates[j] = makeMidState(sites, Jz, basis[j]);
+      for (long unsigned j = 0; j < currentSize; j++) {
+        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+      }
     }
-  }
-  auto end_calc_all_mid = std::chrono::high_resolution_clock::now();
-  auto duration_calc_all_mid = std::chrono::duration_cast<std::chrono::milliseconds>(
-      end_calc_all_mid - start_calc_all_mid);
-  std::cout << "\nCalculating all mid Running Time: " << duration_calc_all_mid.count()
-            << " ms" << std::endl;
 
-  //Use j = 0 to test performance
-  for (long unsigned j = 0; j < 2; j++) {
-    auto start_calc_mid = std::chrono::high_resolution_clock::now();
-    //SpinHalfState1D mid = poly * basis[j];
-    //SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
-    //SpinHalfState1D mid = midStates[j];
-    auto end_calc_mid = std::chrono::high_resolution_clock::now();
-    //mid.eraseZeros();
-    std::vector<int> indices;
-    std::map<int, complex<double> > elements;
-    auto start_fill_map = std::chrono::high_resolution_clock::now();
-    for (size_t k = 0; k < midStates[j].getSize(); k++) {
-      //int index = basis.findBaseState(mid[k].second);
-      size_t index = basis.lookUpBaseState(midStates[j][k].second);
-      complex<double> value = midStates[j][k].first;
-      indices.push_back(index);
-      elements[index] = value;
+    for (long unsigned j = 0; j < currentSize; j++) {
+      std::vector<int> indices;
+      std::map<int, complex<double> > elements;
+      for (size_t k = 0; k < midStates[j].getSize(); k++) {
+        //int index = basis.findBaseState(mid[k].second);
+        size_t index = basis.lookUpBaseState(midStates[j][k].second);
+        complex<double> value = midStates[j][k].first;
+        indices.push_back(index);
+        elements[index] = value;
+      }
+      std::sort(indices.begin(), indices.end());
+      for (size_t k = 0; k < midStates[j].getSize(); k++) {
+        nnz++;
+        nzVal.push_back(elements[indices[k]]);
+        irow.push_back(indices[k]);
+      }
+      pcol.push_back(nnz);
     }
-    auto end_fill_map = std::chrono::high_resolution_clock::now();
-    std::sort(indices.begin(), indices.end());
-    auto start_fill_matrix = std::chrono::high_resolution_clock::now();
-    for (size_t k = 0; k < midStates[j].getSize(); k++) {
-      nnz++;
-      nzVal.push_back(elements[indices[k]]);
-      irow.push_back(indices[k]);
-    }
-    auto end_fill_matrix = std::chrono::high_resolution_clock::now();
-    pcol.push_back(nnz);
-    // Record time.
-    auto duration_calc_mid = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        end_calc_mid - start_calc_mid);
-    auto duration_fill_map = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        end_fill_map - start_fill_map);
-    auto duration_fill_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        end_fill_matrix - start_fill_matrix);
-    auto duration_total = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        end_fill_matrix - start_calc_mid);
-    std::cout << "\nCalculating mid Running Time: " << duration_calc_mid.count() << " ns"
-              << std::endl;
-    std::cout << "\nFilling Map Running Time: " << duration_fill_map.count() << " ns"
-              << std::endl;
-    std::cout << "\nFilling Matrix Running Time: " << duration_fill_matrix.count()
-              << " ns" << std::endl;
-    std::cout << "\nTotal Running Time: " << duration_total.count() << " ns" << std::endl;
-  }
-
-  //Continue from j = 1
-  for (long unsigned j = 2; j < dim; j++) {
-    //SpinHalfState1D mid = poly * basis[j];
-    //SpinHalfState1D mid = makeMidState(sites, Jz, basis[j]);
-    //SpinHalfState1D mid = midStates[j];
-    //mid.eraseZeros();
-    std::vector<int> indices;
-    std::map<int, complex<double> > elements;
-    for (size_t k = 0; k < midStates[j].getSize(); k++) {
-      //int index = basis.findBaseState(mid[k].second);
-      size_t index = basis.lookUpBaseState(midStates[j][k].second);
-      complex<double> value = midStates[j][k].first;
-      indices.push_back(index);
-      elements[index] = value;
-    }
-    std::sort(indices.begin(), indices.end());
-    for (size_t k = 0; k < midStates[j].getSize(); k++) {
-      nnz++;
-      nzVal.push_back(elements[indices[k]]);
-      irow.push_back(indices[k]);
-    }
-    pcol.push_back(nnz);
   }
   //pcol.push_back(nnz);
 }

@@ -1,15 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jun 21, 2024
 
-  Calculate Anderson bound of XXZ model ground state energy.
+  Calculate Anderson bound of ground state energy of 1D XXZ model.
 */
 
-#include <chrono>
 #include <cstddef>
 #include <cstdio>
 #include <fstream>
-#include <string>
 
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arcomp.h"
@@ -22,18 +20,18 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 22;
+  size_t sites = 26;
   vector<double> Jz;
-  for (int i = -10; i < 25; i++) {
+  //Jz.push_back(-1);
+  for (int i = 1; i < 25; i++) {
     Jz.push_back((double)i / 8.0);
   }
   cout << "Number of sites = " << sites << endl;
-  //cout << "Jz = " << Jz << endl << endl;
+  omp_set_num_threads(8);  //Multi-threading when generating matrices
+  vector<double> Energy;   //Store the results
 
-  omp_set_num_threads(8);
-
-  vector<double> Energy;
   for (size_t i = 0; i < Jz.size(); i++) {
+    cout << "Jz = " << Jz[i] << endl << endl;
     /*Construct polynomial and basis.*/
     SpinHalfPolynomial1D poly = makePoly(sites, Jz[i]);
     SpinHalfBasis1D basis(sites);
@@ -46,41 +44,24 @@ int main() {
     //std::cout << "dim = " << dim << std::endl;
 
     /*Consruct sparse Hamiltonian.*/
-    XXZSparseHamiltonian ham(poly, sites, Jz[i]);
+    XXZSparseHamiltonian * ham = new XXZSparseHamiltonian(poly, sites, Jz[i]);
     auto start_matrix_init = std::chrono::high_resolution_clock::now();
-    ham.createMatrix(basis);
+    ham->createMatrix(basis);
     auto end_matrix_init = std::chrono::high_resolution_clock::now();
     //std::cout << "Hamiltonian construction complete!" << std::endl;
     //std::cout << "Full Basis:\n" << basis.toString() << std::endl;
 
-    int nnz = ham.getNumNonZero();
-    //std::cout << "nnz = " << nnz << std::endl;
-    int * irow = new int[nnz];
-    //irow = ham.getIrow().data();
-    //std::cout << "size(irow) = " << ham.getIrow().size() << std::endl;
-    int * pcol = new int[dim + 1];
-    //pcol = ham.getPcol().data();
-    //std::cout << "size(pcol) = " << ham.getPcol().size() << std::endl;
-    complex<double> * valA = new complex<double>[nnz];
-    //valA = ham.getNzVal().data();
-    //std::cout << "size(valA) = " << ham.getNzVal().size() << std::endl;
-
-    vector<int> irowVec = ham.getIrow();
-    vector<int> pcolVec = ham.getPcol();
-    vector<complex<double> > valAVec = ham.getNzVal();
+    int nnz = ham->getNumNonZero();
+    vector<int> irowVec = ham->getIrow();
+    vector<int> pcolVec = ham->getPcol();
+    vector<complex<double> > valAVec = ham->getNzVal();
+    delete ham;
     //cout << "irow = " << intVector_toString(irowVec) << endl;
     //cout << "pcol = " << intVector_toString(pcolVec) << endl;
     //cout << "valA = " << complexVector_toString(valAVec) << endl;
 
-    for (int i = 0; i < nnz; i++) {
-      irow[i] = irowVec[i];
-      valA[i] = valAVec[i];
-    }
-    for (int i = 0; i < dim + 1; i++) {
-      pcol[i] = pcolVec[i];
-    }
-
-    ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
+    ARluNonSymMatrix<complex<double>, double> A(
+        dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
 
     // Defining what we need: the 3 lowest eigenvalues of A.
     ARluCompStdEig<double> dprob(5L, A, "SR");
@@ -119,7 +100,7 @@ int main() {
 
   // Print to data file.
   std::string directory = "../_Data/";
-  std::string filename = "E0vsJz_N_" + std::to_string(sites - 2) + ".txt";
+  std::string filename = "E0vsJz_N_" + std::to_string(sites - 2) + "_pos.txt";
   std::ofstream outFile(filename);
   if (!outFile) {
     std::cerr << "Error: Could not open file " << filename << std::endl;
@@ -130,6 +111,7 @@ int main() {
   for (size_t i = 0; i < Jz.size(); ++i) {
     outFile << Jz[i] << "\t" << Energy[i] << std::endl;
   }
+  cout << "\nData successfully written in" << filename << endl;
   outFile.close();
 
 }  // main
