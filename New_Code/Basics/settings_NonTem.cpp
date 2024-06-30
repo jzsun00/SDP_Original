@@ -1,9 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Jun 12, 2024
+  Updated: Jun 27, 2024
 
-  Implementations of functions:
+  Function Implementations:
   string complex_toString(const complex<double> & num);
+  string intVector_toString(const vector<int> & vec)
   string complexVector_toString(const vector<complex<double> > & vec);
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 */
@@ -11,9 +12,7 @@
 #ifndef ORI_SDP_GS_SETTINGS_NONTEM_CPP
 #define ORI_SDP_GS_SETTINGS_NONTEM_CPP
 
-#include <cstddef>
 #include <sstream>
-#include <string>
 
 #include "./settings.hpp"
 

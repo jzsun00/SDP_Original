@@ -1,9 +1,8 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 27, 2024
 
-  Implementations of classes:
-  DenseMatrix<DataType>
+  Class Implementations:
   COOMatrix<DataType>
   CSRMatrix<DataType>
 */
