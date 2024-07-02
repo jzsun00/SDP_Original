@@ -27,7 +27,7 @@ EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
 # Targets
 .PHONY: all clean
 
-all: $(EXE_FILES)
+all: $(OBJ_FILES) $(EXE_FILES)
 
 $(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
