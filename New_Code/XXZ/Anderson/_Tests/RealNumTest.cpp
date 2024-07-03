@@ -27,8 +27,8 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 20;
-  double Jz = -1.0;
+  size_t sites = 24;
+  double Jz = -0.5;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
