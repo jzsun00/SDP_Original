@@ -9,6 +9,7 @@
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 
 #include <cstddef>
+#include <vector>
 
 #include "./hamiltonians_XXZ.hpp"
 
@@ -205,25 +206,35 @@ void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
       }
     }
 
-    for (long unsigned j = 0; j < currentSize; j++) {
-      std::vector<int> indices;
-      std::map<int, double> elements;
-      for (size_t k = 0; k < midStates[j].getSize(); k++) {
-        //int index = basis.findBaseState(mid[k].second);
-        size_t index = basis.lookUpBaseState(midStates[j][k].second);
-        //if (j + batchSize * batchIdx < indices[k]) {
-        complex<double> value = midStates[j][k].first;
-        indices.push_back(index);
-        elements[index] = value.real();
-        //}
+    vector<vector<int> > indices(currentSize);
+    vector<std::map<int, double> > elements(currentSize);
+
+#pragma omp parallel
+    {
+#pragma omp for
+      for (long unsigned j = 0; j < currentSize; j++) {
+        //std::vector<int> indices;
+        //std::map<int, double> elements;
+        for (size_t k = 0; k < midStates[j].getSize(); k++) {
+          //int index = basis.findBaseState(mid[k].second);
+          size_t index = basis.lookUpBaseState(midStates[j][k].second);
+          //if (j + batchSize * batchIdx <= index) {
+          complex<double> value = midStates[j][k].first;
+          indices[j].push_back(index);
+          elements[j][index] = value.real();
+          //}
+        }
       }
-      std::sort(indices.begin(), indices.end());
-      size_t indicesSize = elements.size();
+    }
+
+    for (long unsigned j = 0; j < currentSize; j++) {
+      std::sort(indices[j].begin(), indices[j].end());
+      //size_t indicesSize = elements.size();
       for (size_t k = 0; k < midStates[j].getSize(); k++) {
-        if (j + batchSize * batchIdx <= indices[k]) {
+        if (j + batchSize * batchIdx <= indices[j][k]) {
           nnz++;
-          nzVal.push_back(elements[indices[k]]);
-          irow.push_back(indices[k]);
+          nzVal.push_back(elements[j][indices[j][k]]);
+          irow.push_back(indices[j][k]);
         }
       }
       pcol.push_back(nnz);

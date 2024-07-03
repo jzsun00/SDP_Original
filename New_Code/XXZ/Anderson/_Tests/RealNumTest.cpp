@@ -27,8 +27,8 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 24;
-  double Jz = -0.5;
+  size_t sites = 18;
+  double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
@@ -59,6 +59,10 @@ int main() {
   std::cout << "Hamiltonian construction complete!" << std::endl;
   delete basis;
   //std::cout << "Full Basis:\n" << basis.toString() << std::endl;
+  auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+      end_matrix_init - start_matrix_init);
+  cout << "\nInitiating Matrix Running Time: " << duration_matrix_init.count() << " ms"
+       << endl;
 
   int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
@@ -84,8 +88,8 @@ int main() {
   // Record time.
   //auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
   //    end_basis_init - start_basis_init);
-  auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
-      end_matrix_init - start_matrix_init);
+  //auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+  //    end_matrix_init - start_matrix_init);
   auto duration_solve =
       std::chrono::duration_cast<std::chrono::milliseconds>(end_solve - start_solve);
   cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
