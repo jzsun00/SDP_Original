@@ -20,7 +20,7 @@ SRC_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.cpp))
 HEADER_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.hpp))
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 OBJ_FILES := $(patsubst %.cpp,%.o,$(filter-out $(TEST_DIR)/%.cpp,$(SRC_FILES)))
-EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
+EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%.exe, $(TEST_FILES))
 
 #all: XXZTest #lcompshf lcompgre lcompgsh
 
@@ -35,7 +35,7 @@ EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
 
 all: $(EXE_FILES)
 
-$(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
+$(EXE_DIR)/%.exe: $(TEST_DIR)/%.cpp $(OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
 	$(CPP) $(CPP_FLAGS) -I$(CSCMAT_DIR) $^ -o $@ $(SUPERLU_LIB) $(ALL_LIBS)
 
