@@ -2,12 +2,12 @@
   Jiazheng Sun
   Updated: Jul 2, 2024
 
-  Calculate Anderson bound of XXZ model ground state energy.
-  Use real number elements and symmetric matrix.
+  Calculate Anderson bound of 1D XXZ model ground state energy.
+  Use real number elements and symmetric matrix for higher performance.
 */
 
-#ifndef XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP
-#define XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP
+#ifndef XXZ_1D_ANDERSON_REALNUM_TEST_CPP
+#define XXZ_1D_ANDERSON_REALNUM_TEST_CPP
 
 #include <chrono>
 #include <cstddef>
@@ -26,11 +26,13 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 22;
+  size_t sites = 26;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
+  /*Set threads for generating the sparse matrix.
+    Use single thread for ARPACK++ since OpenBLAS works better at single thread.*/
   omp_set_num_threads(12);
 
   /*Construct polynomial and basis.*/
@@ -55,15 +57,6 @@ int main() {
 
   int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
-  //int * irow = new int[nnz];
-  //irow = ham.getIrow().data();
-  //std::cout << "size(irow) = " << ham.getIrow().size() << std::endl;
-  //int * pcol = new int[dim + 1];
-  //pcol = ham.getPcol().data();
-  //std::cout << "size(pcol) = " << ham.getPcol().size() << std::endl;
-  //complex<double> * valA = new complex<double>[nnz];
-  //valA = ham.getNzVal().data();
-  //std::cout << "size(valA) = " << ham.getNzVal().size() << std::endl;
 
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();
@@ -74,18 +67,6 @@ int main() {
     valAVec[i] = valAVecComp[i].real();
   }
   delete ham;
-  //cout << "irow = " << intVector_toString(irowVec) << endl;
-  //cout << "pcol = " << intVector_toString(pcolVec) << endl;
-  //cout << "valA = " << complexVector_toString(valAVec) << endl;
-  /*
-  for (int i = 0; i < nnz; i++) {
-    irow[i] = irowVec[i];
-    valA[i] = valAVec[i];
-  }
-  for (int i = 0; i < dim + 1; i++) {
-    pcol[i] = pcolVec[i];
-  }
-  */
 
   //ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
   ARluSymMatrix<double> A(dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
@@ -114,17 +95,16 @@ int main() {
 
   // Printing solution.
   Solution(A, dprob);
-  /*
+
   double gs = dprob.Eigenvalue(0);
-  for (size_t i = 1; i < 5; i++) {
-  if (dprob.Eigenvalue(i) < gs) {
+  for (size_t i = 1; i < 3; i++) {
+    if (dprob.Eigenvalue(i) < gs) {
       gs = dprob.Eigenvalue(i);
     }
   }
   gs /= (sites - 2);
   cout << "\nGround State Energy = " << gs << endl;
-  */
 
 }  // main
 
-#endif  //XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP
+#endif  //XXZ_1D_ANDERSON_REALNUM_TEST_CPP
