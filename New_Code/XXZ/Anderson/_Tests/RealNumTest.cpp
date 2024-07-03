@@ -28,7 +28,7 @@ using std::endl;
 int main() {
   /*Set parameters sites and Jz.*/
   size_t sites = 20;
-  double Jz = 0;
+  double Jz = -1.0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
@@ -74,10 +74,10 @@ int main() {
 
   // Defining what we need: the 3 lowest eigenvalues of A.
   ARluSymStdEig<double> dprob(3, A, "SA");
+  dprob.ChangeMaxit(1000);
 
   // Finding eigenvalues and eigenvectors.
   auto start_solve = std::chrono::high_resolution_clock::now();
-  //omp_set_num_threads(4);
   dprob.FindEigenvectors();
   auto end_solve = std::chrono::high_resolution_clock::now();
 
@@ -103,6 +103,7 @@ int main() {
       gs = dprob.Eigenvalue(i);
     }
   }
+
   gs /= (sites - 2);
   cout << "\nGround State Energy = " << gs << endl;
 
