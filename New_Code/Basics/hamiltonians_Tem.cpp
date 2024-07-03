@@ -55,6 +55,28 @@ void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
   //pcol.push_back(nnz);
 }
 
+//----------------------------------SparseRealHamiltonian<PolyType, BaseStateType>-------
+
+template<typename polyType, typename BaseStateType>
+void SparseRealHamiltonian<polyType, BaseStateType>::createMatrix(
+    Basis<BaseStateType> & basis) {
+  dim = basis.getSize();
+  pcol.push_back(0);
+  for (long unsigned j = 0; j < dim; j++) {
+    State<BaseStateType> mid = poly * basis[j];
+    for (long unsigned i = 0; i < dim; i++) {
+      complex<double> elementij = innerProduct(basis[i], mid);
+      if (std::abs(elementij) <= ERROR) {
+        continue;
+      }
+      nnz++;
+      nzVal.push_back(elementij.real());
+      irow.push_back(i);
+    }
+    pcol.push_back(nnz);
+  }
+}
+
 //-------------------------------------FullHamiltonian<PolyType, BaseStateType>----------
 
 template<typename PolyType, typename BaseStateType>

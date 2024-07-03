@@ -1,18 +1,23 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jul 3, 2024
 
   Class:
   SparseHamiltonian<PolyType, BaseStateType>
+  SparseRealHamiltonian<PolyType, BaseStateType>
   FullHamiltonian<PolyType, BaseStateType>
 
   Define Hamiltonian matrices.
-  SparseHamiltonian can be used for ARPACK++,
+  SparseRealHamiltonian contains the lower triangular part of the matrix,
+  since Hamiltonian matrices are Hermitian, real Hamiltonian matrices are symmetric.
+  SparseHamiltonian and SparseRealHamiltonian can be used for ARPACK++,
   FullHamiltonian is mainly for testing and verification.
 */
 
 #ifndef QM_HAMILTONIANS_HPP
 #define QM_HAMILTONIANS_HPP
+
+#include <cstddef>
 
 #include "./operators.hpp"
 #include "./operators_Tem.cpp"
@@ -46,6 +51,39 @@ class SparseHamiltonian {
   vector<int> getPcol() const { return pcol; }
   int getPcol(size_t i) const { return pcol[i]; }
   vector<complex<double> > getNzVal() const { return nzVal; }
+  complex<double> getNzVal(size_t i) const { return nzVal[i]; }
+  std::string toString();
+  /*Use the specified basis to create matrix.*/
+  virtual void createMatrix(Basis<BaseStateType> & basis);
+};
+
+//----------------------------------SparseRealHamiltonian<PolyType, BaseStateType>-------
+
+template<typename PolyType, typename BaseStateType>
+class SparseRealHamiltonian {
+ protected:
+  PolyType poly;         // Hamiltonian operator
+  size_t dim;            // Dimension of the matrix
+  size_t nnz;            // Number of non-zero elements
+  vector<int> irow;      // Indices of row
+  vector<int> pcol;      // Positions for splitting
+  vector<double> nzVal;  // Non-zero values
+
+ public:
+  /*Construct a sparse Hamiltonian with specified polynomial and dimension,
+    default constructor use empty Hamiltonian.*/
+  SparseRealHamiltonian() : poly(), dim(0), nnz(0), irow(), pcol(), nzVal() {}
+  SparseRealHamiltonian(PolyType poly, size_t dim) :
+      poly(poly), dim(dim), nnz(0), irow(), pcol(), nzVal() {}
+  virtual ~SparseRealHamiltonian() {}
+  /*Get information of the sparse Hamiltonian.*/
+  size_t getDimension() const { return dim; }
+  size_t getNumNonZero() const { return nnz; }
+  vector<int> getIrow() const { return irow; }
+  int getIrow(size_t i) const { return irow[i]; }
+  vector<int> getPcol() const { return pcol; }
+  int getPcol(size_t i) const { return pcol[i]; }
+  vector<double> getNzVal() const { return nzVal; }
   complex<double> getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/

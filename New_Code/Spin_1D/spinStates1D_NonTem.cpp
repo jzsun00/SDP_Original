@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jul 3, 2024
   
   Class Implementations:
   SpinHalfBaseState1D
@@ -60,27 +60,18 @@ void SpinHalfBasis1D::init() {
 
 void SpinHalfBasis1D::init(int SzTotal) {
   size_t total = std::pow(2, SitesNum);
+  int requiredSpinUpCount = (SitesNum + SzTotal) / 2;
   for (size_t i = 0; i < total; i++) {
-    std::bitset<32> bits(i);
-    int Sz = 0;
-    for (size_t j = 0; j < SitesNum; j++) {
-      if (bits[j]) {
-        Sz += 1;
-      }
-      else {
-        Sz -= 1;
-      }
-    }
-    if (Sz != SzTotal) {
+    int popCount = __builtin_popcount(i);
+    if (popCount != requiredSpinUpCount) {
       continue;
     }
     vector<bool> newState(SitesNum);
     for (size_t j = 0; j < SitesNum; j++) {
-      newState[SitesNum - j - 1] = bits[j];
+      newState[SitesNum - j - 1] = ((i & (1 << j)) != 0);
     }
     SpinHalfBaseState1D toAdd(newState);
     States.push_back(toAdd);
-    //IndexTable[toAdd] = States.size() - 1;
     lookupTable[toAdd] = States.size() - 1;
   }
 }

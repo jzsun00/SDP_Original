@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 20, 2024
+  Updated: Jul 3, 2024
 
   Define dense and sparse Hamiltonian matrices for 1D XXZ model.
 */
@@ -60,6 +60,62 @@ void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
 
 void XXZSparseHamiltonian::createSymMatrix(SpinHalfBasis1D & basis) {
   dim = basis.getSize();
+  size_t batchSize = 500000;
+  size_t batchNum = dim / batchSize + 1;
+  size_t fillBatchSize = 50000;
+
+  pcol.push_back(0);
+  for (size_t batchIdx = 0; batchIdx < batchNum; batchIdx++) {
+    size_t currentSize = batchSize;
+    size_t fillBatchNum = currentSize / fillBatchSize + 1;
+    if (batchIdx == batchNum - 1) {
+      currentSize = dim % batchSize;
+    }
+    vector<SpinHalfState1D> midStates(currentSize);
+
+//omp_set_num_threads(8);
+#pragma omp parallel
+    {
+#pragma omp for
+      for (long unsigned j = 0; j < currentSize; j++) {
+        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+      }
+    }
+
+    for (size_t fillIdx = 0; fillIdx < fillBatchNum; fillIdx++) {
+      size_t currentFillSize = fillBatchSize;
+      if (fillIdx == fillBatchNum - 1) {
+        currentFillSize = currentSize % fillBatchSize;
+      }
+      for (long unsigned j = 0; j < currentFillSize; j++) {
+        std::vector<int> indices;
+        std::map<int, complex<double> > elements;
+        for (size_t k = 0; k < midStates[j].getSize(); k++) {
+          //int index = basis.findBaseState(mid[k].second);
+          size_t index = basis.lookUpBaseState(midStates[j][k].second);
+          complex<double> value = midStates[j][k].first;
+          indices.push_back(index);
+          elements[index] = value;
+        }
+        std::sort(indices.begin(), indices.end());
+        for (size_t k = 0; k < midStates[j].getSize(); k++) {
+          if (j + batchSize * batchIdx < indices[k]) {
+            nnz++;
+            nzVal.push_back(elements[indices[k]]);
+            irow.push_back(indices[k]);
+          }
+        }
+        pcol.push_back(nnz);
+      }
+    }
+  }
+  //pcol.push_back(nnz);
+}
+
+//------------------------------------------------------XXZSparseRealHamiltonian---------
+
+void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
+  dim = basis.getSize();
   size_t batchSize = 200000;
   size_t batchNum = dim / batchSize + 1;
   pcol.push_back(0);
@@ -86,22 +142,24 @@ void XXZSparseHamiltonian::createSymMatrix(SpinHalfBasis1D & basis) {
       for (size_t k = 0; k < midStates[j].getSize(); k++) {
         //int index = basis.findBaseState(mid[k].second);
         size_t index = basis.lookUpBaseState(midStates[j][k].second);
+        //if (j + batchSize * batchIdx < indices[k]) {
         complex<double> value = midStates[j][k].first;
         indices.push_back(index);
         elements[index] = value;
+        //}
       }
       std::sort(indices.begin(), indices.end());
+      size_t indicesSize = elements.size();
       for (size_t k = 0; k < midStates[j].getSize(); k++) {
         if (j + batchSize * batchIdx < indices[k]) {
           nnz++;
-          nzVal.push_back(elements[indices[k]]);
+          nzVal.push_back(elements[indices[k]].real());
           irow.push_back(indices[k]);
         }
       }
       pcol.push_back(nnz);
     }
   }
-  //pcol.push_back(nnz);
 }
 
 //----------------------------------------------------------------Other Functions--------

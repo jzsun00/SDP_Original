@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdio>
+#include <cstdlib>
 #include <vector>
 
 #include "../../hamiltonians_XXZ.hpp"
@@ -26,7 +27,7 @@ using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 26;
+  size_t sites = 20;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -45,11 +46,15 @@ int main() {
   //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
   size_t dim = basis->getSize();
   std::cout << "dim = " << dim << std::endl;
+  auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+      end_basis_init - start_basis_init);
+  cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
+       << endl;
 
   /*Consruct sparse Hamiltonian.*/
-  XXZSparseHamiltonian * ham = new XXZSparseHamiltonian(poly, sites, Jz);
+  XXZSparseRealHamiltonian * ham = new XXZSparseRealHamiltonian(poly, sites, Jz);
   auto start_matrix_init = std::chrono::high_resolution_clock::now();
-  ham->createSymMatrix(*basis);
+  ham->createMatrix(*basis);
   auto end_matrix_init = std::chrono::high_resolution_clock::now();
   std::cout << "Hamiltonian construction complete!" << std::endl;
   delete basis;
@@ -60,12 +65,8 @@ int main() {
 
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();
-  vector<complex<double> > valAVecComp = ham->getNzVal();
-  size_t valASize = valAVecComp.size();
-  vector<double> valAVec(valASize);
-  for (size_t i = 0; i < valASize; i++) {
-    valAVec[i] = valAVecComp[i].real();
-  }
+  vector<double> valAVec = ham->getNzVal();
+  size_t valASize = valAVec.size();
   delete ham;
 
   //ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
@@ -81,8 +82,8 @@ int main() {
   auto end_solve = std::chrono::high_resolution_clock::now();
 
   // Record time.
-  auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
-      end_basis_init - start_basis_init);
+  //auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
+  //    end_basis_init - start_basis_init);
   auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
       end_matrix_init - start_matrix_init);
   auto duration_solve =
@@ -105,6 +106,7 @@ int main() {
   gs /= (sites - 2);
   cout << "\nGround State Energy = " << gs << endl;
 
+  return EXIT_SUCCESS;
 }  // main
 
 #endif  //XXZ_1D_ANDERSON_REALNUM_TEST_CPP

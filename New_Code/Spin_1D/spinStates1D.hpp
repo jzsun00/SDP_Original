@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jul 3, 2024
 
   Class:
   SpinHalfBaseState1D
@@ -13,6 +13,7 @@
 #ifndef QM_SPINSTATES1D_HPP
 #define QM_SPINSTATES1D_HPP
 
+#include <bit>
 #include <bitset>
 #include <cmath>
 #include <functional>

@@ -1,8 +1,8 @@
 /*
   Jiazheng Sun
-  Updated: Jul 2, 2024
+  Updated: Jul 3, 2024
 
-  Define Hamiltonian matrices.
+  Define Hamiltonian matrices for 1D XXZ model.
 */
 
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
@@ -33,6 +33,30 @@ class XXZSparseHamiltonian
   ~XXZSparseHamiltonian() {}
   virtual void createMatrix(SpinHalfBasis1D & basis);
   void createSymMatrix(SpinHalfBasis1D & basis);
+};
+
+//------------------------------------------------------XXZSparseRealHamiltonian---------
+
+class XXZSparseRealHamiltonian
+    : public SparseRealHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D> {
+ private:
+  size_t sites;
+  double Jz;
+
+ public:
+  XXZSparseRealHamiltonian() :
+      SparseRealHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>() {}
+  XXZSparseRealHamiltonian(SpinHalfPolynomial1D poly, size_t dim) :
+      SparseRealHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>(poly, dim) {}
+  XXZSparseRealHamiltonian(SpinHalfPolynomial1D poly, size_t sites, double Jz) :
+      SparseRealHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
+  virtual ~XXZSparseRealHamiltonian() {}
+  /*Get information of the sparse Hamiltonian.*/
+  int * getIrowData() { return irow.data(); }
+  int * getPcolData() { return pcol.data(); }
+  double * getNzValData() { return nzVal.data(); }
+  /*Use the specified basis to create matrix.*/
+  virtual void createMatrix(SpinHalfBasis1D & basis);
 };
 
 //-------------------------------------------------------------XXZFullHamiltonian--------
