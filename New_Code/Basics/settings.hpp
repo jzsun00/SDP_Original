@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 27, 2024
+  Updated: Jul 2, 2024
 
   Class:
   COOMatrix<DataType>
@@ -94,6 +94,9 @@ std::string complex_toString(const complex<double> & num);
 
 /*Convert an std::vector of integer numbers to std::string.*/
 std::string intVector_toString(const vector<int> & vec);
+
+/*Convert an std::vector of double numbers to std::string.*/
+std::string doubleVector_toString(const vector<double> & vec);
 
 /*Convert an std::vector of complex numbers to std::string.*/
 std::string complexVector_toString(const vector<complex<double> > & vec);

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jul 2, 2024
 
   Define Hamiltonian matrices.
 */
@@ -32,6 +32,7 @@ class XXZSparseHamiltonian
       SparseHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
   ~XXZSparseHamiltonian() {}
   virtual void createMatrix(SpinHalfBasis1D & basis);
+  void createSymMatrix(SpinHalfBasis1D & basis);
 };
 
 //-------------------------------------------------------------XXZFullHamiltonian--------

@@ -58,6 +58,52 @@ void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   //pcol.push_back(nnz);
 }
 
+void XXZSparseHamiltonian::createSymMatrix(SpinHalfBasis1D & basis) {
+  dim = basis.getSize();
+  size_t batchSize = 200000;
+  size_t batchNum = dim / batchSize + 1;
+  pcol.push_back(0);
+
+  for (size_t batchIdx = 0; batchIdx < batchNum; batchIdx++) {
+    size_t currentSize = batchSize;
+    if (batchIdx == batchNum - 1) {
+      currentSize = dim % batchSize;
+    }
+    vector<SpinHalfState1D> midStates(currentSize);
+
+//omp_set_num_threads(8);
+#pragma omp parallel
+    {
+#pragma omp for
+      for (long unsigned j = 0; j < currentSize; j++) {
+        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+      }
+    }
+
+    for (long unsigned j = 0; j < currentSize; j++) {
+      std::vector<int> indices;
+      std::map<int, complex<double> > elements;
+      for (size_t k = 0; k < midStates[j].getSize(); k++) {
+        //int index = basis.findBaseState(mid[k].second);
+        size_t index = basis.lookUpBaseState(midStates[j][k].second);
+        complex<double> value = midStates[j][k].first;
+        indices.push_back(index);
+        elements[index] = value;
+      }
+      std::sort(indices.begin(), indices.end());
+      for (size_t k = 0; k < midStates[j].getSize(); k++) {
+        if (j + batchSize * batchIdx < indices[k]) {
+          nnz++;
+          nzVal.push_back(elements[indices[k]]);
+          irow.push_back(indices[k]);
+        }
+      }
+      pcol.push_back(nnz);
+    }
+  }
+  //pcol.push_back(nnz);
+}
+
 //----------------------------------------------------------------Other Functions--------
 
 SpinHalfPolynomial1D makePoly(size_t sites, double Jz) {

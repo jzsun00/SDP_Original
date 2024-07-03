@@ -3,24 +3,30 @@
   Updated: Jul 2, 2024
 
   Calculate Anderson bound of XXZ model ground state energy.
+  Use real number elements and symmetric matrix.
 */
+
+#ifndef XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP
+#define XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP
 
 #include <chrono>
 #include <cstddef>
 #include <cstdio>
+#include <vector>
 
 #include "../../hamiltonians_XXZ.hpp"
-#include "../include/arcomp.h"
 #include "../include/arlnsmat.h"
-#include "../include/arlscomp.h"
-#include "../matrices/complex/lcompsol.h"
+#include "../include/arlsmat.h"
+#include "../include/arlssym.h"
+#include "../matrices/sym/lsmatrxa.h"
+#include "../matrices/sym/lsymsol.h"
 
 using std::cout;
 using std::endl;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 4;
+  size_t sites = 22;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -41,7 +47,7 @@ int main() {
   /*Consruct sparse Hamiltonian.*/
   XXZSparseHamiltonian * ham = new XXZSparseHamiltonian(poly, sites, Jz);
   auto start_matrix_init = std::chrono::high_resolution_clock::now();
-  ham->createMatrix(*basis);
+  ham->createSymMatrix(*basis);
   auto end_matrix_init = std::chrono::high_resolution_clock::now();
   std::cout << "Hamiltonian construction complete!" << std::endl;
   delete basis;
@@ -61,7 +67,12 @@ int main() {
 
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();
-  vector<complex<double> > valAVec = ham->getNzVal();
+  vector<complex<double> > valAVecComp = ham->getNzVal();
+  size_t valASize = valAVecComp.size();
+  vector<double> valAVec(valASize);
+  for (size_t i = 0; i < valASize; i++) {
+    valAVec[i] = valAVecComp[i].real();
+  }
   delete ham;
   //cout << "irow = " << intVector_toString(irowVec) << endl;
   //cout << "pcol = " << intVector_toString(pcolVec) << endl;
@@ -77,11 +88,10 @@ int main() {
   */
 
   //ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
-  ARluNonSymMatrix<complex<double>, double> A(
-      dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
+  ARluSymMatrix<double> A(dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
 
   // Defining what we need: the 3 lowest eigenvalues of A.
-  ARluCompStdEig<double> dprob(5L, A, "SR");
+  ARluSymStdEig<double> dprob(3, A, "SA");
 
   // Finding eigenvalues and eigenvectors.
   auto start_solve = std::chrono::high_resolution_clock::now();
@@ -104,13 +114,17 @@ int main() {
 
   // Printing solution.
   Solution(A, dprob);
-  double gs = dprob.Eigenvalue(0).real();
+  /*
+  double gs = dprob.Eigenvalue(0);
   for (size_t i = 1; i < 5; i++) {
-    if (dprob.Eigenvalue(i).real() < gs) {
-      gs = dprob.Eigenvalue(i).real();
+  if (dprob.Eigenvalue(i) < gs) {
+      gs = dprob.Eigenvalue(i);
     }
   }
   gs /= (sites - 2);
   cout << "\nGround State Energy = " << gs << endl;
+  */
 
 }  // main
+
+#endif  //XXZ_1D_ANDERSON_REAL_NUM_TEST_CPP

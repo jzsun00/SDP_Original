@@ -1,10 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Jun 27, 2024
+  Updated: Jul 2, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
   string intVector_toString(const vector<int> & vec)
+  string doubleVector_toString(const vector<double> & vec)
   string complexVector_toString(const vector<complex<double> > & vec);
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 */
@@ -35,6 +36,25 @@ std::string complex_toString(const complex<double> & num) {
 
 /*Convert an std::vector of integer numbers to std::string.*/
 std::string intVector_toString(const vector<int> & vec) {
+  std::string ans = "[ ";
+  size_t count = 1;
+  const size_t len = vec.size();
+  for (size_t i = 0; i < len; ++i) {
+    ans += (std::to_string(count) + "    ");
+    ans += std::to_string(vec[i]);
+    if (i != len - 1) {
+      ans += "\n";
+    }
+    else {
+      ans += "  ]";
+    }
+    count++;
+  }
+  return ans;
+}
+
+/*Convert an std::vector of double numbers to std::string.*/
+std::string doubleVector_toString(const vector<double> & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();
