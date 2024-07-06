@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 3, 2024
+  Updated: Jul 6, 2024
 
   Class:
   SpinHalfBaseState1D
@@ -86,10 +86,15 @@ class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
     construct a basis in that SzTotal sector.*/
   virtual void init();
   void init(int SzTotal);
+  void initRefSym(int SzTotal);
   /*Get information of the full basis.*/
   virtual std::string toString();
   int findBaseState(const SpinHalfBaseState1D & baseState);
   size_t lookUpBaseState(const SpinHalfBaseState1D & baseState);
+
+ private:
+  bool isReverseEqual(int num, int bitSize);
+  bool isLessOrEqualToReverse(int num, int bitSize);
 };
 
 #endif  //QM_SPINSTATES1D_HPP

@@ -57,6 +57,7 @@ class XXZSparseRealHamiltonian
   double * getNzValData() { return nzVal.data(); }
   /*Use the specified basis to create matrix.*/
   virtual void createMatrix(SpinHalfBasis1D & basis);
+  void createRefSymMatrix(SpinHalfBasis1D & basis);
 };
 
 //-------------------------------------------------------------XXZFullHamiltonian--------

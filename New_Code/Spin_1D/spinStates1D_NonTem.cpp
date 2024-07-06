@@ -76,6 +76,29 @@ void SpinHalfBasis1D::init(int SzTotal) {
   }
 }
 
+void SpinHalfBasis1D::initRefSym(int SzTotal) {
+  size_t total = std::pow(2, SitesNum);
+  int requiredSpinUpCount = (SitesNum + SzTotal) / 2;
+  for (size_t i = 0; i < total; i++) {
+    int popCount = __builtin_popcount(i);
+    if (popCount != requiredSpinUpCount) {
+      continue;
+    }
+    if (!isReverseEqual(i, SitesNum)) {
+      if (!isLessOrEqualToReverse(i, SitesNum)) {
+        continue;
+      }
+    }
+    vector<bool> newState(SitesNum);
+    for (size_t j = 0; j < SitesNum; j++) {
+      newState[SitesNum - j - 1] = ((i & (1 << j)) != 0);
+    }
+    SpinHalfBaseState1D toAdd(newState);
+    States.push_back(toAdd);
+    lookupTable[toAdd] = States.size() - 1;
+  }
+}
+
 std::string SpinHalfBasis1D::toString() {
   std::string ans = "SitesNum = ";
   ans += std::to_string(SitesNum);
@@ -96,6 +119,26 @@ int SpinHalfBasis1D::findBaseState(const SpinHalfBaseState1D & baseState) {
 size_t SpinHalfBasis1D::lookUpBaseState(const SpinHalfBaseState1D & baseState) {
   //return IndexTable[baseState];
   return lookupTable[baseState];
+}
+
+bool SpinHalfBasis1D::isReverseEqual(int num, int bitSize) {
+  int reverseNum = 0;
+  for (int i = 0; i < bitSize; ++i) {
+    if (num & (1 << i)) {
+      reverseNum |= (1 << (bitSize - 1 - i));
+    }
+  }
+  return num == reverseNum;
+}
+
+bool SpinHalfBasis1D::isLessOrEqualToReverse(int num, int bitSize) {
+  int reverseNum = 0;
+  for (int i = 0; i < bitSize; ++i) {
+    if (num & (1 << i)) {
+      reverseNum |= (1 << (bitSize - 1 - i));
+    }
+  }
+  return num <= reverseNum;
 }
 
 #endif  //QM_SPINSTATES1D_NONTEM_CPP

@@ -241,6 +241,112 @@ void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
   }
 }
 
+bool isReverseEqual(const SpinHalfBaseState1D & state) {
+  size_t n = state.getSize();
+  for (size_t i = 0; i < n / 2; ++i) {
+    if (state[i] != state[n - 1 - i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool isLessOrEqualToReverse(const SpinHalfBaseState1D & state) {
+  size_t n = state.getSize();
+  for (size_t i = 0; i < n; ++i) {
+    if (state[i] < state[n - 1 - i]) {
+      return true;
+    }
+    else if (state[i] > state[n - 1 - i]) {
+      return false;
+    }
+  }
+  return true;  // They are equal
+}
+
+void XXZSparseRealHamiltonian::createRefSymMatrix(SpinHalfBasis1D & basis) {
+  dim = basis.getSize();
+  size_t batchSize = 500000;
+  size_t batchNum = dim / batchSize + 1;
+  pcol.push_back(0);
+
+  for (size_t batchIdx = 0; batchIdx < batchNum; batchIdx++) {
+    size_t currentSize = batchSize;
+    if (batchIdx == batchNum - 1) {
+      currentSize = dim % batchSize;
+    }
+    vector<SpinHalfState1D> midStates(currentSize);
+
+#pragma omp parallel
+    {
+#pragma omp for
+      for (long unsigned j = 0; j < currentSize; j++) {
+        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+      }
+    }
+
+    vector<vector<int> > indices(currentSize);
+    vector<std::map<int, double> > elements(currentSize);
+
+    bool symState = false;
+
+#pragma omp parallel
+    {
+#pragma omp for
+      for (long unsigned j = 0; j < currentSize; j++) {
+        size_t midStateSize = midStates[j].getSize();
+        bool symState1 = isReverseEqual(basis[j + batchSize * batchIdx]);
+        for (size_t k = 0; k < midStateSize; k++) {
+          //int index = basis.findBaseState(mid[k].second);
+          if (!isLessOrEqualToReverse(midStates[j][k].second)) {
+            continue;
+          }
+          size_t index = basis.lookUpBaseState(midStates[j][k].second);
+          //std::cout << "index = " << index << std::endl;
+          symState = isReverseEqual(midStates[j][k].second);
+          if (j + batchSize * batchIdx <= index) {
+            complex<double> value = midStates[j][k].first;
+            if (symState1) {
+              if (!symState) {
+                value *= std::pow(2, -0.5);
+              }
+            }
+            else {
+              if (symState) {
+                value *= std::pow(2, -0.5);
+              }
+              else {
+                value *= std::pow(2, 0.5);
+              }
+            }
+            /*
+            if (!symState) {
+              value *= std::pow(2, -0.5);
+            }
+            if (!isReverseEqual(basis[j + batchSize * batchIdx])) {
+              value *= std::pow(2, 0.5);
+            }
+            */
+            indices[j].push_back(index);
+            elements[j][index] = value.real();
+          }
+        }
+      }
+    }
+
+    for (long unsigned j = 0; j < currentSize; j++) {
+      std::sort(indices[j].begin(), indices[j].end());
+      size_t indicesSize = indices[j].size();
+      for (size_t k = 0; k < indicesSize; k++) {
+        nnz++;
+        nzVal.push_back(elements[j][indices[j][k]]);
+        irow.push_back(indices[j][k]);
+      }
+      pcol.push_back(nnz);
+    }
+  }
+}
+
 //----------------------------------------------------------------Other Functions--------
 
 SpinHalfPolynomial1D makePoly(size_t sites, double Jz) {
