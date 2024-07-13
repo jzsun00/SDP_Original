@@ -394,7 +394,8 @@ void printSparseMatrixXX1D(size_t max, std::string fileName) {
   for (size_t i = 1; i < 2 * max; i++) {
     if (i == 2) {
       //inputFile << max - 1;
-      inputFile << 1;
+      //inputFile << 1;
+      inputFile << -1;
     }
     else {
       inputFile << 0;
@@ -485,6 +486,11 @@ void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
     if (i == 1) {
       inputFile << 2 * ham[i].real();
     }
+    ////////////////////////////////////
+    else if (i == 2) {
+      inputFile << -ham[i].real();
+    }
+    ///////////////////////////////////
     else {
       inputFile << ham[i].real();
     }

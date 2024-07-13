@@ -11,10 +11,10 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  size_t sites = 4;
+  size_t sites = 12;
   std::string fileName = "./XX_data/XX_N_" + std::to_string(sites) + ".dat";
   std::string fileNameS = "./XX_data/XX_N_" + std::to_string(sites) + ".dat-s";
-  printMatrixXX1D(sites, fileName);
+  //printMatrixXX1D(sites, fileName);
   printSparseMatrixXX1D(sites, fileNameS);
   /////////////////////////////////////////////////////
   cout << "\nTests pass!" << endl;

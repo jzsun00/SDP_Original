@@ -7,7 +7,7 @@ using std::endl;
 
 int main(void) {
   size_t sites = 48;
-  double Jz = 0.5;
+  double Jz = -1;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -18,15 +18,15 @@ int main(void) {
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub2(0, sites - 1, 2);
-  HardCore1DOpSubBasis sub4(19, sites - 20, 4);
-  HardCore1DOpSubBasis sub6(22, sites - 23, 6);
+  HardCore1DOpSubBasis sub4(21, sites - 22, 4);
+  //HardCore1DOpSubBasis sub6(22, sites - 23, 6);
   sub2.init();
   sub4.init();
-  sub6.init();
+  //sub6.init();
   HardCore1DOpBasis basis;
   basis.addSubspace(sub2);
   basis.addSubspace(sub4);
-  basis.addSubspace(sub6);
+  //basis.addSubspace(sub6);
   cout << "Operator Basis:" << endl;
   //cout << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = findHermPairs(basis);
@@ -44,15 +44,15 @@ int main(void) {
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
-  HardCore1DConsBaseSet base2(19, sites - 20, 2);
-  HardCore1DConsBaseSet base3(22, sites - 23, 3);
+  HardCore1DConsBaseSet base2(21, sites - 22, 2);
+  //HardCore1DConsBaseSet base3(22, sites - 23, 3);
   base1.init();
   base2.init();
-  base3.init();
+  //base3.init();
   HardCore1DConsSet fullSet;
-  fullSet.addBaseSet(base2);
   fullSet.addBaseSet(base1);
-  fullSet.addBaseSet(base3);
+  fullSet.addBaseSet(base2);
+  //fullSet.addBaseSet(base3);
   cout << "Constraint operator set:" << endl;
   //cout << fullSet.toString() << endl;
   //std::string fileName = "N_" + std::to_string(sites) + "_Jz_" + ".dat";
