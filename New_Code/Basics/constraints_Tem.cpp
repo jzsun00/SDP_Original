@@ -9,7 +9,13 @@
 #ifndef ORI_SDP_GS_CONSTRAINS_TEM_CPP
 #define ORI_SDP_GS_CONSTRAINS_TEM_CPP
 
+#include <vector>
+
 #include "./constraints.hpp"
+
+using std::complex;
+using std::pair;
+using std::vector;
 
 //-----------------------------------------------------------------ConsSet---------------
 /*

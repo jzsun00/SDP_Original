@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jul 13, 2024
 
   Class:
   Operator<IndexType>
@@ -27,7 +27,6 @@
 #include <stdexcept>
 
 #include "./settings.hpp"
-#include "./settings_Tem.cpp"
 
 //----------------------------------------------------------Operator<IndexType>---------
 
@@ -122,14 +121,14 @@ class SpinOp : public Operator<IndexType> {
 template<typename OpType>
 class Monomial {
  protected:
-  vector<OpType> Expr;
+  std::vector<OpType> Expr;
 
  public:
   /*Construct a monomial with one operator or a vector of operators.
     Default constructor use an empty vector.*/
   Monomial() : Expr() {}
   Monomial(OpType & Op) : Expr(1, Op) {}
-  Monomial(const vector<OpType> & Expr) : Expr(Expr) {}
+  Monomial(const std::vector<OpType> & Expr) : Expr(Expr) {}
   Monomial(const Monomial<OpType> & rhs) : Expr(rhs.Expr) {}
   virtual ~Monomial() {}
   /*Get information of the monomial.*/
@@ -150,24 +149,27 @@ class Monomial {
 template<typename MonomialType>
 class Polynomial {
  protected:
-  vector<pair<complex<double>, MonomialType> > Terms;
+  std::vector<std::pair<std::complex<double>, MonomialType> > Terms;
 
  public:
-  typedef pair<complex<double>, MonomialType> TermType;
+  typedef std::pair<std::complex<double>, MonomialType> TermType;
   /*Construct a polynomial with one monomial.
     Default constructor use an empty vector.*/
   Polynomial() : Terms() {}
-  Polynomial(const MonomialType & mn) : Terms(1, TermType(complex<double>(1.0, 0), mn)) {}
-  Polynomial(complex<double> pref, const MonomialType & mn) :
+  Polynomial(const MonomialType & mn) :
+      Terms(1, TermType(std::complex<double>(1.0, 0), mn)) {}
+  Polynomial(std::complex<double> pref, const MonomialType & mn) :
       Terms(1, TermType(pref, mn)) {}
   Polynomial(const Polynomial & rhs) : Terms(rhs.Terms) {}
   virtual ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
-  typename vector<pair<complex<double>, MonomialType> >::const_iterator getBegin() const {
+  typename std::vector<std::pair<std::complex<double>, MonomialType> >::const_iterator
+  getBegin() const {
     return Terms.begin();
   }
-  typename vector<pair<complex<double>, MonomialType> >::const_iterator getEnd() const {
+  typename std::vector<std::pair<std::complex<double>, MonomialType> >::const_iterator
+  getEnd() const {
     return Terms.end();
   }
   std::string toString() const;
@@ -183,7 +185,7 @@ class Polynomial {
   Polynomial & operator*=(MonomialType const & rhs);
   Polynomial & operator*=(TermType const & rhs);
   Polynomial & operator*=(Polynomial const & rhs);
-  Polynomial & operator*=(complex<double> rhs);
+  Polynomial & operator*=(std::complex<double> rhs);
   void herm();
   void eraseZeros();
 
@@ -191,8 +193,8 @@ class Polynomial {
   /*Find the same monomial for += operation.
     Return the corresponding iterator if same monomial is found,
     otherwise return Terms.end().*/
-  typename vector<pair<complex<double>, MonomialType> >::iterator findSameMonomial(
-      MonomialType const & mn);
+  typename std::vector<std::pair<std::complex<double>, MonomialType> >::iterator
+  findSameMonomial(MonomialType const & mn);
 };
 
 #endif  //QM_OPERATORS_HPP

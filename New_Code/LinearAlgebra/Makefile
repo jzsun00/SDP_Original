@@ -8,7 +8,7 @@ OBJ_DIR := ./_Objs
 
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic
+CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic
 LDFLAGS := -lopenblas
 
 # Source files

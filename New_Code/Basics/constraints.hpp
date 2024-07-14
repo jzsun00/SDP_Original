@@ -17,7 +17,7 @@ class ConsBaseSet {
   IndexType start;
   IndexType end;
   size_t order;
-  vector<MonomialType> BaseOpSet;
+  std::vector<MonomialType> BaseOpSet;
 
  public:
   ConsBaseSet() : order(0), BaseOpSet() {}
@@ -30,7 +30,7 @@ class ConsBaseSet {
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
-  vector<MonomialType> getBaseOpSet() const { return BaseOpSet; }
+  std::vector<MonomialType> getBaseOpSet() const { return BaseOpSet; }
   MonomialType operator[](size_t n) const { return BaseOpSet[n]; }
   virtual std::string toString() = 0;
 };
@@ -40,7 +40,7 @@ class ConsBaseSet {
 template<typename MonomialType, typename IndexType>
 class ConsSet {
  protected:
-  vector<MonomialType> OpSet;
+  std::vector<MonomialType> OpSet;
 
  public:
   ConsSet() : OpSet() {}

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 14, 2024
+  Updated: Jul 13, 2024
 
   Class:
   DenseMatrix<DataType>
@@ -17,8 +17,6 @@
 #include <string>
 #include <vector>
 
-using std::vector;
-
 //----------------------------------------------------------------Constants-----------
 
 const size_t rand_max = 100;  //Maximum value for generated random number
@@ -30,9 +28,9 @@ const size_t rand_max = 100;  //Maximum value for generated random number
 template<typename DataType>
 class DenseMatrix {
  protected:
-  size_t nrows;           //Number of rows
-  size_t ncols;           //Number of columns
-  vector<DataType> data;  //Values of elements
+  size_t nrows;                //Number of rows
+  size_t ncols;                //Number of columns
+  std::vector<DataType> data;  //Values of elements
  public:
   DenseMatrix() : nrows(0), ncols(0), data() {}
   DenseMatrix(size_t nrows, size_t ncols) :
@@ -43,7 +41,7 @@ class DenseMatrix {
   /*Get information of the matrix.*/
   size_t getNrows() const { return nrows; }
   size_t getNcols() const { return ncols; }
-  vector<DataType> getAllData() const { return data; }
+  std::vector<DataType> getAllData() const { return data; }
   DataType operator()(size_t rowIdx, size_t colIdx) const;
   virtual std::string toString() const = 0;
   /*Modify the matrix.*/

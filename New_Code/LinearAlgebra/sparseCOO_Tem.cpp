@@ -1,16 +1,15 @@
 /*
   Jiazheng Sun
-  Updated: Jun 27, 2024
+  Updated: Jul 13, 2024
 
   Class Implementations:
   COOMatrix<DataType>
-  CSRMatrix<DataType>
 */
 
-#ifndef ORI_SDP_GS_SETTINGS_TEM_CPP
-#define ORI_SDP_GS_SETTINGS_TEM_CPP
+#ifndef LA_SPARSE_COO_TEM_CPP
+#define LA_SPARSE_COO_TEM_CPP
 
-#include "./settings.hpp"
+#include "./sparseCOO.hpp"
 
 //-----------------------------------------------------------------COOMatrix-------------
 
@@ -35,4 +34,4 @@ int findIndex(const std::vector<T> & vec, const T & value) {
   }
 }
 
-#endif  //ORI_SDP_GS_SETTINGS_TEM_CPP
+#endif  //LA_SPARSE_COO_TEM_CPP

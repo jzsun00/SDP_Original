@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 14, 2024
+  Updated: Jul 13, 2024
 
   Class Implementations:
   DenseMatrix<DataType>
@@ -10,6 +10,8 @@
 #define LA_DENSE_TEM_CPP
 
 #include "./dense.hpp"
+
+using std::vector;
 
 //---------------------------------------------------------------DenseMatrix----------
 

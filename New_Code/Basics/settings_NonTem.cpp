@@ -1,11 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Jul 2, 2024
+  Updated: Jul 13, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
-  string intVector_toString(const vector<int> & vec)
-  string doubleVector_toString(const vector<double> & vec)
+  string intVector_toString(const vector<int> & vec);
+  string doubleVector_toString(const vector<double> & vec);
   string complexVector_toString(const vector<complex<double> > & vec);
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 */
@@ -16,6 +16,9 @@
 #include <sstream>
 
 #include "./settings.hpp"
+
+using std::complex;
+using std::vector;
 
 //----------------------------------------------------------------Output Tools-----------
 
@@ -40,7 +43,7 @@ std::string intVector_toString(const vector<int> & vec) {
   size_t count = 1;
   const size_t len = vec.size();
   for (size_t i = 0; i < len; ++i) {
-    ans += (std::to_string(count) + "    ");
+    ans += (std::to_string(count) + "\t");
     ans += std::to_string(vec[i]);
     if (i != len - 1) {
       ans += "\n";
@@ -59,7 +62,7 @@ std::string doubleVector_toString(const vector<double> & vec) {
   size_t count = 1;
   const size_t len = vec.size();
   for (size_t i = 0; i < len; ++i) {
-    ans += (std::to_string(count) + "    ");
+    ans += (std::to_string(count) + "\t");
     ans += std::to_string(vec[i]);
     if (i != len - 1) {
       ans += "\n";
@@ -78,7 +81,7 @@ std::string complexVector_toString(const vector<complex<double> > & vec) {
   size_t count = 1;
   const size_t len = vec.size();
   for (size_t i = 0; i < len; ++i) {
-    ans += (std::to_string(count) + "    ");
+    ans += (std::to_string(count) + "\t");
     ans += complex_toString(vec[i]);
     if (i != len - 1) {
       ans += "\n";
@@ -98,10 +101,10 @@ std::string complexMatrix_toString(const vector<vector<complex<double> > > & mat
   const size_t lenRow = matrix.size();
   const size_t lenCol = matrix[0].size();
   for (size_t i = 0; i < lenRow; ++i) {
-    ans += (std::to_string(count) + "    ");
+    ans += (std::to_string(count) + "\t");
     for (size_t j = 0; j < lenCol; ++j) {
       ans += complex_toString(matrix[i][j]);
-      ans += "    ";
+      ans += "\t";
     }
     if (i != lenRow - 1) {
       ans += "\n";

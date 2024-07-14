@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 14, 2024
+  Updated: Jul 13, 2024
 
   Class Implementations:
   DoubleDenseMatrix
@@ -16,6 +16,7 @@
 #include <cstdlib>
 
 #include "./dense.hpp"
+using std::vector;
 
 //-----------------------------------------------------------DoubleDenseMatrix--------
 

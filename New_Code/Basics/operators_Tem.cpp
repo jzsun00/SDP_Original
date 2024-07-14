@@ -14,6 +14,10 @@
 
 #include "./operators.hpp"
 
+using std::complex;
+using std::pair;
+using std::vector;
+
 //----------------------------------------------------------LadderOp<IndexType>---------
 
 template<typename IndexType>

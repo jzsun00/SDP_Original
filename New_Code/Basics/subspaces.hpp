@@ -16,11 +16,11 @@ class OpSubBasis {
   IndexType start;
   IndexType end;
   size_t order;
-  vector<MonomialType> Basis;
+  std::vector<MonomialType> Basis;
 
  public:
   /*Construct a basis with MonomialType.
-    Default constructor use random size and empty vector.*/
+    Default constructor use random size and empty std::vector.*/
   OpSubBasis() : order(0), Basis() {}
   OpSubBasis(IndexType start, IndexType end, size_t order) :
       start(start), end(end), order(order), Basis() {}
@@ -32,12 +32,12 @@ class OpSubBasis {
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
-  vector<MonomialType> getBasis() const { return Basis; }
+  std::vector<MonomialType> getBasis() const { return Basis; }
   MonomialType operator[](size_t n) const { return Basis[n]; }
   virtual std::string toString() = 0;
 
   /*Projection tools.*/
-  vector<complex<double> > projPoly(Polynomial<MonomialType> poly);
+  std::vector<std::complex<double> > projPoly(Polynomial<MonomialType> poly);
 };
 
 //---------------------------------------------------------------OpBasis-----------------
@@ -45,7 +45,7 @@ class OpSubBasis {
 template<typename MonomialType, typename IndexType>
 class OpBasis {
  protected:
-  vector<MonomialType> Basis;
+  std::vector<MonomialType> Basis;
 
  public:
   OpBasis() : Basis() {}
@@ -55,9 +55,9 @@ class OpBasis {
   virtual void addSubspace(OpSubBasis<MonomialType, IndexType> & rhs) = 0;
 
   /*Projection tools.*/
-  vector<complex<double> > projPoly(Polynomial<MonomialType> poly);
+  std::vector<std::complex<double> > projPoly(Polynomial<MonomialType> poly);
 };
 
-#include "./subspaces_Tem.hpp"
+#include "./subspaces_Tem.cpp"
 
 #endif  //ORI_SDP_GS_SUBSPACES_HPP

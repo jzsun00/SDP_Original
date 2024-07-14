@@ -11,6 +11,10 @@
 
 #include "./subspaces.hpp"
 
+using std::complex;
+using std::pair;
+using std::vector;
+
 //-----------------------------------------------------------------OpSubBasis------------
 
 template<typename MonomialType, typename IndexType>

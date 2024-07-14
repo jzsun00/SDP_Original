@@ -19,6 +19,10 @@
 
 #include "states.hpp"
 
+using std::complex;
+using std::pair;
+using std::vector;
+
 //-------------------------------------------------------------------FockState-----------
 
 template<typename NumsType>
