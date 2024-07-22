@@ -11,6 +11,8 @@
 
 #include "./sparseCOO.hpp"
 
+using std::vector;
+
 //-----------------------------------------------------------------COOMatrix-------------
 
 template<typename DataType>

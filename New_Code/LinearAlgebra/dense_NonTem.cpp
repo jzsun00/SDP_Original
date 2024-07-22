@@ -1,48 +1,39 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 17, 2024
 
   Class Implementations:
   DoubleDenseMatrix
 */
 
-#ifndef LA_DENSE_NONTEM_CPP
-#define LA_DENSE_NONTEM_CPP
+#ifndef LA_DENSE_MATRIX_NONTEM_CPP
+#define LA_DENSE_MATRIX_NONTEM_CPP
 
 #include <cblas.h>
 #include <lapacke.h>
 
 #include <cstddef>
-#include <cstdlib>
+#include <string>
 
 #include "./dense.hpp"
-using std::vector;
 
 //-----------------------------------------------------------DoubleDenseMatrix--------
 
-std::string DoubleDenseMatrix::toString() const {
-  std::string ans = "[ ";
-  size_t count = 1;
-  for (size_t rowId = 0; rowId < nrows; ++rowId) {
-    ans += (std::to_string(count) + "    ");
-    for (size_t colId = 0; colId < ncols; ++colId) {
-      ans += std::to_string(data[colId * nrows + rowId]);
-      ans += "    ";
-    }
-    if (rowId != nrows - 1) {
-      ans += "\n";
-    }
-    else {
-      ans += "  ]";
-    }
-    count++;
-  }
-  return ans;
+std::string DoubleDenseMatrix::data_toString(double element) const {
+  return std::to_string(element);
 }
 
 void DoubleDenseMatrix::fillRandomNum() {
-  for (size_t i = 0; i < data.size(); ++i) {
-    data[i] = std::rand() % rand_max;
+  const size_t len = data.size();
+  for (size_t i = 0; i < len; ++i) {
+    data[i] = std::rand();
+  }
+}
+
+void DoubleDenseMatrix::fillRandomNum(size_t maxNum) {
+  const size_t len = data.size();
+  for (size_t i = 0; i < len; ++i) {
+    data[i] = std::rand() % maxNum;
   }
 }
 
@@ -65,4 +56,28 @@ DoubleDenseMatrix DoubleDenseMatrix::operator*(const DoubleDenseMatrix & rhs) co
   return ans;
 }
 
-#endif  //LA_DENSE_NONTEM_CPP
+void DoubleDenseMatrix::solveEigen(std::vector<double> & real,
+                                   std::vector<double> & imag) {
+  if (nrows != ncols) {
+    throw std::invalid_argument("ERROR: Matrix must be square to solve eigenvalues!\n");
+  }
+  int n = nrows;
+  int status = LAPACKE_dgeev(LAPACK_ROW_MAJOR,
+                             'N',
+                             'N',
+                             n,
+                             data.data(),
+                             n,
+                             real.data(),
+                             imag.data(),
+                             nullptr,
+                             n,
+                             nullptr,
+                             n);
+  if (status != 0) {
+    throw std::invalid_argument("ERROR: LAPACKE_dgeev return value is " +
+                                std::to_string(status) + "!\n");
+  }
+}
+
+#endif  //LA_DENSE_MATRIX_NONTEM_CPP
