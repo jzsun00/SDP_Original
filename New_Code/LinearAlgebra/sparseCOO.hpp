@@ -8,6 +8,7 @@
 #ifndef LA_SPARSE_MATRIX_COO_HPP
 #define LA_SPARSE_MATRIX_COO_HPP
 
+#include <complex>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ class COOMatrix {
 
  public:
   COOMatrix() : nrows(0), ncols(0), nnz(0), rows(), cols(), data() {}
-  COOMatrix(size_t nrows, size_t ncols) :
+  COOMatrix(const size_t nrows, const size_t ncols) :
       nrows(nrows), ncols(ncols), nnz(0), rows(), cols(), data() {}
   COOMatrix(const COOMatrix<DataType> & rhs);
   virtual ~COOMatrix() {}
@@ -38,11 +39,23 @@ class COOMatrix {
   std::vector<size_t> getCols() const { return cols; }
   std::vector<DataType> getAllData() const { return data; }
   std::string toString() const;
+  virtual std::string element_toString(DataType element) const = 0;
   /*Modify the matrix.*/
   void addData(size_t rowId, size_t colId, DataType newData);
+};
 
- private:
-  std::string element_toString(DataType element) const = 0;
+//-----------------------------------------------------------ComplexCOOMatrix------------
+
+class ComplexCOOMatrix : public COOMatrix<std::complex<double> > {
+ public:
+  ComplexCOOMatrix() : COOMatrix<std::complex<double> >() {}
+  ComplexCOOMatrix(const size_t nrows, const size_t ncols) :
+      COOMatrix<std::complex<double> >(nrows, ncols) {}
+  ComplexCOOMatrix(const COOMatrix<std::complex<double> > & rhs) :
+      COOMatrix<std::complex<double> >(rhs) {}
+  virtual ~ComplexCOOMatrix() {}
+  /*Get information of the matrix.*/
+  virtual std::string element_toString(std::complex<double> element) const;
 };
 
 #endif  //LA_SPARSE_MATRIX_COO_HPP
