@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 23, 2024
 
   Class:
   
@@ -28,7 +28,7 @@
 #include <utility>
 #include <vector>
 
-//------------------------------------------------------------Constant Definitions-------
+//-----------------------------------------------------------Constant Definitions-------
 
 /*Double values less than ERROR will be considered zero in computations.*/
 constexpr double ERROR = 1e-12;

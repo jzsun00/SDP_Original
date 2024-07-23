@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 23, 2024
 
   Class:
   Operator<IndexType>
@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <limits>
 #include <stdexcept>
+#include <vector>
 
 #include "./settings.hpp"
 
@@ -65,7 +66,7 @@ class LadderOp : public Operator<IndexType> {
   LadderOp(IndexType index, bool creatorF) :
       Operator<IndexType>(index), isUnit(false), creatorF(creatorF) {}
   LadderOp(bool isUnit) : Operator<IndexType>(), isUnit(isUnit) {}
-  LadderOp(LadderOp const & rhs) :
+  LadderOp(const LadderOp & rhs) :
       Operator<IndexType>(rhs), isUnit(rhs.isUnit), creatorF(rhs.creatorF) {}
   virtual ~LadderOp() {}
   /*Get information of the ladder operator.*/
@@ -125,9 +126,9 @@ class Monomial {
 
  public:
   /*Construct a monomial with one operator or a vector of operators.
-    Default constructor use an empty vector.*/
+    Default constructor uses an empty vector.*/
   Monomial() : Expr() {}
-  Monomial(OpType & Op) : Expr(1, Op) {}
+  Monomial(const OpType & Op) : Expr(1, Op) {}
   Monomial(const std::vector<OpType> & Expr) : Expr(Expr) {}
   Monomial(const Monomial<OpType> & rhs) : Expr(rhs.Expr) {}
   virtual ~Monomial() {}
@@ -164,28 +165,22 @@ class Polynomial {
   virtual ~Polynomial() {}
   /*Get information of the polynomial.*/
   size_t getSize() const { return Terms.size(); }
-  typename std::vector<std::pair<std::complex<double>, MonomialType> >::const_iterator
-  getBegin() const {
-    return Terms.begin();
-  }
-  typename std::vector<std::pair<std::complex<double>, MonomialType> >::const_iterator
-  getEnd() const {
-    return Terms.end();
-  }
+  auto getBegin() const { return Terms.begin(); }
+  auto getEnd() const { return Terms.end(); }
   std::string toString() const;
   /*Overload operators.*/
   Polynomial & operator=(Polynomial const & rhs);
-  bool operator==(Polynomial const & rhs) { return Terms == rhs.Terms; }
-  Polynomial & operator+=(MonomialType const & rhs);
-  Polynomial & operator+=(TermType const & rhs);
-  Polynomial & operator+=(Polynomial const & rhs);
-  Polynomial & operator-=(MonomialType const & rhs);
-  Polynomial & operator-=(TermType const & rhs);
-  Polynomial & operator-=(Polynomial const & rhs);
-  Polynomial & operator*=(MonomialType const & rhs);
-  Polynomial & operator*=(TermType const & rhs);
-  Polynomial & operator*=(Polynomial const & rhs);
-  Polynomial & operator*=(std::complex<double> rhs);
+  bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
+  Polynomial & operator+=(const MonomialType & rhs);
+  Polynomial & operator+=(const TermType & rhs);
+  Polynomial & operator+=(const Polynomial & rhs);
+  Polynomial & operator-=(const MonomialType & rhs);
+  Polynomial & operator-=(const TermType & rhs);
+  Polynomial & operator-=(const Polynomial & rhs);
+  Polynomial & operator*=(const MonomialType & rhs);
+  Polynomial & operator*=(const TermType & rhs);
+  Polynomial & operator*=(const Polynomial & rhs);
+  Polynomial & operator*=(const std::complex<double> rhs);
   void herm();
   void eraseZeros();
 
@@ -193,8 +188,7 @@ class Polynomial {
   /*Find the same monomial for += operation.
     Return the corresponding iterator if same monomial is found,
     otherwise return Terms.end().*/
-  typename std::vector<std::pair<std::complex<double>, MonomialType> >::iterator
-  findSameMonomial(MonomialType const & mn);
+  auto findSameMonomial(const MonomialType & mn) const;
 };
 
 #endif  //QM_OPERATORS_HPP

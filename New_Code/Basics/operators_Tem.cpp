@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 16, 2024
+  Updated: Jul 23, 2024
 
   Class Implementations:
   LadderOp<IndexType>
@@ -16,7 +16,6 @@
 
 using std::complex;
 using std::pair;
-using std::vector;
 
 //----------------------------------------------------------LadderOp<IndexType>---------
 
@@ -87,8 +86,7 @@ void SpinOp<IndexType>::herm() {
 template<typename OpType>
 std::string Monomial<OpType>::toString() const {
   std::string ans;
-  for (typename vector<OpType>::const_iterator it = Expr.begin(); it != Expr.end();
-       ++it) {
+  for (auto it = Expr.begin(); it != Expr.end(); ++it) {
     ans += it->toString();
   }
   return ans;
@@ -125,7 +123,7 @@ Monomial<OpType> & Monomial<OpType>::operator*=(const OpType & toAdd) {
 template<typename OpType>
 void Monomial<OpType>::herm() {
   std::reverse(Expr.begin(), Expr.end());
-  for (typename vector<OpType>::iterator it = Expr.begin(); it != Expr.end(); ++it) {
+  for (auto it = Expr.begin(); it != Expr.end(); ++it) {
     it->herm();
   }
 }
@@ -138,11 +136,8 @@ std::string Polynomial<MonomialType>::toString() const {
   if (Terms.size() == 0) {
     return ans;
   }
-  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
-           Terms.begin();
-       it != Terms.end();
-       ++it) {
-    ans += "  (";
+  for (auto it = Terms.begin(); it != Terms.end(); ++it) {
+    ans += "\t(";
     ans += complex_toString(it->first);
     ans += ")";
     ans += it->second.toString();
@@ -161,11 +156,8 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator=(
 }
 
 template<typename MonomialType>
-typename vector<pair<complex<double>, MonomialType> >::iterator
-Polynomial<MonomialType>::findSameMonomial(MonomialType const & mn) {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
-       it != Terms.end();
-       ++it) {
+auto Polynomial<MonomialType>::findSameMonomial(const MonomialType & mn) const {
+  for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     if (it->second == mn) {
       return it;
     }
@@ -176,20 +168,20 @@ Polynomial<MonomialType>::findSameMonomial(MonomialType const & mn) {
 //+=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
-    MonomialType const & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(1, 0), rhs);
+    const MonomialType & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(1.0, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
+//+=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
-    pair<complex<double>, MonomialType> const & toAdd) {
+    const pair<complex<double>, MonomialType> & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
-  typename vector<pair<complex<double>, MonomialType> >::iterator it =
-      findSameMonomial(toAdd.second);
+  auto it = findSameMonomial(toAdd.second);
   if (it == Terms.end()) {
     Terms.push_back(toAdd);
   }
@@ -199,13 +191,11 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
   return *this;
 }
 
+//+=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
-    Polynomial<MonomialType> const & rhs) {
-  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
-           rhs.getBegin();
-       termIt != rhs.getEnd();
-       ++termIt) {
+    const Polynomial<MonomialType> & rhs) {
+  for (auto termIt = rhs.getBegin(); termIt != rhs.getEnd(); ++termIt) {
     *this += *termIt;
   }
   return *this;
@@ -214,31 +204,30 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
 //-=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
-    MonomialType const & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(-1, 0), rhs);
+    const MonomialType & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(-1.0, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
+//-=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
-    pair<complex<double>, MonomialType> const & toAdd) {
+    const pair<complex<double>, MonomialType> & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
-  pair<complex<double>, MonomialType> copy(complex<double>(-1, 0) * toAdd.first,
+  pair<complex<double>, MonomialType> copy(complex<double>(-1.0, 0) * toAdd.first,
                                            toAdd.second);
   *this += copy;
   return *this;
 }
 
+//-=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
-    Polynomial<MonomialType> const & rhs) {
-  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
-           rhs.getBegin();
-       termIt != rhs.getEnd();
-       ++termIt) {
+    const Polynomial<MonomialType> & rhs) {
+  for (auto termIt = rhs.getBegin(); termIt != rhs.getEnd(); ++termIt) {
     *this -= *termIt;
   }
   return *this;
@@ -247,33 +236,30 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
 //*=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
-    MonomialType const & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(1, 0), rhs);
+    const MonomialType & rhs) {
+  pair<complex<double>, MonomialType> toAdd(complex<double>(1.0, 0), rhs);
   *this *= toAdd;
   return *this;
 }
 
+//*=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
-    pair<complex<double>, MonomialType> const & rhs) {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
-       it != Terms.end();
-       ++it) {
+    const pair<complex<double>, MonomialType> & rhs) {
+  for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     it->first *= rhs.first;
     it->second *= rhs.second;
   }
   return *this;
 }
 
+//*=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
-    Polynomial<MonomialType> const & rhs) {
-  Polynomial current(*this);
-  for (typename vector<pair<complex<double>, MonomialType> >::const_iterator termIt =
-           rhs.getBegin();
-       termIt != rhs.getEnd();
-       ++termIt) {
-    Polynomial copy(current);
+    const Polynomial<MonomialType> & rhs) {
+  const Polynomial<MonomialType> current(*this);
+  for (auto termIt = rhs.getBegin(); termIt != rhs.getEnd(); ++termIt) {
+    Polynomial<MonomialType> copy(current);
     *this += (copy *= *termIt);
   }
   *this -= current;
@@ -281,10 +267,9 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
 }
 
 template<typename MonomialType>
-Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(complex<double> rhs) {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
-       it != Terms.end();
-       ++it) {
+Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
+    const complex<double> rhs) {
+  for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     it->first *= rhs;
   }
   return *this;
@@ -292,9 +277,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(complex<double> 
 
 template<typename MonomialType>
 void Polynomial<MonomialType>::herm() {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it = Terms.begin();
-       it != Terms.end();
-       ++it) {
+  for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     it->first = std::conj(it->first);
     it->second.herm();
   }

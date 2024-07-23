@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 23, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
