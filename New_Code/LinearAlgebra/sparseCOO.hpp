@@ -1,23 +1,22 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 22, 2024
   
-  
+  Define tools for Coordinate Format (COO) sparse matrix operations.
 */
 
-#ifndef LA_SPARSE_COO_HPP
-#define LA_SPARSE_COO_HPP
+#ifndef LA_SPARSE_MATRIX_COO_HPP
+#define LA_SPARSE_MATRIX_COO_HPP
 
 #include <cstddef>
 #include <string>
 #include <vector>
 
-//-----------------------------------------------------------------COOMatrix-------------
+//----------------------------------------------------------COOMatrix<DataType>----------
 
-/*Coordinate Format (COO) sparse matrix.*/
 template<typename DataType>
 class COOMatrix {
- private:
+ protected:
   size_t nrows;                //Number of rows
   size_t ncols;                //Number of columns
   size_t nnz;                  //Number of non-zero elements
@@ -29,25 +28,21 @@ class COOMatrix {
   COOMatrix() : nrows(0), ncols(0), nnz(0), rows(), cols(), data() {}
   COOMatrix(size_t nrows, size_t ncols) :
       nrows(nrows), ncols(ncols), nnz(0), rows(), cols(), data() {}
-  COOMatrix(const COOMatrix<DataType> & rhs) :
-      nrows(rhs.nrows),
-      ncols(rhs.ncols),
-      nnz(rhs.nnz),
-      rows(rhs.rows),
-      cols(rhs.cols),
-      data(rhs.data) {}
-  ~COOMatrix() {}
+  COOMatrix(const COOMatrix<DataType> & rhs);
+  virtual ~COOMatrix() {}
   /*Get information of the matrix.*/
-  std::pair<size_t, size_t> getDim() const {
-    return std::pair<size_t, size_t>(nrows, ncols);
-  }
+  size_t getNrows() const { return nrows; }
+  size_t getNcols() const { return ncols; }
   size_t getNnz() const { return nnz; }
   std::vector<size_t> getRows() const { return rows; }
   std::vector<size_t> getCols() const { return cols; }
-  std::vector<DataType> getData() const { return data; }
-  std::string toString() const = 0;
+  std::vector<DataType> getAllData() const { return data; }
+  std::string toString() const;
   /*Modify the matrix.*/
   void addData(size_t rowId, size_t colId, DataType newData);
+
+ private:
+  std::string element_toString(DataType element) const = 0;
 };
 
-#endif  //LA_SPARSE_COO_HPP
+#endif  //LA_SPARSE_MATRIX_COO_HPP

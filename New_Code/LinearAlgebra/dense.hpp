@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 17, 2024
+  Updated: Jul 22, 2024
 
   Class:
   DenseMatrix<DataType>
@@ -59,7 +59,8 @@ class DenseMatrix {
 class DoubleDenseMatrix : public DenseMatrix<double> {
  public:
   DoubleDenseMatrix() : DenseMatrix<double>() {}
-  DoubleDenseMatrix(size_t nrows, size_t ncols) : DenseMatrix<double>(nrows, ncols) {}
+  DoubleDenseMatrix(const size_t nrows, const size_t ncols) :
+      DenseMatrix<double>(nrows, ncols) {}
   DoubleDenseMatrix(const DoubleDenseMatrix & rhs) : DenseMatrix<double>(rhs) {}
   virtual ~DoubleDenseMatrix() {}
   /*Get information of the matrix.*/
@@ -67,9 +68,9 @@ class DoubleDenseMatrix : public DenseMatrix<double> {
   /*Modify the matrix.*/
   void fillRandomNum();
   void fillRandomNum(size_t maxNum);
-  /*BLAS*/
+  /*BLAS (OpenBLAS) tools.*/
   DoubleDenseMatrix operator*(const DoubleDenseMatrix & rhs) const;
-  /*LAPACK*/
+  /*LAPACK tools.*/
   void solveEigen(std::vector<double> & real, std::vector<double> & imag);
 };
 

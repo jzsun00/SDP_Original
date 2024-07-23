@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 17, 2024
+  Updated: Jul 22, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
@@ -20,10 +20,10 @@
 using std::complex;
 using std::vector;
 
-//----------------------------------------------------------------Output Tools-----------
+//-------------------------------------------------------------Output Tools-----------
 
 /*Convert a single complex number to std::string.*/
-std::string complex_toString(const complex<double> & num) {
+std::string LA::complex_toString(const complex<double> & num) {
   std::ostringstream oss;
   oss.precision(COMPLEX_PRECISION);
   oss << std::scientific;
@@ -38,7 +38,7 @@ std::string complex_toString(const complex<double> & num) {
 }
 
 /*Convert an std::vector of integer numbers to std::string.*/
-std::string intVector_toString(const vector<int> & vec) {
+std::string LA::intVector_toString(const vector<int> & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();
@@ -57,7 +57,7 @@ std::string intVector_toString(const vector<int> & vec) {
 }
 
 /*Convert an std::vector of double numbers to std::string.*/
-std::string doubleVector_toString(const vector<double> & vec) {
+std::string LA::doubleVector_toString(const vector<double> & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();
@@ -76,7 +76,7 @@ std::string doubleVector_toString(const vector<double> & vec) {
 }
 
 /*Convert an std::vector of complex numbers to std::string.*/
-std::string complexVector_toString(const vector<complex<double> > & vec) {
+std::string LA::complexVector_toString(const vector<complex<double> > & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();
@@ -95,7 +95,7 @@ std::string complexVector_toString(const vector<complex<double> > & vec) {
 }
 
 /*Convert a dense matrix of complex numbers to std::string.*/
-std::string complexMatrix_toString(const vector<vector<complex<double> > > & matrix) {
+std::string LA::complexMatrix_toString(const vector<vector<complex<double> > > & matrix) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t lenRow = matrix.size();

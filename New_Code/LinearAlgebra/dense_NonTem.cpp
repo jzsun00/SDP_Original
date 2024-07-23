@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 17, 2024
+  Updated: Jul 22, 2024
 
   Class Implementations:
   DoubleDenseMatrix
@@ -11,9 +11,6 @@
 
 #include <cblas.h>
 #include <lapacke.h>
-
-#include <cstddef>
-#include <string>
 
 #include "./dense.hpp"
 
@@ -75,8 +72,8 @@ void DoubleDenseMatrix::solveEigen(std::vector<double> & real,
                              nullptr,
                              n);
   if (status != 0) {
-    throw std::invalid_argument("ERROR: LAPACKE_dgeev return value is " +
-                                std::to_string(status) + "!\n");
+    throw std::invalid_argument("ERROR: LAPACKE_dgeev returns non-zero value " +
+                                std::to_string(status) + " !\n");
   }
 }
 

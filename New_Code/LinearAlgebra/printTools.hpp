@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 17, 2024
+  Updated: Jul 22, 2024
 
   Class:
   
@@ -23,31 +23,37 @@
 #include <string>
 #include <vector>
 
-//------------------------------------------------------------Constant Definitions-------
+//---------------------------------------------------------Constant Definitions-------
 
-/*Double values less than ERROR will be considered zero in computations.*/
-constexpr double ERROR = 1e-12;
-/*Default output precision for complex numbers.*/
-constexpr size_t COMPLEX_PRECISION = 4;
-/*Numerical value for Pi.*/
-constexpr double PI = 3.1415926536;
+namespace LA {
 
-//----------------------------------------------------------------Output Tools----------
+  /*Default output precision for complex numbers.*/
+  constexpr size_t COMPLEX_PRECISION = 4;
+  /*Numerical value for Pi.*/
+  constexpr double PI = 3.1415926536;
 
-/*Convert a single complex number to std::string.*/
-std::string complex_toString(const std::complex<double> & num);
+}  // namespace LA
 
-/*Convert an std::vector of integer numbers to std::string.*/
-std::string intVector_toString(const std::vector<int> & vec);
+//-------------------------------------------------------------Output Tools-----------
 
-/*Convert an std::vector of double numbers to std::string.*/
-std::string doubleVector_toString(const std::vector<double> & vec);
+namespace LA {
 
-/*Convert an std::vector of complex numbers to std::string.*/
-std::string complexVector_toString(const std::vector<std::complex<double> > & vec);
+  /*Convert a single complex number to std::string.*/
+  std::string complex_toString(const std::complex<double> & num);
 
-/*Convert a dense matrix of complex numbers to std::string.*/
-std::string complexMatrix_toString(
-    const std::vector<std::vector<std::complex<double> > > & matrix);
+  /*Convert an std::vector of integer numbers to std::string.*/
+  std::string intVector_toString(const std::vector<int> & vec);
+
+  /*Convert an std::vector of double numbers to std::string.*/
+  std::string doubleVector_toString(const std::vector<double> & vec);
+
+  /*Convert an std::vector of complex numbers to std::string.*/
+  std::string complexVector_toString(const std::vector<std::complex<double> > & vec);
+
+  /*Convert a dense matrix of complex numbers to std::string.*/
+  std::string complexMatrix_toString(
+      const std::vector<std::vector<std::complex<double> > > & matrix);
+
+}  // namespace LA
 
 #endif  //LA_PRINT_TOOLS_HPP
