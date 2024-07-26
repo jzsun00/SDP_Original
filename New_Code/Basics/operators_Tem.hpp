@@ -9,8 +9,8 @@
   Polynomial<MonomialType>
 */
 
-#ifndef QM_OPERATORS_TEM_CPP
-#define QM_OPERATORS_TEM_CPP
+#ifndef QM_OPERATORS_TEM_HPP
+#define QM_OPERATORS_TEM_HPP
 
 #include "./operators.hpp"
 
@@ -307,4 +307,4 @@ void Polynomial<MonomialType>::eraseZeros() {
               Terms.end());
 }
 
-#endif  //QM_OPERATORS_TEM_CPP
+#endif  //QM_OPERATORS_TEM_HPP

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 13, 2024
+  Updated: Jul 26, 2024
   
   Test output tools, print complex, double and int numbers, vectors and matrices.
 */

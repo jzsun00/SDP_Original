@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 3, 2024
+  Updated: Jul 26, 2024
 
   Class:
   SparseHamiltonian<PolyType, BaseStateType>
@@ -19,8 +19,7 @@
 
 #include <cstddef>
 
-#include "./operators.hpp"
-#include "./operators_Tem.cpp"
+#include "./operators_Tem.hpp"
 #include "./states.hpp"
 #include "./states_Tem.cpp"
 
@@ -31,10 +30,10 @@ class SparseHamiltonian {
  protected:
   PolyType poly;
   size_t dim;
-  int nnz;                         // Number of non-zero elements
-  vector<int> irow;                // Indices of row
-  vector<int> pcol;                // Positions for splitting
-  vector<complex<double> > nzVal;  // Non-zero values
+  int nnz;                                   // Number of non-zero elements
+  std::vector<int> irow;                     // Indices of row
+  std::vector<int> pcol;                     // Positions for splitting
+  std::vector<std::complex<double> > nzVal;  // Non-zero values
 
  public:
   /*Construct a sparse Hamiltonian with specified polynomial and dimension,
@@ -46,12 +45,12 @@ class SparseHamiltonian {
   /*Get information of the sparse Hamiltonian.*/
   size_t getDimension() const { return dim; }
   int getNumNonZero() const { return nnz; }
-  vector<int> getIrow() const { return irow; }
+  std::vector<int> getIrow() const { return irow; }
   int getIrow(size_t i) const { return irow[i]; }
-  vector<int> getPcol() const { return pcol; }
+  std::vector<int> getPcol() const { return pcol; }
   int getPcol(size_t i) const { return pcol[i]; }
-  vector<complex<double> > getNzVal() const { return nzVal; }
-  complex<double> getNzVal(size_t i) const { return nzVal[i]; }
+  std::vector<std::complex<double> > getNzVal() const { return nzVal; }
+  std::complex<double> getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/
   virtual void createMatrix(Basis<BaseStateType> & basis);
@@ -62,12 +61,12 @@ class SparseHamiltonian {
 template<typename PolyType, typename BaseStateType>
 class SparseRealHamiltonian {
  protected:
-  PolyType poly;         // Hamiltonian operator
-  size_t dim;            // Dimension of the matrix
-  size_t nnz;            // Number of non-zero elements
-  vector<int> irow;      // Indices of row
-  vector<int> pcol;      // Positions for splitting
-  vector<double> nzVal;  // Non-zero values
+  PolyType poly;              // Hamiltonian operator
+  size_t dim;                 // Dimension of the matrix
+  size_t nnz;                 // Number of non-zero elements
+  std::vector<int> irow;      // Indices of row
+  std::vector<int> pcol;      // Positions for splitting
+  std::vector<double> nzVal;  // Non-zero values
 
  public:
   /*Construct a sparse Hamiltonian with specified polynomial and dimension,
@@ -79,12 +78,12 @@ class SparseRealHamiltonian {
   /*Get information of the sparse Hamiltonian.*/
   size_t getDimension() const { return dim; }
   size_t getNumNonZero() const { return nnz; }
-  vector<int> getIrow() const { return irow; }
+  std::vector<int> getIrow() const { return irow; }
   int getIrow(size_t i) const { return irow[i]; }
-  vector<int> getPcol() const { return pcol; }
+  std::vector<int> getPcol() const { return pcol; }
   int getPcol(size_t i) const { return pcol[i]; }
-  vector<double> getNzVal() const { return nzVal; }
-  complex<double> getNzVal(size_t i) const { return nzVal[i]; }
+  std::vector<double> getNzVal() const { return nzVal; }
+  std::complex<double> getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/
   virtual void createMatrix(Basis<BaseStateType> & basis);
@@ -97,14 +96,14 @@ class FullHamiltonian {
  protected:
   PolyType poly;
   size_t dim;
-  vector<vector<complex<double> > > matrix;
+  std::vector<std::vector<std::complex<double> > > matrix;
   unsigned long nnz;
 
  public:
   /*Construct a full Hamiltonian, corresponding matrix is dim x dim.*/
   FullHamiltonian() : poly(), dim(0), matrix(), nnz(0) {}
   FullHamiltonian(PolyType poly, size_t dim) : poly(poly), dim(dim), matrix(), nnz(0) {
-    matrix.resize(dim, std::vector<complex<double> >(dim, 0));
+    matrix.resize(dim, std::vector<std::complex<double> >(dim, 0));
   }
   ~FullHamiltonian() {}
   /*Get information of the full Hamiltonian.*/

@@ -31,8 +31,8 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
     Bool value 'true' for spin-up, 'false' for spin-down.
     Added constructor: if passing in size_t N, construct state with all spin-down.*/
   SpinHalfBaseState1D() : SpinBaseState() {}
-  SpinHalfBaseState1D(size_t N) : SpinBaseState(vector<bool>(N, false)) {}
-  SpinHalfBaseState1D(const vector<bool> & input) : SpinBaseState(input) {}
+  SpinHalfBaseState1D(size_t N) : SpinBaseState(std::vector<bool>(N, false)) {}
+  SpinHalfBaseState1D(const std::vector<bool> & input) : SpinBaseState(input) {}
   SpinHalfBaseState1D(const SpinBaseState & rhs) : SpinBaseState(rhs) {}
   virtual ~SpinHalfBaseState1D() {}
   /*Get information of the 1D spin-1/2 base state.*/
@@ -50,7 +50,7 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
     Constructors are identical to State*/
   SpinHalfState1D() : State() {}
   SpinHalfState1D(const SpinHalfBaseState1D & ffs) : State(ffs) {}
-  SpinHalfState1D(complex<double> pref, const SpinHalfBaseState1D & ffs) :
+  SpinHalfState1D(std::complex<double> pref, const SpinHalfBaseState1D & ffs) :
       State(pref, ffs) {}
   SpinHalfState1D(const SpinHalfState1D & rhs) : State(rhs) {}
   virtual ~SpinHalfState1D() {}
@@ -63,7 +63,7 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
 struct VectorBoolHash {
   size_t operator()(const SpinHalfBaseState1D & baseState) const {
     size_t hash = 0;
-    vector<bool> vec = baseState.getNums();
+    std::vector<bool> vec = baseState.getNums();
     for (bool b : vec) {
       hash = (hash << 1) ^ std::hash<bool>()(b);
     }

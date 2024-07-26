@@ -1,14 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Jun 17, 2024
+  Updated: Jun 26, 2024
 
   Class Implementations:
   SparseHamiltonian<PolyType, BaseStateType>
   FullHamiltonian.<PolyType, BaseStateType>
 */
 
-#ifndef QM_HAMILTONIANS_TEM_CPP
-#define QM_HAMILTONIANS_TEM_CPP
+#ifndef QM_HAMILTONIANS_TEM_HPP
+#define QM_HAMILTONIANS_TEM_HPP
 
 #include "./hamiltonians.hpp"
 
@@ -42,7 +42,7 @@ void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
   for (long unsigned j = 0; j < dim; j++) {
     State<BaseStateType> mid = poly * basis[j];
     for (long unsigned i = 0; i < dim; i++) {
-      complex<double> elementij = innerProduct(basis[i], mid);
+      std::complex<double> elementij = innerProduct(basis[i], mid);
       if (std::abs(elementij) <= ERROR) {
         continue;
       }
@@ -65,7 +65,7 @@ void SparseRealHamiltonian<polyType, BaseStateType>::createMatrix(
   for (long unsigned j = 0; j < dim; j++) {
     State<BaseStateType> mid = poly * basis[j];
     for (long unsigned i = 0; i < dim; i++) {
-      complex<double> elementij = innerProduct(basis[i], mid);
+      std::complex<double> elementij = innerProduct(basis[i], mid);
       if (std::abs(elementij) <= ERROR) {
         continue;
       }
@@ -112,4 +112,4 @@ void FullHamiltonian<PolyType, BaseStateType>::createMatrix(
   }
 }
 
-#endif  //QM_HAMILTONIANS_TEM_CPP
+#endif  //QM_HAMILTONIANS_TEM_HPP

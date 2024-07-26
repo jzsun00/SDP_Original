@@ -1,29 +1,26 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: Jul 26, 2024
 
   Implementations of methods in class:
   OpBasis.
  */
 
-#ifndef ORI_SDP_GS_SUBSPACES_TEM_CPP
-#define ORI_SDP_GS_SUBSPACES_TEM_CPP
+#ifndef ORI_SDP_GS_SUBSPACES_TEM_HPP
+#define ORI_SDP_GS_SUBSPACES_TEM_HPP
 
 #include "./subspaces.hpp"
-
-using std::complex;
-using std::pair;
-using std::vector;
 
 //-----------------------------------------------------------------OpSubBasis------------
 
 template<typename MonomialType, typename IndexType>
-vector<complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly(
+std::vector<std::complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly(
     Polynomial<MonomialType> poly) {
-  vector<complex<double> > ans(Basis.size());
+  std::vector<std::complex<double> > ans(Basis.size());
   for (size_t index = 0; index < Basis.size(); index++) {
     MonomialType basisMn = Basis[index];
-    for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
+    for (typename std::vector<
+             std::pair<std::complex<double>, MonomialType> >::const_iterator it =
              poly.getBegin();
          it != poly.getEnd();
          ++it) {
@@ -38,12 +35,13 @@ vector<complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly(
 //--------------------------------------------------------------------OpBasis------------
 
 template<typename MonomialType, typename IndexType>
-vector<complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
+std::vector<std::complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
     Polynomial<MonomialType> poly) {
-  vector<complex<double> > ans(Basis.size());
+  std::vector<std::complex<double> > ans(Basis.size());
   for (size_t index = 0; index < Basis.size(); index++) {
     MonomialType basisMn = Basis[index];
-    for (typename vector<pair<complex<double>, MonomialType> >::const_iterator it =
+    for (typename std::vector<
+             std::pair<std::complex<double>, MonomialType> >::const_iterator it =
              poly.getBegin();
          it != poly.getEnd();
          ++it) {
@@ -55,4 +53,4 @@ vector<complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
   return ans;
 }
 
-#endif  //ORI_SDP_GS_SUBSPACES_TEM_CPP
+#endif  //ORI_SDP_GS_SUBSPACES_TEM_HPP

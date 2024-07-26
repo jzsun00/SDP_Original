@@ -1,12 +1,12 @@
 /*
   Jiazheng Sun
-  Updated: Apr 6, 2024
+  Updated: Jul 26, 2024
 */
 
-#ifndef ORI_SDP_GS_SUBSPACES_HPP
-#define ORI_SDP_GS_SUBSPACES_HPP
+#ifndef QM_SUBSPACES_HPP
+#define QM_SUBSPACES_HPP
 
-#include "./operators.hpp"
+#include "./operators_Tem.hpp"
 
 //---------------------------------------------------------------OpSubBasis--------------
 
@@ -58,6 +58,4 @@ class OpBasis {
   std::vector<std::complex<double> > projPoly(Polynomial<MonomialType> poly);
 };
 
-#include "./subspaces_Tem.cpp"
-
-#endif  //ORI_SDP_GS_SUBSPACES_HPP
+#endif  //QM_SUBSPACES_HPP

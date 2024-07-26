@@ -1,21 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Apr 16, 2024
+  Updated: Jul 26, 2024
 
   Implementations of methods in class:
   OpBasis.
  */
 
-#ifndef ORI_SDP_GS_CONSTRAINS_TEM_CPP
-#define ORI_SDP_GS_CONSTRAINS_TEM_CPP
+#ifndef ORI_SDP_GS_CONSTRAINS_TEM_HPP
+#define ORI_SDP_GS_CONSTRAINS_TEM_HPP
 
 #include <vector>
 
 #include "./constraints.hpp"
-
-using std::complex;
-using std::pair;
-using std::vector;
 
 //-----------------------------------------------------------------ConsSet---------------
 /*
@@ -51,4 +47,4 @@ void printMatrix(ConsSet<MonomialType, IndexType> & constrains,
   }
 }
 
-#endif  //ORI_SDP_GS_CONSTRAINS_TEM_CPP
+#endif  //ORI_SDP_GS_CONSTRAINS_TEM_HPP

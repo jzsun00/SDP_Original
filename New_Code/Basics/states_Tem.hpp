@@ -14,8 +14,8 @@
   complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs);
 */
 
-#ifndef QM_STATES_TEM_CPP
-#define QM_STATES_TEM_CPP
+#ifndef QM_STATES_TEM_HPP
+#define QM_STATES_TEM_HPP
 
 #include "states.hpp"
 
@@ -246,4 +246,4 @@ std::complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs) {
   return ans;
 }
 
-#endif  //QM_STATES_TEM_CPP
+#endif  //QM_STATES_TEM_HPP

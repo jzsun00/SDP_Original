@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jul 26, 2024
 
   Class:
   SpinHalfOp1D
@@ -10,11 +10,10 @@
   Define operators, monomials and polynomials for 1D spin systems.
 */
 
-#ifndef QM_SPINOPERATORS1D_HPP
-#define QM_SPINOPERATORS1D_HPP
+#ifndef QM_SPIN_OPERATORS_1D_HPP
+#define QM_SPIN_OPERATORS_1D_HPP
 
-#include "../Basics/operators.hpp"
-#include "../Basics/operators_Tem.cpp"
+#include "../Basics/operators_Tem.hpp"
 #include "./spinStates1D.hpp"
 
 //--------------------------------------------------------------SpinHalfOp1D-------------
@@ -65,4 +64,4 @@ class SpinHalfPolynomial1D : public Polynomial<SpinHalfMonomial1D> {
   SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
 };
 
-#endif  //QM_SPINOPERATORS1D_HPP
+#endif  //QM_SPIN_OPERATORS_1D_HPP
