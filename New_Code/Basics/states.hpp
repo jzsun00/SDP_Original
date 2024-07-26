@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jul 26, 2024
 
   Class:
   FockState<NumsType>
@@ -37,16 +37,16 @@ class FockState {
   /*Construct a Fock state for general system.*/
   FockState() : Nums() {}
   FockState(std::vector<NumsType> & input) : Nums(input) {}
-  FockState(FockState const & rhs) : Nums(rhs.Nums) {}
+  FockState(const FockState & rhs) : Nums(rhs.Nums) {}
   ~FockState() {}
   /*Get information of the Fock state.*/
   size_t getSize() const { return Nums.size(); }
-  std::vector<NumsType> getNums() const { return Nums; };
+  std::vector<NumsType> getAllNums() const { return Nums; };
   std::string toString() const;
   /*Overload operators.*/
-  FockState & operator=(FockState const & rhs);
-  bool operator==(FockState const & rhs) const { return Nums == rhs.Nums; }
-  bool operator!=(FockState const & rhs) const { return !(*this == rhs); }
+  FockState & operator=(const FockState & rhs);
+  bool operator==(const FockState & rhs) const { return Nums == rhs.Nums; }
+  bool operator!=(const FockState & rhs) const { return !(*this == rhs); }
   bool operator[](size_t n) const { return Nums[n]; }
 };
 
@@ -66,7 +66,7 @@ class SpinBaseState {
   virtual ~SpinBaseState() {}
   /*Get information of the spin base state.*/
   size_t getSize() const { return Nums.size(); }
-  std::vector<NumsType> getNums() const { return Nums; };
+  std::vector<NumsType> getAllNums() const { return Nums; };
   std::string toString() const;
   virtual std::string numToString(NumsType num) const = 0;
   /*Overload operators.*/
@@ -87,19 +87,18 @@ class State {
   /*Construct a general quantum state.
     Default constructor uses an empty std::vector.*/
   State() : Terms() {}
-  State(const StateType & fs) : Terms(1, TermType(std::complex<double>(1.0, 0), fs)) {}
-  State(std::complex<double> pref, const StateType & fs) : Terms(1, TermType(pref, fs)) {}
+  State(const StateType & rhs) : Terms(1, TermType(std::complex<double>(1.0, 0), rhs)) {}
+  State(std::complex<double> pref, const StateType & rhs) :
+      Terms(1, TermType(pref, rhs)) {}
   State(const State & rhs) : Terms(rhs.Terms) {}
   virtual ~State() {}
   /*Get information of the general quantum state.*/
   size_t getSize() const { return Terms.size(); }
-  typename std::vector<TermType>::const_iterator getBegin() const {
-    return Terms.begin();
-  }
-  typename std::vector<TermType>::const_iterator getEnd() const { return Terms.end(); }
+  auto getBegin() const { return Terms.begin(); }
+  auto getEnd() const { return Terms.end(); }
   std::string toString() const;
   /*Overload operators.*/
-  std::pair<std::complex<double>, StateType> operator[](size_t n) const;
+  TermType operator[](size_t n) const;
   State & operator=(const State & rhs);
   State & operator+=(const StateType & rhs);
   State & operator+=(const TermType & rhs);
@@ -134,27 +133,25 @@ class Basis {
   /*Get information of the basis.*/
   size_t getSize() const { return States.size(); }
   virtual std::string toString() = 0;
-  typename std::vector<BaseStateType>::const_iterator getBegin() const {
-    return States.begin();
-  }
-  typename std::vector<BaseStateType>::const_iterator getEnd() const {
-    return States.end();
-  }
+  auto getBegin() const { return States.begin(); }
+  auto getEnd() const { return States.end(); }
   /*Overload operators.*/
   BaseStateType operator[](size_t n) const { return States[n]; }
 };
 
 //------------------------------------------------------------Inner Product--------------
-template<typename StateType>
-double innerProduct(StateType lhs, StateType rhs);
 
 template<typename StateType>
-std::complex<double> innerProduct(StateType lhs, State<StateType> rhs);
+double innerProduct(const StateType & lhs, const StateType & rhs);
 
 template<typename StateType>
-std::complex<double> innerProduct(State<StateType> lhs, StateType rhs);
+std::complex<double> innerProduct(const StateType & lhs, const State<StateType> & rhs);
 
 template<typename StateType>
-std::complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs);
+std::complex<double> innerProduct(const State<StateType> & lhs, const StateType & rhs);
+
+template<typename StateType>
+std::complex<double> innerProduct(const State<StateType> & lhs,
+                                  const State<StateType> & rhs);
 
 #endif  //QM_STATES_HPP
