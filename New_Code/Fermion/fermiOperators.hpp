@@ -1,20 +1,23 @@
 /*
   Jiazheng Sun
-  Updated: Mar 21, 2024
+  Updated: Jul 23, 2024
 
   Class:
-  FermiLadderOp, Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
-
+  FermiLadderOp<IndexType>
+  Fermi1DLadderOp
+  FermiMonomial<OpType>
+  FermiPolynomial<MonomialType>
+  
   Define ladder operators, monomials and polynomials for Fermi systems.
 */
 
-#ifndef ORI_SDP_GS_FERMIOPERATORS_HPP
-#define ORI_SDP_GS_FERMIOPERATORS_HPP
+#ifndef QM_FERMI_OPERATORS_HPP
+#define QM_FERMI_OPERATORS_HPP
 
 #include "../Basics/operators.hpp"
-//#include "./fermiStates.hpp"
+#include "../Basics/operators_Tem.cpp"
 
-//------------------------------------------------------------------FermiLadderOp--------
+//------------------------------------------------------FermiLadderOp<IndexType>---------
 
 template<typename IndexType>
 class FermiLadderOp : public LadderOp<IndexType> {
@@ -23,21 +26,16 @@ class FermiLadderOp : public LadderOp<IndexType> {
   FermiLadderOp() : LadderOp<IndexType>() {}
   FermiLadderOp(IndexType index, bool creatorF) : LadderOp<IndexType>(index, creatorF) {}
   FermiLadderOp(bool isUnit) : LadderOp<IndexType>(isUnit) {}
-  FermiLadderOp(FermiLadderOp const & rhs) : LadderOp<IndexType>(rhs) {}
-  ~FermiLadderOp() {}
+  FermiLadderOp(const FermiLadderOp<IndexType> & rhs) : LadderOp<IndexType>(rhs) {}
+  virtual ~FermiLadderOp() {}
   /*Get information of the Fermi ladder operator.*/
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
-  FermiLadderOp & operator=(FermiLadderOp const & rhs);
-  bool operator==(FermiLadderOp const & rhs) const;
-  bool operator!=(FermiLadderOp const & rhs) const { return !(*this == rhs); }
   virtual bool operator<(LadderOp<IndexType> const & rhs) const = 0;
-  bool operator>(FermiLadderOp const & rhs) const {
-    return !(*this < rhs || *this == rhs);
-  }
+  bool operator>(FermiLadderOp const & rhs) const;
 };
 
-//-----------------------------------------------------------------Fermi1DLadderOp-------
+//------------------------------------------------------------Fermi1DLadderOp------------
 
 class Fermi1DLadderOp : public FermiLadderOp<int> {
  public:
@@ -57,7 +55,7 @@ class Fermi1DLadderOp : public FermiLadderOp<int> {
   //FermiState operator*(FermiState const & rhs) const;
 };
 
-//------------------------------------------------------------------FermiMonomial--------
+//---------------------------------------------------------FermiMonomial<OpType>---------
 
 template<typename OpType>
 class FermiMonomial : public Monomial<OpType> {
@@ -65,7 +63,7 @@ class FermiMonomial : public Monomial<OpType> {
   /*The constructors are identical to Monomial.*/
   FermiMonomial() : Monomial<OpType>() {}
   FermiMonomial(OpType & Op) : Monomial<OpType>(Op) {}
-  FermiMonomial(vector<OpType> & Expr) : Monomial<OpType>(Expr) {}
+  FermiMonomial(std::vector<OpType> & Expr) : Monomial<OpType>(Expr) {}
   FermiMonomial(Monomial<OpType> const & rhs) : Monomial<OpType>(rhs) {}
   ~FermiMonomial() {}
   /*Define operators at Fock states.*/
@@ -78,7 +76,7 @@ class FermiMonomial : public Monomial<OpType> {
   FermiMonomial<OpType> sliceExprE(size_t index);
 };
 
-//-----------------------------------------------------------------FermiPolynomial-------
+//-------------------------------------------------FermiPolynomial<MonomialType>---------
 
 template<typename MonomialType>
 class FermiPolynomial : public Polynomial<MonomialType> {
@@ -86,7 +84,7 @@ class FermiPolynomial : public Polynomial<MonomialType> {
   /*The constructors are identical to Polynomial.*/
   FermiPolynomial() : Polynomial<MonomialType>() {}
   FermiPolynomial(MonomialType const & mn) : Polynomial<MonomialType>(mn) {}
-  FermiPolynomial(complex<double> pref, MonomialType const & mn) :
+  FermiPolynomial(std::complex<double> pref, MonomialType const & mn) :
       Polynomial<MonomialType>(pref, mn) {}
   FermiPolynomial(FermiPolynomial const & rhs) : Polynomial<MonomialType>(rhs) {}
   ~FermiPolynomial() {}
@@ -102,15 +100,13 @@ class FermiPolynomial : public Polynomial<MonomialType> {
   void eraseNonNorm();
 };
 
-//----------------------------------------------------------------Algebra Functions------
+//---------------------------------------------------------Algebra Functions-------------
 
 template<typename OpType>
 FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2);
 
 template<typename OpType>
-FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
+FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
                                                  FermiMonomial<OpType> mn);
 
-#include "./fermiOperators_Tem.cpp"
-
-#endif  //ORI_SDP_GS_FERMIOPERATORS_HPP
+#endif  //QM_FERMI_OPERATORS_HPP

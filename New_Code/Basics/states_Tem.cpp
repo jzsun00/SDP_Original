@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jun 19, 2024
+  Updated: Jul 23, 2024
   
   Class Implementations:
   FockState<NumsType>
@@ -19,16 +19,12 @@
 
 #include "states.hpp"
 
-using std::complex;
-using std::pair;
-using std::vector;
-
 //-------------------------------------------------------------------FockState-----------
 
 template<typename NumsType>
 std::string FockState<NumsType>::toString() const {
   std::string ans = "|";
-  for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
+  for (typename std::vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
        ++it) {
     ans += " ";
     ans += std::to_string(*it);
@@ -50,7 +46,7 @@ FockState<NumsType> & FockState<NumsType>::operator=(FockState<NumsType> const &
 template<typename NumsType>
 std::string SpinBaseState<NumsType>::toString() const {
   std::string ans = "|";
-  for (typename vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
+  for (typename std::vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
        ++it) {
     ans += " ";
     ans += numToString(*it);
@@ -73,8 +69,8 @@ SpinBaseState<NumsType> & SpinBaseState<NumsType>::operator=(
 template<typename StateType>
 std::string State<StateType>::toString() const {
   std::string ans = "";
-  for (typename vector<pair<complex<double>, StateType> >::const_iterator it =
-           Terms.begin();
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::const_iterator
+           it = Terms.begin();
        it != Terms.end();
        ++it) {
     ans += "  (";
@@ -91,7 +87,7 @@ std::string State<StateType>::toString() const {
 }
 
 template<typename StateType>
-pair<complex<double>, StateType> State<StateType>::operator[](size_t n) const {
+std::pair<std::complex<double>, StateType> State<StateType>::operator[](size_t n) const {
   return Terms.at(n);
 }
 
@@ -102,9 +98,10 @@ State<StateType> & State<StateType>::operator=(State<StateType> const & rhs) {
 }
 
 template<typename StateType>
-typename vector<pair<complex<double>, StateType> >::iterator
+typename std::vector<std::pair<std::complex<double>, StateType> >::iterator
 State<StateType>::findSameFockState(const StateType & ffs) {
-  for (typename vector<pair<complex<double>, StateType> >::iterator it = Terms.begin();
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::iterator it =
+           Terms.begin();
        it != Terms.end();
        ++it) {
     if (it->second == ffs) {
@@ -117,18 +114,18 @@ State<StateType>::findSameFockState(const StateType & ffs) {
 //+=
 template<typename StateType>
 State<StateType> & State<StateType>::operator+=(StateType const & rhs) {
-  pair<complex<double>, StateType> toAdd(complex<double>(1, 0), rhs);
+  std::pair<std::complex<double>, StateType> toAdd(std::complex<double>(1, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
 template<typename StateType>
 State<StateType> & State<StateType>::operator+=(
-    pair<complex<double>, StateType> const & rhs) {
+    std::pair<std::complex<double>, StateType> const & rhs) {
   if (std::abs(rhs.first) < ERROR) {
     return *this;
   }
-  typename vector<pair<complex<double>, StateType> >::iterator it =
+  typename std::vector<std::pair<std::complex<double>, StateType> >::iterator it =
       findSameFockState(rhs.second);
   if (it == Terms.end()) {
     Terms.push_back(rhs);
@@ -141,8 +138,8 @@ State<StateType> & State<StateType>::operator+=(
 
 template<typename StateType>
 State<StateType> & State<StateType>::operator+=(State<StateType> const & rhs) {
-  for (typename vector<pair<complex<double>, StateType> >::const_iterator termIt =
-           rhs.getBegin();
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::const_iterator
+           termIt = rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     *this += *termIt;
@@ -153,21 +150,22 @@ State<StateType> & State<StateType>::operator+=(State<StateType> const & rhs) {
 //-=
 template<typename StateType>
 State<StateType> & State<StateType>::operator-=(StateType const & rhs) {
-  pair<complex<double>, StateType> toAdd(complex<double>(-1, 0), rhs);
+  std::pair<std::complex<double>, StateType> toAdd(std::complex<double>(-1, 0), rhs);
   *this += toAdd;
   return *this;
 }
 
 template<typename StateType>
 State<StateType> & State<StateType>::operator-=(
-    pair<complex<double>, StateType> const & rhs) {
+    std::pair<std::complex<double>, StateType> const & rhs) {
   if (std::abs(rhs.first) < ERROR) {
     return *this;
   }
-  typename vector<pair<complex<double>, StateType> >::iterator it =
+  typename std::vector<std::pair<std::complex<double>, StateType> >::iterator it =
       findSameFockState(rhs.second);
   if (it == Terms.end()) {
-    pair<complex<double>, StateType> copy(complex<double>(-1, 0) * rhs.first, rhs.second);
+    std::pair<std::complex<double>, StateType> copy(
+        std::complex<double>(-1, 0) * rhs.first, rhs.second);
     Terms.push_back(copy);
   }
   else {
@@ -178,8 +176,8 @@ State<StateType> & State<StateType>::operator-=(
 
 template<typename StateType>
 State<StateType> & State<StateType>::operator-=(State<StateType> const & rhs) {
-  for (typename vector<pair<complex<double>, StateType> >::const_iterator termIt =
-           rhs.getBegin();
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::const_iterator
+           termIt = rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     *this -= *termIt;
@@ -189,9 +187,9 @@ State<StateType> & State<StateType>::operator-=(State<StateType> const & rhs) {
 
 //*=
 template<typename StateType>
-State<StateType> & State<StateType>::operator*=(complex<double> pref) {
-  for (typename vector<pair<complex<double>, StateType> >::iterator termIt =
-           Terms.begin();
+State<StateType> & State<StateType>::operator*=(std::complex<double> pref) {
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::iterator
+           termIt = Terms.begin();
        termIt != Terms.end();
        ++termIt) {
     termIt->first *= pref;
@@ -200,7 +198,7 @@ State<StateType> & State<StateType>::operator*=(complex<double> pref) {
 }
 
 template<typename StateType>
-bool isZeroS(pair<complex<double>, StateType> term) {
+bool isZeroS(std::pair<std::complex<double>, StateType> term) {
   return std::abs(term.first) < ERROR;
 }
 
@@ -220,10 +218,10 @@ double innerProduct(StateType lhs, StateType rhs) {
 }
 
 template<typename StateType>
-complex<double> innerProduct(StateType lhs, State<StateType> rhs) {
-  complex<double> ans(0, 0);
-  for (typename vector<pair<complex<double>, StateType> >::const_iterator termIt =
-           rhs.getBegin();
+std::complex<double> innerProduct(StateType lhs, State<StateType> rhs) {
+  std::complex<double> ans(0, 0);
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::const_iterator
+           termIt = rhs.getBegin();
        termIt != rhs.getEnd();
        ++termIt) {
     ans += termIt->first * innerProduct(lhs, termIt->second);
@@ -232,15 +230,15 @@ complex<double> innerProduct(StateType lhs, State<StateType> rhs) {
 }
 
 template<typename StateType>
-complex<double> innerProduct(State<StateType> lhs, StateType rhs) {
+std::complex<double> innerProduct(State<StateType> lhs, StateType rhs) {
   return std::conj(innerProduct(rhs, lhs));
 }
 
 template<typename StateType>
-complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs) {
-  complex<double> ans(0, 0);
-  for (typename vector<pair<complex<double>, StateType> >::const_iterator it =
-           lhs.getBegin();
+std::complex<double> innerProduct(State<StateType> lhs, State<StateType> rhs) {
+  std::complex<double> ans(0, 0);
+  for (typename std::vector<std::pair<std::complex<double>, StateType> >::const_iterator
+           it = lhs.getBegin();
        it != lhs.getEnd();
        ++it) {
     ans += it->first * innerProduct(it->second, rhs);

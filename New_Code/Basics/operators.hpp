@@ -75,6 +75,9 @@ class LadderOp : public Operator<IndexType> {
   virtual std::string toString() const;
   virtual std::string indexToString() const = 0;
   /*Overload operators.*/
+  LadderOp<IndexType> & operator=(const Operator<IndexType> & rhs);
+  bool operator==(const LadderOp<IndexType> & rhs) const;
+  bool operator!=(const LadderOp<IndexType> & rhs) const { return !(*this == rhs); }
   virtual void herm() { creatorF ^= 1; }
 };
 

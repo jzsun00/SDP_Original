@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Mar 19, 2024
+  Updated: Jul 23, 2024
 
   Define Fock states, quantum states for Fermionic systems.
   Define the full basis for a Fermion lattice system.
@@ -14,6 +14,7 @@
 #include <numeric>
 
 #include "../Basics/states.hpp"
+#include "../Basics/states_Tem.cpp"
 
 //----------------------------------------------------------------FermiFockState--------
 
@@ -22,7 +23,7 @@ class FermiFockState : public FockState<bool> {
   /*Construct a Fock state for Fermion system.
     Constructors are identical to FockState.*/
   FermiFockState() : FockState() {}
-  FermiFockState(vector<bool> & input) : FockState(input) {}
+  FermiFockState(std::vector<bool> & input) : FockState(input) {}
   FermiFockState(FockState<bool> const & rhs) : FockState(rhs) {}
   ~FermiFockState() {}
 };
@@ -31,12 +32,12 @@ class FermiFockState : public FockState<bool> {
 
 class FermiState : public State<FermiFockState> {
  public:
-  typedef pair<complex<double>, FermiFockState> TermType;
+  typedef std::pair<std::complex<double>, FermiFockState> TermType;
   /*Construct a general quantum state for Fermions.
     Constructors are identical to State*/
   FermiState() : State() {}
   FermiState(FermiFockState const & ffs) : State(ffs) {}
-  FermiState(complex<double> pref, FermiFockState const & ffs) : State(pref, ffs) {}
+  FermiState(std::complex<double> pref, FermiFockState const & ffs) : State(pref, ffs) {}
   FermiState(FermiState const & rhs) : State(rhs) {}
   ~FermiState() {}
 };

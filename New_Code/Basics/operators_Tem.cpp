@@ -14,9 +14,6 @@
 
 #include "./operators.hpp"
 
-using std::complex;
-using std::pair;
-
 //----------------------------------------------------------LadderOp<IndexType>---------
 
 template<typename IndexType>
@@ -32,6 +29,22 @@ std::string LadderOp<IndexType>::toString() const {
     ans += "{+}";
   }
   return ans;
+}
+
+template<typename IndexType>
+LadderOp<IndexType> & LadderOp<IndexType>::operator=(const Operator<IndexType> & rhs) {
+  this->index = rhs.index;
+  this->isUnit = rhs.isUnit;
+  this->creatorF = rhs.creatorF;
+  return *this;
+}
+
+template<typename IndexType>
+bool LadderOp<IndexType>::operator==(const LadderOp<IndexType> & rhs) const {
+  if (this->isUnit && rhs.isUnit) {
+    return true;
+  }
+  return (this->index == rhs.index) && (this->creatorF == rhs.creatorF);
 }
 
 //-----------------------------------------------------------SpinOp<IndexType>----------
@@ -169,7 +182,7 @@ auto Polynomial<MonomialType>::findSameMonomial(const MonomialType & mn) const {
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
     const MonomialType & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(1.0, 0), rhs);
+  std::pair<std::complex<double>, MonomialType> toAdd(std::complex<double>(1.0, 0), rhs);
   *this += toAdd;
   return *this;
 }
@@ -177,7 +190,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
 //+=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
-    const pair<complex<double>, MonomialType> & toAdd) {
+    const std::pair<std::complex<double>, MonomialType> & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
@@ -205,7 +218,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
     const MonomialType & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(-1.0, 0), rhs);
+  std::pair<std::complex<double>, MonomialType> toAdd(std::complex<double>(-1.0, 0), rhs);
   *this += toAdd;
   return *this;
 }
@@ -213,12 +226,12 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
 //-=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
-    const pair<complex<double>, MonomialType> & toAdd) {
+    const std::pair<std::complex<double>, MonomialType> & toAdd) {
   if (std::abs(toAdd.first) < ERROR) {
     return *this;
   }
-  pair<complex<double>, MonomialType> copy(complex<double>(-1.0, 0) * toAdd.first,
-                                           toAdd.second);
+  std::pair<std::complex<double>, MonomialType> copy(
+      std::complex<double>(-1.0, 0) * toAdd.first, toAdd.second);
   *this += copy;
   return *this;
 }
@@ -237,7 +250,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator-=(
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
     const MonomialType & rhs) {
-  pair<complex<double>, MonomialType> toAdd(complex<double>(1.0, 0), rhs);
+  std::pair<std::complex<double>, MonomialType> toAdd(std::complex<double>(1.0, 0), rhs);
   *this *= toAdd;
   return *this;
 }
@@ -245,7 +258,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
 //*=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
-    const pair<complex<double>, MonomialType> & rhs) {
+    const std::pair<std::complex<double>, MonomialType> & rhs) {
   for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     it->first *= rhs.first;
     it->second *= rhs.second;
@@ -268,7 +281,7 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
 
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
-    const complex<double> rhs) {
+    const std::complex<double> rhs) {
   for (auto it = Terms.begin(); it != Terms.end(); ++it) {
     it->first *= rhs;
   }
@@ -284,7 +297,7 @@ void Polynomial<MonomialType>::herm() {
 }
 
 template<typename MonomialType>
-bool isZero(pair<complex<double>, MonomialType> term) {
+bool isZero(std::pair<std::complex<double>, MonomialType> term) {
   return std::abs(term.first) < ERROR;
 }
 

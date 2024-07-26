@@ -1,45 +1,28 @@
 /*
   Jiazheng Sun
-  Updated: Mar 20, 2024
+  Updated: Jul 23, 2024
 
-  Implementations of methods in class:
-  Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
- */
+  Class Implementations:
+  FermiLadderOp<IndexType>
+  FermiMonomial<OpType>
+  FermiPolynomial<MonomialType>
+*/
 
-#ifndef ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
-#define ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+#ifndef QM_FERMI_OPERATORS_TEM_CPP
+#define QM_FERMI_OPERATORS_TEM_CPP
 
 #include "fermiOperators.hpp"
 
-//------------------------------------------------------------------FermiLadderOp--------
+using std::vector;
+
+//------------------------------------------------------FermiLadderOp<IndexType>---------
 
 template<typename IndexType>
-FermiLadderOp<IndexType> & FermiLadderOp<IndexType>::operator=(
-    FermiLadderOp<IndexType> const & rhs) {
-  this->index = rhs.index;
-  this->isUnit = rhs.isUnit;
-  this->creatorF = rhs.creatorF;
-  return *this;
+bool FermiLadderOp<IndexType>::operator>(FermiLadderOp const & rhs) const {
+  return !(*this < rhs || *this == rhs);
 }
 
-template<typename IndexType>
-bool FermiLadderOp<IndexType>::operator==(FermiLadderOp<IndexType> const & rhs) const {
-  if (this->isUnit) {
-    if (rhs.isUnit) {
-      return true;
-    }
-    return false;
-  }
-  if (rhs.isUnit) {
-    if (this->isUnit) {
-      return true;
-    }
-    return false;
-  }
-  return (this->index == rhs.index) && (this->creatorF == rhs.creatorF);
-}
-
-//------------------------------------------------------------------FermiMonomial--------
+//---------------------------------------------------------FermiMonomial<OpType>---------
 
 template<typename OpType>
 int FermiMonomial<OpType>::findWrongOrder() const {
@@ -74,7 +57,7 @@ FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprE(size_t index) {
       vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
 }
 
-//-----------------------------------------------------------------FermiPolynomial-------
+//-------------------------------------------------FermiPolynomial<MonomialType>---------
 
 template<typename MonomialType>
 FermiPolynomial<MonomialType> & FermiPolynomial<MonomialType>::operator=(
@@ -149,7 +132,7 @@ void FermiPolynomial<MonomialType>::normOneTerm(int index) {
   //std::cout << "\nCurrent term: "
   //          << "index = " << index << ": " << this->Terms[index].second.toString()
   //          << std::endl;
-  complex<double> pref = this->Terms[index].first;
+  std::complex<double> pref = this->Terms[index].first;
   MonomialType mn(this->Terms[index].second);
   this->Terms.erase(this->Terms.begin() + index);
   (*this) += NormOnce(pref, mn);
@@ -166,7 +149,7 @@ void FermiPolynomial<MonomialType>::normalize() {
 }
 
 template<typename MonomialType>
-bool isNonNorm(pair<complex<double>, MonomialType> term) {
+bool isNonNorm(std::pair<std::complex<double>, MonomialType> term) {
   return !(term.second.isNorm());
 }
 
@@ -186,11 +169,11 @@ FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2) {
   FermiMonomial<OpType> mnr(op2);
   mnr *= op1;
   if (op1.getCreatorF() == op2.getCreatorF()) {
-    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    FermiPolynomial<FermiMonomial<OpType> > ans(std::complex<double>(-1, 0), mnr);
     return ans;
   }
   else {
-    FermiPolynomial<FermiMonomial<OpType> > ans(complex<double>(-1, 0), mnr);
+    FermiPolynomial<FermiMonomial<OpType> > ans(std::complex<double>(-1, 0), mnr);
     if (op1.getIndex() == op2.getIndex()) {
       OpType unit(true);
       FermiMonomial<OpType> mnu(unit);
@@ -201,7 +184,7 @@ FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2) {
 }
 
 template<typename OpType>
-FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
+FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
                                                  FermiMonomial<OpType> mn) {
   size_t index = mn.findWrongOrder();
   //std::cout << "index = " << index << std::endl;
@@ -210,7 +193,8 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
   FermiPolynomial<FermiMonomial<OpType> > ans;
   if (index > 0) {
     FermiMonomial<OpType> mnFront(mn.sliceExprS(index));
-    FermiPolynomial<FermiMonomial<OpType> > polyFront(complex<double>(1, 0), mnFront);
+    FermiPolynomial<FermiMonomial<OpType> > polyFront(std::complex<double>(1, 0),
+                                                      mnFront);
     ans = mnFront;
     ans *= mid;
   }
@@ -219,7 +203,7 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
   }
   //std::cout << "ans = " << ans.toString() << std::endl;
   if (index < mn.getSize() - 2) {
-    FermiPolynomial<FermiMonomial<OpType> > mnRear(complex<double>(1, 0),
+    FermiPolynomial<FermiMonomial<OpType> > mnRear(std::complex<double>(1, 0),
                                                    mn.sliceExprE(index + 2));
     //std::cout << "Rear = " << mnRear.toString() << std::endl;
     ans *= mnRear;
@@ -230,4 +214,4 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(complex<double> pref,
   return ans;
 }
 
-#endif  //ORI_SDP_GS_FERMIOPERATORS_TEM_CPP
+#endif  //QM_FERMI_OPERATORS_TEM_CPP

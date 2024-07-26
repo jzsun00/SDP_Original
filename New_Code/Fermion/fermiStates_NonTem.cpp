@@ -1,15 +1,19 @@
 /*
   Jiazheng Sun
-  Updated: Mar 19, 2024
+  Updated: Jul 23, 2024
 
-  Implementations of methods in class:
-  FermiFockstate, FermiState, FermiBasis.
- */
+  Class Implementations:
+  FermiFockstate
+  FermiState
+  FermiBasis.
+*/
 
-#ifndef ORI_SDP_GS_FERMISTATES_NONTEM_CPP
-#define ORI_SDP_GS_FERMISTATES_NONTEM_CPP
+#ifndef QM_FERMI_STATES_NONTEM_CPP
+#define QM_FERMI_STATES_NONTEM_CPP
 
 #include "./fermiStates.hpp"
+
+using std::vector;
 
 //-------------------------------------------------------------FermiBasis----------------
 
@@ -38,4 +42,4 @@ std::string Fermi1DBasis::toString() {
   return ans;
 }
 
-#endif  //ORI_SDP_GS_FERMISTATES_NONTEM_CPP
+#endif  //QM_FERMI_STATES_NONTEM_CPP
