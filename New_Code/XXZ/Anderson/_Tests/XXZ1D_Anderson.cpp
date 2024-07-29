@@ -14,9 +14,12 @@
 #include "../include/arlnsmat.h"
 #include "../include/arlscomp.h"
 #include "../matrices/complex/lcompsol.h"
+#include "omp.h"
 
+using std::complex;
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/

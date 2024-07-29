@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 6, 2024
+  Updated: Jul 28, 2024
 
   Class:
   SpinHalfBaseState1D
@@ -10,8 +10,8 @@
   Define base states, states and basis for 1D spin systems.
 */
 
-#ifndef QM_SPINSTATES1D_HPP
-#define QM_SPINSTATES1D_HPP
+#ifndef QM_SPINSTATES_1D_HPP
+#define QM_SPINSTATES_1D_HPP
 
 #include <bit>
 #include <bitset>
@@ -20,8 +20,7 @@
 #include <numeric>
 #include <unordered_map>
 
-#include "../Basics/states.hpp"
-#include "../Basics/states_Tem.cpp"
+#include "../Basics/states_Tem.hpp"
 
 //----------------------------------------------------------SpinHalfBaseState1D----------
 
@@ -49,26 +48,17 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
   /*Construct a general quantum state for 1D spin-1/2 systems.
     Constructors are identical to State*/
   SpinHalfState1D() : State() {}
-  SpinHalfState1D(const SpinHalfBaseState1D & ffs) : State(ffs) {}
-  SpinHalfState1D(std::complex<double> pref, const SpinHalfBaseState1D & ffs) :
-      State(pref, ffs) {}
+  SpinHalfState1D(const SpinHalfBaseState1D & rhs) : State(rhs) {}
+  SpinHalfState1D(std::complex<double> pref, const SpinHalfBaseState1D & rhs) :
+      State(pref, rhs) {}
   SpinHalfState1D(const SpinHalfState1D & rhs) : State(rhs) {}
   virtual ~SpinHalfState1D() {}
-  /*Overload operators.*/
-  //SpinHalfState1D & operator=(const SpinHalfState1D & rhs);
 };
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------
 
 struct VectorBoolHash {
-  size_t operator()(const SpinHalfBaseState1D & baseState) const {
-    size_t hash = 0;
-    std::vector<bool> vec = baseState.getNums();
-    for (bool b : vec) {
-      hash = (hash << 1) ^ std::hash<bool>()(b);
-    }
-    return hash;
-  }
+  size_t operator()(const SpinHalfBaseState1D & baseState) const;
 };
 
 class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
@@ -97,4 +87,4 @@ class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
   bool isLessOrEqualToReverse(int num, int bitSize);
 };
 
-#endif  //QM_SPINSTATES1D_HPP
+#endif  //QM_SPINSTATES_1D_HPP

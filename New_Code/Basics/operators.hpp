@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
+  Updated: Jul 28, 2024
 
   Class:
   Operator<IndexType>

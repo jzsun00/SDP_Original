@@ -10,8 +10,7 @@
 
 #include <cstddef>
 
-#include "../Basics/hamiltonians.hpp"
-#include "../Basics/hamiltonians_Tem.cpp"
+#include "../Basics/hamiltonians_Tem.hpp"
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
 

@@ -7,7 +7,7 @@ EXE_DIR := ./_Exes
 
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++11 -Wall -Wextra
+CXXFLAGS := -std=c++20 -Wall -Wextra
 LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
 
 # Source files

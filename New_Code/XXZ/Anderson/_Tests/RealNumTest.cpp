@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 2, 2024
+  Updated: Jul 28, 2024
 
   Calculate Anderson bound of 1D XXZ model ground state energy.
   Use real number elements and symmetric matrix for higher performance.
@@ -21,9 +21,11 @@
 #include "../include/arlssym.h"
 #include "../matrices/sym/lsmatrxa.h"
 #include "../matrices/sym/lsymsol.h"
+#include "omp.h"
 
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/

@@ -21,9 +21,11 @@
 #include "../include/arlssym.h"
 #include "../matrices/sym/lsmatrxa.h"
 #include "../matrices/sym/lsymsol.h"
+#include "omp.h"
 
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/

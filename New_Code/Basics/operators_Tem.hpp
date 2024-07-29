@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
+  Updated: Jul 28, 2024
 
   Class Implementations:
   LadderOp<IndexType>
@@ -199,7 +199,8 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator+=(
     Terms.push_back(toAdd);
   }
   else {
-    it->first += toAdd.first;
+    auto nonconst_it = Terms.begin() + std::distance(Terms.cbegin(), it);
+    nonconst_it->first += toAdd.first;
   }
   return *this;
 }

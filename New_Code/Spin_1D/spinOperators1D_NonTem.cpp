@@ -13,6 +13,10 @@
 
 #include "spinOperators1D.hpp"
 
+using std::complex;
+using std::pair;
+using std::vector;
+
 //--------------------------------------------------------------SpinHalfOp1D-------------
 
 SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfBaseState1D const & rhs) const {
@@ -29,7 +33,7 @@ SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfBaseState1D const & rhs) const {
       if (rhs[index]) {
         return SpinHalfState1D(complex<double>(0, 0), rhs);
       }
-      vector<bool> Nums = rhs.getNums();
+      vector<bool> Nums = rhs.getAllNums();
       Nums[index] = true;
       return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
     }
@@ -37,7 +41,7 @@ SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfBaseState1D const & rhs) const {
       if (!rhs[index]) {
         return SpinHalfState1D(complex<double>(0, 0), rhs);
       }
-      vector<bool> Nums = rhs.getNums();
+      vector<bool> Nums = rhs.getAllNums();
       Nums[index] = false;
       return SpinHalfState1D(complex<double>(1.0, 0), SpinHalfBaseState1D(Nums));
     }

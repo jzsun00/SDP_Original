@@ -20,8 +20,7 @@
 #include <cstddef>
 
 #include "./operators_Tem.hpp"
-#include "./states.hpp"
-#include "./states_Tem.cpp"
+#include "./states_Tem.hpp"
 
 //------------------------------------SparseHamiltonian<PolyType, BaseStateType>---------
 
