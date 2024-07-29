@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 28, 2024
   
   Class Implementations:
   SpinHalfBaseState1D
@@ -36,6 +36,13 @@ bool SpinHalfBaseState1D::operator<(const SpinHalfBaseState1D & rhs) const {
 }
 
 //-------------------------------------------------------------SpinHalfState1D-----------
+
+SpinHalfState1D & SpinHalfState1D::operator=(const SpinHalfState1D & rhs) {
+  if (this != &rhs) {
+    Terms = rhs.Terms;
+  }
+  return *this;
+}
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------
 

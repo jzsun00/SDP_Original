@@ -28,7 +28,7 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
  public:
   /*Construct a base state for 1D spin-1/2 system.
     Bool value 'true' for spin-up, 'false' for spin-down.
-    Added constructor: if passing in size_t N, construct state with all spin-down.*/
+    Added constructor: if passing in size_t, construct state with all spin-down.*/
   SpinHalfBaseState1D() : SpinBaseState() {}
   SpinHalfBaseState1D(size_t N) : SpinBaseState(std::vector<bool>(N, false)) {}
   SpinHalfBaseState1D(const std::vector<bool> & input) : SpinBaseState(input) {}
@@ -53,6 +53,8 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
       State(pref, rhs) {}
   SpinHalfState1D(const SpinHalfState1D & rhs) : State(rhs) {}
   virtual ~SpinHalfState1D() {}
+  /*Overload operators.*/
+  SpinHalfState1D & operator=(const SpinHalfState1D & rhs);
 };
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------

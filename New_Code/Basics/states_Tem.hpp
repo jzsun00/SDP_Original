@@ -87,7 +87,7 @@ std::pair<std::complex<double>, StateType> State<StateType>::operator[](size_t n
 }
 
 template<typename StateType>
-State<StateType> & State<StateType>::operator=(State<StateType> const & rhs) {
+State<StateType> & State<StateType>::operator=(const State<StateType> & rhs) {
   Terms = rhs.Terms;
   return *this;
 }

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 28, 2024
 
   Class:
   SpinHalfOp1D
@@ -26,13 +26,13 @@ class SpinHalfOp1D : public SpinOp<int> {
   SpinHalfOp1D(int index) : SpinOp<int>(index) {}
   SpinHalfOp1D(int index, bool isPlus) : SpinOp<int>(index, isPlus) {}
   SpinHalfOp1D(int index, bool isZ, bool isPlus) : SpinOp<int>(index, isZ, isPlus) {}
-  SpinHalfOp1D(SpinHalfOp1D const & rhs) : SpinOp<int>(rhs) {}
-  ~SpinHalfOp1D() {}
+  SpinHalfOp1D(const SpinHalfOp1D & rhs) : SpinOp<int>(rhs) {}
+  virtual ~SpinHalfOp1D() {}
   /*Get information of the spin operator.*/
   virtual std::string indexToString() const { return std::to_string(index); }
   /*Overload operators.*/
-  SpinHalfState1D operator*(SpinHalfBaseState1D const & rhs) const;
-  SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
+  SpinHalfState1D operator*(const SpinHalfBaseState1D & rhs) const;
+  SpinHalfState1D operator*(const SpinHalfState1D & rhs) const;
 };
 
 //-----------------------------------------------------------SpinHalfMonomial1D----------
