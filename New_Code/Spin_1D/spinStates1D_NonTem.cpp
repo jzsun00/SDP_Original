@@ -51,6 +51,10 @@ SpinHalfState1D & SpinHalfState1D::operator=(const SpinHalfState1D & rhs) {
   return *this;
 }
 
+void SpinHalfState1D::clear() {
+  Terms.clear();
+}
+
 //-------------------------------------------------------------SpinHalfBasis1D-----------
 
 size_t VectorBoolHash::operator()(const SpinHalfBaseState1D & baseState) const {

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
 
   Calculate Anderson bound of 1D XXZ model ground state energy.
   Use real number elements and symmetric matrix for higher performance.
@@ -29,7 +29,7 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 4;
+  size_t sites = 18;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -42,7 +42,7 @@ int main() {
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
   SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
-  basis->init(0);
+  basis->init(-6);
   auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
   //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
@@ -68,9 +68,9 @@ int main() {
 
   int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
-  std::cout << "irow = " << intVector_toString(ham->getIrow()) << endl;
-  std::cout << "pcol = " << intVector_toString(ham->getPcol()) << endl;
-  std::cout << "val = " << doubleVector_toString(ham->getNzVal()) << endl;
+  //std::cout << "irow = " << intVector_toString(ham->getIrow()) << endl;
+  //std::cout << "pcol = " << intVector_toString(ham->getPcol()) << endl;
+  //std::cout << "val = " << doubleVector_toString(ham->getNzVal()) << endl;
 
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();

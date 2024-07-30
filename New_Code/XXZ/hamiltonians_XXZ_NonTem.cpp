@@ -1,16 +1,18 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
   
-  Define dense and sparse Hamiltonian matrices for 1D XXZ model.
+  Class Implementations:
+  XXZSparseHamiltonian
+  XXZSparseRealHamiltonian
+  XXZFullHamiltonian
 */
 
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 
-#include <cstddef>
-
 #include "./hamiltonians_XXZ.hpp"
+#include "omp.h"
 
 using std::complex;
 using std::pair;
@@ -81,7 +83,8 @@ void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
     {
 #pragma omp for
       for (long unsigned j = 0; j < currentSize; j++) {
-        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+        //midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+        midStates[j] = poly * basis[j + batchSize * batchIdx];
       }
     }
 
@@ -123,22 +126,29 @@ void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
 void XXZSparseRealHamiltonian::createFullBasisMatrix(const SpinHalfBasis1D & basis) {
   dim = basis.getSize();
   pcol.push_back(0);
+  vector<SpinHalfState1D> midStates(dim);
+#pragma omp parallel  //Parallel compute all (poly * baseState)
+  {
+#pragma omp for
+    for (size_t i = 0; i < dim; i++) {
+      midStates[i] = poly * basis[i];
+    }
+  }
   for (size_t i = 0; i < dim; i++) {
     size_t colIdx = i;
-    SpinHalfState1D midState = poly * basis[i];
-    size_t midStateSize = midState.getSize();
+    size_t midStateSize = midStates[i].getSize();
     vector<size_t> indices;
     std::unordered_map<size_t, double> elements;
-    for (size_t j = 0; j < midStateSize; j++) {
-      size_t rowIdx = midState[j].second.toDecimal();
+    for (size_t j = 0; j < midStateSize; j++) {  //Fill in indices and elements
+      size_t rowIdx = midStates[i][j].second.toDecimal();
       if (colIdx <= rowIdx) {
         indices.push_back(rowIdx);
-        elements[rowIdx] = midState[j].first.real();
+        elements[rowIdx] = midStates[i][j].first.real();
       }
     }
     std::sort(indices.begin(), indices.end());
     size_t indicesSize = indices.size();
-    for (size_t k = 0; k < indicesSize; k++) {
+    for (size_t k = 0; k < indicesSize; k++) {  //Print into the matrix
       nnz++;
       nzVal.push_back(elements[indices[k]]);
       irow.push_back(indices[k]);

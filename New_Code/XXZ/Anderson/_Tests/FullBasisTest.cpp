@@ -29,7 +29,7 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 19;
+  size_t sites = 16;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;

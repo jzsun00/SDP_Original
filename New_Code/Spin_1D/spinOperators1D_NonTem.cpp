@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
+  Updated: Jul 30, 2024
 
   Class Implementations:
   SpinHalfOp1D
@@ -104,6 +104,17 @@ SpinHalfState1D SpinHalfPolynomial1D::operator*(SpinHalfState1D const & rhs) con
     ans += (((it->second) * rhs) *= it->first);
   }
   return ans;
+}
+
+void SpinHalfPolynomial1D::operate(const SpinHalfState1D & rhs,
+                                   SpinHalfState1D & result) const {
+  result.clear();
+  for (vector<pair<complex<double>, SpinHalfMonomial1D> >::const_iterator it =
+           Terms.begin();
+       it != Terms.end();
+       ++it) {
+    result += (((it->second) * rhs) *= it->first);
+  }
 }
 
 #endif  //QM_SPIN_OPERATORS_1D_NONTEM_CPP

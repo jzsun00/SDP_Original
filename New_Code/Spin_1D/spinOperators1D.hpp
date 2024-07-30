@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
 
   Class:
   SpinHalfOp1D
@@ -62,6 +62,7 @@ class SpinHalfPolynomial1D : public Polynomial<SpinHalfMonomial1D> {
   SpinHalfPolynomial1D & operator=(const SpinHalfPolynomial1D & rhs);
   SpinHalfState1D operator*(const SpinHalfBaseState1D & rhs) const;
   SpinHalfState1D operator*(const SpinHalfState1D & rhs) const;
+  void operate(const SpinHalfState1D & rhs, SpinHalfState1D & result) const;
 };
 
 #endif  //QM_SPIN_OPERATORS_1D_HPP

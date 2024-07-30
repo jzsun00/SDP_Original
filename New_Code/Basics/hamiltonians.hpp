@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
 
   Class:
   SparseHamiltonian<PolyType, BaseStateType>
@@ -8,6 +8,7 @@
   FullHamiltonian<PolyType, BaseStateType>
 
   Define Hamiltonian matrices.
+  Sparse Hamiltonians use CSC format for ARPACK++.
   SparseRealHamiltonian contains the lower triangular part of the matrix,
   since Hamiltonian matrices are Hermitian, real Hamiltonian matrices are symmetric.
   SparseHamiltonian and SparseRealHamiltonian can be used for ARPACK++,
@@ -71,7 +72,9 @@ class SparseRealHamiltonian {
   /*Construct a sparse Hamiltonian with specified polynomial and dimension,
     default constructor use empty Hamiltonian.*/
   SparseRealHamiltonian() : poly(), dim(0), nnz(0), irow(), pcol(), nzVal() {}
-  SparseRealHamiltonian(PolyType poly, size_t dim) :
+  SparseRealHamiltonian(const PolyType & poly) :
+      poly(poly), dim(0), nnz(0), irow(), pcol(), nzVal() {}
+  SparseRealHamiltonian(const PolyType & poly, size_t dim) :
       poly(poly), dim(dim), nnz(0), irow(), pcol(), nzVal() {}
   virtual ~SparseRealHamiltonian() {}
   /*Get information of the sparse Hamiltonian.*/
@@ -82,10 +85,10 @@ class SparseRealHamiltonian {
   std::vector<int> getPcol() const { return pcol; }
   int getPcol(size_t i) const { return pcol[i]; }
   std::vector<double> getNzVal() const { return nzVal; }
-  std::complex<double> getNzVal(size_t i) const { return nzVal[i]; }
+  double getNzVal(size_t i) const { return nzVal[i]; }
   std::string toString();
   /*Use the specified basis to create matrix.*/
-  virtual void createMatrix(Basis<BaseStateType> & basis);
+  virtual void createMatrix(const Basis<BaseStateType> & basis);
 };
 
 //-------------------------------------FullHamiltonian<PolyType, BaseStateType>----------

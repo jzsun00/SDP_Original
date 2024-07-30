@@ -1,6 +1,11 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
+  
+  Class:
+  XXZSparseHamiltonian
+  XXZSparseRealHamiltonian
+  XXZFullHamiltonian
   
   Define Hamiltonian matrices for 1D XXZ model.
 */
@@ -14,7 +19,7 @@
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
 
-//------------------------------------------------------------XXZSparseHamiltonian-------
+//--------------------------------------------------------XXZSparseHamiltonian-----------
 
 class XXZSparseHamiltonian
     : public SparseHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D> {
@@ -45,10 +50,10 @@ class XXZSparseRealHamiltonian
  public:
   XXZSparseRealHamiltonian() :
       SparseRealHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>() {}
-  XXZSparseRealHamiltonian(SpinHalfPolynomial1D poly, size_t dim) :
+  XXZSparseRealHamiltonian(const SpinHalfPolynomial1D & poly, size_t dim) :
       SparseRealHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D>(poly, dim) {}
-  XXZSparseRealHamiltonian(SpinHalfPolynomial1D poly, size_t sites, double Jz) :
-      SparseRealHamiltonian(poly, std::pow(2, sites)), sites(sites), Jz(Jz) {}
+  XXZSparseRealHamiltonian(const SpinHalfPolynomial1D & poly, size_t sites, double Jz) :
+      SparseRealHamiltonian(poly), sites(sites), Jz(Jz) {}
   virtual ~XXZSparseRealHamiltonian() {}
   /*Get information of the sparse Hamiltonian.*/
   int * getIrowData() { return irow.data(); }
@@ -60,7 +65,7 @@ class XXZSparseRealHamiltonian
   void createRefSymMatrix(SpinHalfBasis1D & basis);
 };
 
-//-------------------------------------------------------------XXZFullHamiltonian--------
+//--------------------------------------------------------XXZFullHamiltonian-------------
 
 class XXZFullHamiltonian
     : public FullHamiltonian<SpinHalfPolynomial1D, SpinHalfBaseState1D> {

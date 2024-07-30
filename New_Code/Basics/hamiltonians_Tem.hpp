@@ -1,9 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Jun 26, 2024
-
+  Updated: Jul 30, 2024
+  
   Class Implementations:
   SparseHamiltonian<PolyType, BaseStateType>
+  SparseRealHamiltonian<PolyType, BaseStateType>
   FullHamiltonian.<PolyType, BaseStateType>
 */
 
@@ -59,19 +60,21 @@ void SparseHamiltonian<polyType, BaseStateType>::createMatrix(
 
 template<typename polyType, typename BaseStateType>
 void SparseRealHamiltonian<polyType, BaseStateType>::createMatrix(
-    Basis<BaseStateType> & basis) {
+    const Basis<BaseStateType> & basis) {
   dim = basis.getSize();
   pcol.push_back(0);
-  for (long unsigned j = 0; j < dim; j++) {
+  for (long unsigned j = 0; j < dim; j++) {  //colIdx = j
     State<BaseStateType> mid = poly * basis[j];
-    for (long unsigned i = 0; i < dim; i++) {
+    for (long unsigned i = 0; i < dim; i++) {  //rowIdx = i
       std::complex<double> elementij = innerProduct(basis[i], mid);
       if (std::abs(elementij) <= ERROR) {
         continue;
       }
-      nnz++;
-      nzVal.push_back(elementij.real());
-      irow.push_back(i);
+      if (i >= j) {  //Lower triangular part rowIdx >= colIdx
+        nnz++;
+        nzVal.push_back(elementij.real());
+        irow.push_back(i);
+      }
     }
     pcol.push_back(nnz);
   }

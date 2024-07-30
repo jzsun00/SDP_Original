@@ -56,6 +56,7 @@ class SpinHalfState1D : public State<SpinHalfBaseState1D> {
   virtual ~SpinHalfState1D() {}
   /*Overload operators.*/
   SpinHalfState1D & operator=(const SpinHalfState1D & rhs);
+  void clear();
 };
 
 //-------------------------------------------------------------SpinHalfBasis1D-----------
