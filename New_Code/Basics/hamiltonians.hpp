@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 29, 2024
 
   Class:
   SparseHamiltonian<PolyType, BaseStateType>

@@ -1,7 +1,7 @@
 /*
   Jiazheng Sun
-  Updated: Jul 3, 2024
-
+  Updated: Jul 29, 2024
+  
   Define Hamiltonian matrices for 1D XXZ model.
 */
 
@@ -56,6 +56,7 @@ class XXZSparseRealHamiltonian
   double * getNzValData() { return nzVal.data(); }
   /*Use the specified basis to create matrix.*/
   virtual void createMatrix(SpinHalfBasis1D & basis);
+  void createFullBasisMatrix(const SpinHalfBasis1D & basis);
   void createRefSymMatrix(SpinHalfBasis1D & basis);
 };
 

@@ -1,12 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
-
+  Updated: Jul 29, 2024
+  
   Define dense and sparse Hamiltonian matrices for 1D XXZ model.
 */
 
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
+
+#include <cstddef>
 
 #include "./hamiltonians_XXZ.hpp"
 
@@ -115,6 +117,33 @@ void XXZSparseRealHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
       }
       pcol.push_back(nnz);
     }
+  }
+}
+
+void XXZSparseRealHamiltonian::createFullBasisMatrix(const SpinHalfBasis1D & basis) {
+  dim = basis.getSize();
+  pcol.push_back(0);
+  for (size_t i = 0; i < dim; i++) {
+    size_t colIdx = i;
+    SpinHalfState1D midState = poly * basis[i];
+    size_t midStateSize = midState.getSize();
+    vector<size_t> indices;
+    std::unordered_map<size_t, double> elements;
+    for (size_t j = 0; j < midStateSize; j++) {
+      size_t rowIdx = midState[j].second.toDecimal();
+      if (colIdx <= rowIdx) {
+        indices.push_back(rowIdx);
+        elements[rowIdx] = midState[j].first.real();
+      }
+    }
+    std::sort(indices.begin(), indices.end());
+    size_t indicesSize = indices.size();
+    for (size_t k = 0; k < indicesSize; k++) {
+      nnz++;
+      nzVal.push_back(elements[indices[k]]);
+      irow.push_back(indices[k]);
+    }
+    pcol.push_back(nnz);
   }
 }
 

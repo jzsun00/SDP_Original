@@ -1,17 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
-
+  Updated: Jul 29, 2024
+  
   Class:
   SpinHalfBaseState1D
   SpinHalfState1D
   SpinHalfBasis1D
-
+  
   Define base states, states and basis for 1D spin systems.
 */
 
-#ifndef QM_SPINSTATES_1D_HPP
-#define QM_SPINSTATES_1D_HPP
+#ifndef QM_SPIN_STATES_1D_HPP
+#define QM_SPIN_STATES_1D_HPP
 
 #include <bit>
 #include <bitset>
@@ -38,6 +38,7 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
   virtual std::string numToString(bool num) const { return std::to_string(num); }
   unsigned long toDecimal() const;  //Corresponding decimal value
   /*Overload operators.*/
+  SpinHalfBaseState1D & operator=(const SpinHalfBaseState1D & rhs);
   bool operator<(const SpinHalfBaseState1D & rhs) const;  //Based on decimal value
 };
 
@@ -65,13 +66,15 @@ struct VectorBoolHash {
 
 class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
  protected:
-  size_t SitesNum;
-  std::unordered_map<SpinHalfBaseState1D, size_t, VectorBoolHash> lookupTable;
+  size_t SitesNum;  //Number of sites
+  std::unordered_map<SpinHalfBaseState1D, size_t, VectorBoolHash>
+      lookupTable;  //<BaseState, index> pair for searching
 
  public:
   /*Construct the entire basis of spin-1/2 systems.*/
   SpinHalfBasis1D() : Basis(), SitesNum(0), lookupTable() {}
   SpinHalfBasis1D(size_t n) : Basis(), SitesNum(n), lookupTable() {}
+  SpinHalfBasis1D(const SpinHalfBasis1D & rhs);
   virtual ~SpinHalfBasis1D() {}
   /*Fill the basis.
     If pass in an int SzTotal (should divide by 2 for actual Sz),
@@ -89,4 +92,4 @@ class SpinHalfBasis1D : public Basis<SpinHalfBaseState1D> {
   bool isLessOrEqualToReverse(int num, int bitSize);
 };
 
-#endif  //QM_SPINSTATES_1D_HPP
+#endif  //QM_SPIN_STATES_1D_HPP

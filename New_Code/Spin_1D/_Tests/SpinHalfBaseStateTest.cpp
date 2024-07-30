@@ -1,6 +1,8 @@
 /*
   Jiazheng Sun
   Updated: Jul 28, 2024
+  
+  Test implementations of SpinHalfBaseState1D.
 */
 
 #ifndef QM_SPIN_HALF_BASESTATE_TEST_CPP

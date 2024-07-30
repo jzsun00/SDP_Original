@@ -1,11 +1,12 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
+  Updated: Jul 29, 2024
   
   Class Implementations:
   FockState<NumsType>
   SpinBaseState<NumsType>
   State<StateType>
+  Basis<BaseStateType>
   
   Function Implementations:
   double innerProduct(StateType lhs, StateType rhs);
@@ -24,7 +25,7 @@
 
 template<typename NumsType>
 std::string FockState<NumsType>::toString() const {
-  std::string ans = "|";
+  std::string ans = "| ";
   for (typename std::vector<NumsType>::const_iterator it = Nums.begin(); it != Nums.end();
        ++it) {
     ans += " ";
@@ -46,7 +47,7 @@ FockState<NumsType> & FockState<NumsType>::operator=(FockState<NumsType> const &
 
 template<typename NumsType>
 std::string SpinBaseState<NumsType>::toString() const {
-  std::string ans = "|";
+  std::string ans = "| ";
   for (auto it = Nums.begin(); it != Nums.end(); ++it) {
     ans += " ";
     ans += numToString(*it);
@@ -190,6 +191,16 @@ bool isZeroState(std::pair<std::complex<double>, StateType> term) {
 template<typename StateType>
 void State<StateType>::eraseZeros() {
   Terms.erase(std::remove_if(Terms.begin(), Terms.end(), isZeroState), Terms.end());
+}
+
+//--------------------------------------------------------Basis<BaseStateType>-----------
+
+template<typename BaseStateType>
+Basis<BaseStateType> & Basis<BaseStateType>::operator=(const Basis<BaseStateType> & rhs) {
+  if (this != &rhs) {
+    this->States = rhs.States;
+  }
+  return *this;
 }
 
 //-------------------------------------------------------------------Inner Product-------

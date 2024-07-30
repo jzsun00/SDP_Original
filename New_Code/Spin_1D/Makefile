@@ -1,42 +1,42 @@
 # Makefile
 
 # Directories
-SRC_DIR := ../Basics .
+SRC_DIR := .
+BASIC_DIR = ../Basics
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
+OBJ_DIR := ./_Objs
+BASIC_OBJ_DIR := ../Basics/_Objs
 
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++20 -Wall -Wextra
-LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
+CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic
+LDFLAGS := -lopenblas -llapack -lgfortran
 
 # Source files
-SRC_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.cpp))
-HEADER_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.hpp))
-#SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
-#HEADER_FILES := $(wildcard $(SRC_DIR)/*.hpp)
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+HEADER_FILES := $(wildcard $(SRC_DIR)/*.hpp) $(wildcard $(BASIC_DIR)/*.hpp)
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 
 # Object files
-#OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(SRC_DIR)/%.o, $(SRC_FILES))
-OBJ_FILES := $(patsubst %.cpp,%.o,$(filter-out $(TEST_DIR)/%.cpp,$(SRC_FILES)))
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+BASIC_OBJ_FILES := $(wildcard $(BASIC_OBJ_DIR)/*.o)
+
 # Executables
-EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
+EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%.exe, $(TEST_FILES))
 
 # Targets
 .PHONY: all clean
 
-all: $(EXE_FILES)
+all: $(EXE_FILES) $(OBJ_FILES) clean
 
-$(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
+$(EXE_DIR)/%.exe: $(TEST_DIR)/%.cpp $(OBJ_FILES) $(BASIC_OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-#$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
-#	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-%.o: %.cpp $(HEADER_FILES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(EXE_DIR) $(SRC_DIR)/*.o
+	rm -rf $(TEST_DIR)/%~

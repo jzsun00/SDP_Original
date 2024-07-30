@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
+  Updated: Jul 29, 2024
 
   Class:
   FockState<NumsType>
@@ -127,6 +127,7 @@ class Basis {
   /*Construct a basis.
     Default constructor uses an empty std::vector.*/
   Basis() : States() {}
+  Basis(const Basis<BaseStateType> & rhs) : States(rhs.States) {}
   virtual ~Basis() {}
   /*Fill the basis.*/
   virtual void init() = 0;
@@ -137,6 +138,7 @@ class Basis {
   auto getEnd() const { return States.end(); }
   /*Overload operators.*/
   BaseStateType operator[](size_t n) const { return States[n]; }
+  Basis<BaseStateType> & operator=(const Basis<BaseStateType> & rhs);
 };
 
 //------------------------------------------------------------Inner Product--------------

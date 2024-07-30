@@ -1,13 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Jul 30, 2024
 
   Calculate Anderson bound of 1D XXZ model ground state energy.
   Use real number elements and symmetric matrix for higher performance.
 */
 
-#ifndef XXZ_1D_ANDERSON_REALNUM_TEST_CPP
-#define XXZ_1D_ANDERSON_REALNUM_TEST_CPP
+#ifndef XXZ_1D_ANDERSON_FULL_BASIS_TEST_CPP
+#define XXZ_1D_ANDERSON_FULL_BASIS_TEST_CPP
 
 #include <chrono>
 #include <cstddef>
@@ -29,7 +29,7 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 4;
+  size_t sites = 19;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -40,12 +40,15 @@ int main() {
 
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
+  //cout << "poly = " << poly.toString() << endl;
   SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
-  basis->init(0);
+  basis->init();
   auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
-  //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
+  //std::cout << "Basis:" << std::endl << basis->toString() << std::endl;
+  std::cout << "toDecimal:" << (*basis)[0].toDecimal() << (*basis)[1].toDecimal()
+            << (*basis)[2].toDecimal() << endl;
   size_t dim = basis->getSize();
   std::cout << "dim = " << dim << std::endl;
   auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -56,7 +59,7 @@ int main() {
   /*Consruct sparse Hamiltonian.*/
   XXZSparseRealHamiltonian * ham = new XXZSparseRealHamiltonian(poly, sites, Jz);
   auto start_matrix_init = std::chrono::high_resolution_clock::now();
-  ham->createMatrix(*basis);
+  ham->createFullBasisMatrix(*basis);
   auto end_matrix_init = std::chrono::high_resolution_clock::now();
   std::cout << "Hamiltonian construction complete!" << std::endl;
   delete basis;
@@ -68,9 +71,9 @@ int main() {
 
   int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
-  std::cout << "irow = " << intVector_toString(ham->getIrow()) << endl;
-  std::cout << "pcol = " << intVector_toString(ham->getPcol()) << endl;
-  std::cout << "val = " << doubleVector_toString(ham->getNzVal()) << endl;
+  //std::cout << "irow = " << intVector_toString(ham->getIrow()) << endl;
+  //std::cout << "pcol = " << intVector_toString(ham->getPcol()) << endl;
+  //std::cout << "val = " << doubleVector_toString(ham->getNzVal()) << endl;
 
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();
@@ -119,4 +122,4 @@ int main() {
   return EXIT_SUCCESS;
 }  // main
 
-#endif  //XXZ_1D_ANDERSON_REALNUM_TEST_CPP
+#endif  //XXZ_1D_ANDERSON_FULL_BASIS_TEST_CPP

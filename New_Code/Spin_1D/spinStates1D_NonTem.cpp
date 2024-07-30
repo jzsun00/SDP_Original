@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
+  Updated: Jul 29, 2024
   
   Class Implementations:
   SpinHalfBaseState1D
@@ -8,8 +8,8 @@
   SpinHalfBasis1D
 */
 
-#ifndef QM_SPINSTATES_1D_NONTEM_CPP
-#define QM_SPINSTATES_1D_NONTEM_CPP
+#ifndef QM_SPIN_STATES_1D_NONTEM_CPP
+#define QM_SPIN_STATES_1D_NONTEM_CPP
 
 #include <cstddef>
 
@@ -18,6 +18,13 @@
 using std::vector;
 
 //----------------------------------------------------------SpinHalfBaseState1D----------
+
+SpinHalfBaseState1D & SpinHalfBaseState1D::operator=(const SpinHalfBaseState1D & rhs) {
+  if (this != &rhs) {
+    Nums = rhs.Nums;
+  }
+  return *this;
+}
 
 unsigned long SpinHalfBaseState1D::toDecimal() const {
   unsigned long decimalValue = 0;
@@ -55,6 +62,12 @@ size_t VectorBoolHash::operator()(const SpinHalfBaseState1D & baseState) const {
   return hash;
 }
 
+SpinHalfBasis1D::SpinHalfBasis1D(const SpinHalfBasis1D & rhs) :
+    Basis<SpinHalfBaseState1D>(rhs),
+    SitesNum(rhs.SitesNum),
+    lookupTable(rhs.lookupTable) {
+}
+
 void SpinHalfBasis1D::init() {
   size_t total = std::pow(2, SitesNum);
   for (size_t i = 0; i < total; i++) {
@@ -65,7 +78,6 @@ void SpinHalfBasis1D::init() {
     }
     SpinHalfBaseState1D toAdd(newState);
     States.push_back(toAdd);
-    lookupTable[toAdd] = States.size() - 1;
   }
 }
 
@@ -123,14 +135,7 @@ std::string SpinHalfBasis1D::toString() {
   return ans;
 }
 
-/*
-int SpinHalfBasis1D::findBaseState(const SpinHalfBaseState1D & baseState) {
-  return findIndex(States, baseState);
-}
-*/
-
 size_t SpinHalfBasis1D::lookUpBaseState(const SpinHalfBaseState1D & baseState) {
-  //return IndexTable[baseState];
   return lookupTable[baseState];
 }
 
@@ -154,4 +159,4 @@ bool SpinHalfBasis1D::isLessOrEqualToReverse(int num, int bitSize) {
   return num <= reverseNum;
 }
 
-#endif  //QM_SPINSTATES_1D_NONTEM_CPP
+#endif  //QM_SPIN_STATES_1D_NONTEM_CPP
