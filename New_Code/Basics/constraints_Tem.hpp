@@ -5,6 +5,9 @@
   Class Implementations:
   ConsBaseSet<MonomialType, IndexType>
   ConsSet<MonomialType, IndexType>
+  
+  Function Implementations:
+  void printMatrix(ConsSet & constraints, OpBasis & basis)
 */
 
 #ifndef QM_CONSTRAINS_TEM_HPP
@@ -12,7 +15,31 @@
 
 #include "./constraints.hpp"
 
+//---------------------------------------ConsBaseSet<MonomialType, IndexType>------------
+
+template<typename MonomialType, typename IndexType>
+ConsBaseSet<MonomialType, IndexType> & ConsBaseSet<MonomialType, IndexType>::operator=(
+    const ConsBaseSet<MonomialType, IndexType> & rhs) {
+  if (this != &rhs) {
+    this->start = rhs.start;
+    this->end = rhs.end;
+    this->order = rhs.order;
+    this->BaseOpSet = rhs.BaseOpSet;
+  }
+  return *this;
+}
+
 //------------------------------------------ConsSet<MonomialType, IndexType>-------------
+
+template<typename MonomialType, typename IndexType>
+ConsSet<MonomialType, IndexType> & ConsSet<MonomialType, IndexType>::operator=(
+    const ConsSet<MonomialType, IndexType> & rhs) {
+  if (this != &rhs) {
+    this->OpSet = rhs.OpSet;
+  }
+  return *this;
+}
+
 /*
 template<typename MonomialType, typename IndexType>
 Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, size_t j) {
@@ -24,6 +51,7 @@ Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, s
   return ans;
 }
 */
+
 //-------------------------------------------------------------Other Functions-----------
 
 template<typename MonomialType, typename IndexType>

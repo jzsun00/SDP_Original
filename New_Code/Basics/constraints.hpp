@@ -7,6 +7,7 @@
   ConsSet<MonomialType, IndexType>
   
   Function:
+  void printMatrix(ConsSet & constraints, OpBasis & basis);
 */
 
 #ifndef QM_CONSTRAINTS_HPP
@@ -39,8 +40,10 @@ class ConsBaseSet {
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
   std::vector<MonomialType> getBaseOpSet() const { return BaseOpSet; }
-  MonomialType operator[](size_t n) const { return BaseOpSet[n]; }
   virtual std::string toString() = 0;
+  /*Overload operators.*/
+  ConsBaseSet & operator=(const ConsBaseSet<MonomialType, IndexType> & rhs);
+  MonomialType operator[](size_t n) const { return BaseOpSet[n]; }
 };
 
 //------------------------------------------ConsSet<MonomialType, IndexType>-------------
@@ -56,6 +59,8 @@ class ConsSet {
   /*Get information of the constraint set.*/
   size_t getLength() const { return OpSet.size(); }
   virtual std::string toString() = 0;
+  /*Overload operators.*/
+  ConsSet & operator=(const ConsSet<MonomialType, IndexType> & rhs);
   virtual void addBaseSet(ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
   //virtual Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
 };
