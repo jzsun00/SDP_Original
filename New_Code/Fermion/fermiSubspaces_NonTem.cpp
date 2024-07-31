@@ -13,11 +13,6 @@
 
 #include "./hardCoreSubspaces.hpp"
 
-using std::complex;
-using std::pair;
-using std::set;
-using std::vector;
-
 //-------------------------------------------------------------HardCore1DOpSubBasis------
 
 void MonomialsGenerator(vector<int> & current,
@@ -143,7 +138,7 @@ std::string HardCore1DOpBasis::toString() {
 
 void HardCore1DOpBasis::addSubspace(
     OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
-  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getFullBasis();
+  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBasis();
   Basis.insert(Basis.end(), sub.begin(), sub.end());
 }
 

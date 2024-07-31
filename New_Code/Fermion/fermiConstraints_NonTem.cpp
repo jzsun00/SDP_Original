@@ -14,10 +14,6 @@
 
 #include "./hardCoreConstraints.hpp"
 
-using std::complex;
-using std::pair;
-using std::vector;
-
 //-------------------------------------------------------------HardCore1DOpSubBasis------
 
 void ConsMonomialsGenerator(vector<int> & current,

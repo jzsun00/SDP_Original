@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: May 14, 2024
+  Updated: Jul 31, 2024
 
   Class:
   HardCoreLadderOp, HardCore1DLadderOp, HardCoreMonomial, HardCorePolynomial.
@@ -10,11 +10,10 @@
   Define ladder operators, monomials and polynomials for hard core Boson systems.
 */
 
-#ifndef ORI_SDP_GS_HARDCOREOPERATORS_HPP
-#define ORI_SDP_GS_HARDCOREOPERATORS_HPP
+#ifndef QM_HARDCORE_OPERATORS_HPP
+#define QM_HARDCORE_OPERATORS_HPP
 
-#include "../Basics/operators.hpp"
-#include "../Basics/operators_Tem.cpp"
+#include "../Basics/operators_Tem.hpp"
 
 //---------------------------------------------------------------HardCoreLadderOp--------
 
@@ -66,7 +65,7 @@ class HardCoreMonomial : public Monomial<OpType> {
   /*The constructors are identical to Monomial.*/
   HardCoreMonomial() : Monomial<OpType>() {}
   HardCoreMonomial(OpType & Op) : Monomial<OpType>(Op) {}
-  HardCoreMonomial(vector<OpType> & Expr) : Monomial<OpType>(Expr) {}
+  HardCoreMonomial(std::vector<OpType> & Expr) : Monomial<OpType>(Expr) {}
   HardCoreMonomial(Monomial<OpType> const & rhs) : Monomial<OpType>(rhs) {}
   ~HardCoreMonomial() {}
   /*Tools for normalization.*/
@@ -88,7 +87,7 @@ class HardCorePolynomial : public Polynomial<MonomialType> {
   /*The constructors are identical to Polynomial.*/
   HardCorePolynomial() : Polynomial<MonomialType>() {}
   HardCorePolynomial(MonomialType const & mn) : Polynomial<MonomialType>(mn) {}
-  HardCorePolynomial(complex<double> pref, MonomialType const & mn) :
+  HardCorePolynomial(std::complex<double> pref, MonomialType const & mn) :
       Polynomial<MonomialType>(pref, mn) {}
   HardCorePolynomial(HardCorePolynomial const & rhs) : Polynomial<MonomialType>(rhs) {}
   ~HardCorePolynomial() {}
@@ -108,9 +107,7 @@ HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreCommute(OpType op1, OpType
 
 template<typename OpType>
 HardCorePolynomial<HardCoreMonomial<OpType> > HardCoreNormOnce(
-    complex<double> pref,
+    std::complex<double> pref,
     HardCoreMonomial<OpType> mn);
 
-#include "./hardCoreOperators_Tem.cpp"
-
-#endif  //ORI_SDP_GS_HARDCOREOPERATORS_HPP
+#endif  //QM_HARDCORE_OPERATORS_HPP

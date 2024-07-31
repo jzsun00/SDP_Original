@@ -3,14 +3,13 @@
   Updated: Jul 31, 2024
 */
 
-#ifndef QM_HARDCORE_SUBSPACES_HPP
-#define QM_HARDCORE_SUBSPACES_HPP
+#ifndef QM_FERMI_SUBSPACES_HPP
+#define QM_FERMI_SUBSPACES_HPP
 
-#include <complex>
 #include <set>
 
 #include "../Basics/subspaces_Tem.hpp"
-#include "./hardCoreOperators_Tem.hpp"
+#include "./fermiOperators_Tem.hpp"
 
 //-------------------------------------------------------------HardCore1DOpSubBasis------
 
@@ -40,17 +39,17 @@ class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, i
   HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
   virtual std::string toString();
   virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
-  std::vector<std::complex<double> > projPolyInf(
+  vector<complex<double> > projPolyInf(
       HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly);
 };
 
 //--------------------------------------------------------------Other Functions----------
 
-std::vector<std::pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis);
+vector<pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis);
 
-std::string printHermPairs(std::vector<std::pair<size_t, size_t> > & pairs);
+std::string printHermPairs(vector<pair<size_t, size_t> > & pairs);
 
-void transVecToReIm(std::vector<std::complex<double> > & vec,
-                    std::vector<std::pair<size_t, size_t> > & pairs);
+void transVecToReIm(vector<complex<double> > & vec,
+                    vector<pair<size_t, size_t> > & pairs);
 
-#endif  //ORI_SDP_GS_HARDCORESUBSPACES_HPP
+#endif  //QM_FERMI_SUBSPACES_HPP

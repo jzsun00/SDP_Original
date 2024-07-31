@@ -6,8 +6,8 @@
 #ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
 #define ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
 
-#include "../Basics/constraints_Tem.hpp"
-#include "./hardCoreOperators_Tem.hpp"
+#include "../Basics/constraints.hpp"
+#include "./hardCoreOperators.hpp"
 #include "./hardCoreSubspaces.hpp"
 
 //----------------------------------------------------------HardCore1DConsBaseSet--------
@@ -43,21 +43,20 @@ class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, i
 void printMatrixHardCore1D(HardCore1DConsSet & constraints,
                            HardCore1DOpBasis & basis,
                            std::string fileName,
-                           std::vector<std::complex<double> > ham,
-                           std::vector<std::pair<size_t, size_t> > & pairs);
+                           vector<complex<double> > ham,
+                           vector<pair<size_t, size_t> > & pairs);
 
 void printMatrixXX1D(size_t max, std::string fileName);
 
 void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
                                  HardCore1DOpBasis & basis,
                                  std::string fileName,
-                                 std::vector<std::complex<double> > ham,
-                                 std::vector<std::pair<size_t, size_t> > & pairs);
+                                 vector<complex<double> > ham,
+                                 vector<pair<size_t, size_t> > & pairs);
 
 void printSparseMatrixXX1D(size_t max, std::string fileName);
 
-void transMatToReIm(
-    std::vector<std::vector<std::vector<std::complex<double> > > > & matrices,
-    std::vector<std::pair<size_t, size_t> > & pairs);
+void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
+                    vector<pair<size_t, size_t> > & pairs);
 
 #endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_HPP

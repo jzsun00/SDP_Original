@@ -1,6 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 31, 2024
+  
+  Class:
+  OpSubBasis<MonomialType, IndexType>
+  OpBasis<MonomialType, IndexType>
 */
 
 #ifndef QM_SUBSPACES_HPP
@@ -8,7 +12,7 @@
 
 #include "./operators_Tem.hpp"
 
-//---------------------------------------------------------------OpSubBasis--------------
+//-----------------------------------------OpSubBasis<MonomialType, IndexType>-----------
 
 template<typename MonomialType, typename IndexType>
 class OpSubBasis {
@@ -24,23 +28,26 @@ class OpSubBasis {
   OpSubBasis() : order(0), Basis() {}
   OpSubBasis(IndexType start, IndexType end, size_t order) :
       start(start), end(end), order(order), Basis() {}
-  OpSubBasis(OpSubBasis const & rhs) : Basis(rhs.Basis) {}
+  OpSubBasis(const OpSubBasis & rhs) :
+      start(rhs.start), end(rhs.end), order(rhs.order), Basis(rhs.Basis) {}
   virtual void init() = 0;
-  ~OpSubBasis() {}
-  /*Get information of the operator basis.*/
+  virtual ~OpSubBasis() {}
+  /*Get information of the operator sub-basis.*/
   size_t getLength() const { return Basis.size(); }
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
-  std::vector<MonomialType> getBasis() const { return Basis; }
-  MonomialType operator[](size_t n) const { return Basis[n]; }
+  std::vector<MonomialType> getFullBasis() const { return Basis; }
   virtual std::string toString() = 0;
-
+  /*Overload operators.*/
+  OpSubBasis & operator=(const OpSubBasis<MonomialType, IndexType> & rhs);
+  MonomialType operator[](size_t n) const { return Basis[n]; }
   /*Projection tools.*/
-  std::vector<std::complex<double> > projPoly(Polynomial<MonomialType> poly);
+  virtual std::vector<std::complex<double> > projPoly(
+      const Polynomial<MonomialType> & poly) const;
 };
 
-//---------------------------------------------------------------OpBasis-----------------
+//-------------------------------------------OpBasis<MonomialType, IndexType>------------
 
 template<typename MonomialType, typename IndexType>
 class OpBasis {
@@ -49,13 +56,17 @@ class OpBasis {
 
  public:
   OpBasis() : Basis() {}
-  ~OpBasis() {}
+  OpBasis(const OpBasis<MonomialType, IndexType> & rhs) : Basis(rhs.Basis) {}
+  virtual ~OpBasis() {}
+  /*Get information of the operator basis.*/
   size_t getLength() const { return Basis.size(); }
   virtual std::string toString() = 0;
-  virtual void addSubspace(OpSubBasis<MonomialType, IndexType> & rhs) = 0;
-
+  virtual void addSubspace(const OpSubBasis<MonomialType, IndexType> & rhs) = 0;
+  /*Overload operators.*/
+  OpBasis & operator=(const OpBasis<MonomialType, IndexType> & rhs);
   /*Projection tools.*/
-  std::vector<std::complex<double> > projPoly(Polynomial<MonomialType> poly);
+  virtual std::vector<std::complex<double> > projPoly(
+      const Polynomial<MonomialType> & poly) const;
 };
 
 #endif  //QM_SUBSPACES_HPP

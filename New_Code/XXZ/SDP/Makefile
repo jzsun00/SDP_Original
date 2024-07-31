@@ -1,7 +1,7 @@
 # Makefile
 
 # Directories
-SRC_DIR := ../Basics ../HardCore .
+SRC_DIR := ../../Basics ../../HardCore .
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
 

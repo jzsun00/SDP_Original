@@ -3,8 +3,8 @@
   Updated: Jun 30, 2024
 */
 
-#include "../../HardCore/hardCoreConstraints.hpp"
-#include "../../HardCore/hardCoreSubspaces.hpp"
+#include "../../../HardCore/hardCoreConstraints.hpp"
+#include "../../../HardCore/hardCoreSubspaces.hpp"
 #include "../hamiltonians_XXZ.hpp"
 
 using std::cout;

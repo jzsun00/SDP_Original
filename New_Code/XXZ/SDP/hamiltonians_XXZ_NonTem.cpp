@@ -7,6 +7,9 @@
 
 #include "./hamiltonians_XXZ.hpp"
 
+using std::complex;
+using std::pair;
+
 HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makePoly(size_t sites,
                                                                    double Jz) {
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > ans;

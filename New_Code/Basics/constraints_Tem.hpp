@@ -1,19 +1,18 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 31, 2024
+  
+  Class Implementations:
+  ConsBaseSet<MonomialType, IndexType>
+  ConsSet<MonomialType, IndexType>
+*/
 
-  Implementations of methods in class:
-  OpBasis.
- */
-
-#ifndef ORI_SDP_GS_CONSTRAINS_TEM_HPP
-#define ORI_SDP_GS_CONSTRAINS_TEM_HPP
-
-#include <vector>
+#ifndef QM_CONSTRAINS_TEM_HPP
+#define QM_CONSTRAINS_TEM_HPP
 
 #include "./constraints.hpp"
 
-//-----------------------------------------------------------------ConsSet---------------
+//------------------------------------------ConsSet<MonomialType, IndexType>-------------
 /*
 template<typename MonomialType, typename IndexType>
 Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, size_t j) {
@@ -32,14 +31,14 @@ void printMatrix(ConsSet<MonomialType, IndexType> & constrains,
                  OpBasis<MonomialType, IndexType> & basis) {
   size_t matrixNum = basis.getLength();
   size_t matrixSize = constrains.getLength();
-  vector<vector<vector<complex<double> > > > matrices(
+  std::vector<std::vector<std::vector<std::complex<double> > > > matrices(
       matrixNum,
-      vector<vector<complex<double> > >(matrixSize,
-                                        vector<complex<double> >(matrixSize)));
+      std::vector<std::vector<std::complex<double> > >(
+          matrixSize, std::vector<std::complex<double> >(matrixSize)));
   for (size_t i = 0; i < matrixSize; i++) {
     for (size_t j = 0; j < matrixSize; j++) {
       Polynomial<MonomialType> polyIJ = constrains.getIJPoly(i, j);
-      vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
+      std::vector<std::complex<double> > entryIJ = basis.projPoly(polyIJ);
       for (size_t k = 0; k < matrixNum; k++) {
         matrices[k][i][j] = entryIJ[k];
       }
@@ -47,4 +46,4 @@ void printMatrix(ConsSet<MonomialType, IndexType> & constrains,
   }
 }
 
-#endif  //ORI_SDP_GS_CONSTRAINS_TEM_HPP
+#endif  //QM_CONSTRAINS_TEM_HPP

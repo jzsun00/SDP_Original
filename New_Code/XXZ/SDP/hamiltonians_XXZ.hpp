@@ -5,9 +5,9 @@
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
 #define ORI_SDP_GS_HAMILTONIANS_XXZ_HPP
 
-#include "../Basics/hamiltonians.hpp"
-#include "../HardCore/hardCoreOperators.hpp"
-#include "../HardCore/hardCoreSubspaces.hpp"
+#include "../../Basics/hamiltonians_Tem.hpp"
+#include "../../HardCore/hardCoreOperators_Tem.hpp"
+#include "../../HardCore/hardCoreSubspaces.hpp"
 
 //-------------------------------------------------------------XXZFullHamiltonian--------
 /*

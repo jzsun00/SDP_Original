@@ -1,8 +1,10 @@
-#include "../../HardCore/hardCoreSubspaces.hpp"
+#include "../../../HardCore/hardCoreSubspaces.hpp"
 #include "../hamiltonians_XXZ.hpp"
 
+using std::complex;
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main(void) {
   size_t sites = 3;

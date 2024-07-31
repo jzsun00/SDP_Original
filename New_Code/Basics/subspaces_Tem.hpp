@@ -1,29 +1,39 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 31, 2024
+  
+  Class Implementations:
+  OpSubBasis<MonomialType, IndexType>
+  OpBasis<MonomialType, IndexType>
+*/
 
-  Implementations of methods in class:
-  OpBasis.
- */
-
-#ifndef ORI_SDP_GS_SUBSPACES_TEM_HPP
-#define ORI_SDP_GS_SUBSPACES_TEM_HPP
+#ifndef QM_SUBSPACES_TEM_HPP
+#define QM_SUBSPACES_TEM_HPP
 
 #include "./subspaces.hpp"
 
-//-----------------------------------------------------------------OpSubBasis------------
+//-----------------------------------------OpSubBasis<MonomialType, IndexType>-----------
+
+template<typename MonomialType, typename IndexType>
+OpSubBasis<MonomialType, IndexType> & OpSubBasis<MonomialType, IndexType>::operator=(
+    const OpSubBasis<MonomialType, IndexType> & rhs) {
+  if (this != &rhs) {
+    this->start = rhs.start;
+    this->end = rhs.end;
+    this->order = rhs.order;
+    this->Basis = rhs.Basis;
+  }
+  return *this;
+}
 
 template<typename MonomialType, typename IndexType>
 std::vector<std::complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly(
-    Polynomial<MonomialType> poly) {
-  std::vector<std::complex<double> > ans(Basis.size());
-  for (size_t index = 0; index < Basis.size(); index++) {
+    const Polynomial<MonomialType> & poly) const {
+  const size_t len = Basis.size();
+  std::vector<std::complex<double> > ans(len);
+  for (size_t index = 0; index < len; index++) {
     MonomialType basisMn = Basis[index];
-    for (typename std::vector<
-             std::pair<std::complex<double>, MonomialType> >::const_iterator it =
-             poly.getBegin();
-         it != poly.getEnd();
-         ++it) {
+    for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {
       if (it->second == basisMn) {
         ans[index] = it->first;
       }
@@ -32,19 +42,25 @@ std::vector<std::complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly
   return ans;
 }
 
-//--------------------------------------------------------------------OpBasis------------
+//-------------------------------------------OpBasis<MonomialType, IndexType>------------
+
+template<typename MonomialType, typename IndexType>
+OpBasis<MonomialType, IndexType> & OpBasis<MonomialType, IndexType>::operator=(
+    const OpBasis<MonomialType, IndexType> & rhs) {
+  if (this != &rhs) {
+    this->Basis = rhs.Basis;
+  }
+  return *this;
+}
 
 template<typename MonomialType, typename IndexType>
 std::vector<std::complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
-    Polynomial<MonomialType> poly) {
-  std::vector<std::complex<double> > ans(Basis.size());
-  for (size_t index = 0; index < Basis.size(); index++) {
+    const Polynomial<MonomialType> & poly) const {
+  const size_t len = Basis.size();
+  std::vector<std::complex<double> > ans(len);
+  for (size_t index = 0; index < len; index++) {
     MonomialType basisMn = Basis[index];
-    for (typename std::vector<
-             std::pair<std::complex<double>, MonomialType> >::const_iterator it =
-             poly.getBegin();
-         it != poly.getEnd();
-         ++it) {
+    for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {
       if (it->second == basisMn) {
         ans[index] = it->first;
       }
@@ -53,4 +69,4 @@ std::vector<std::complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
   return ans;
 }
 
-#endif  //ORI_SDP_GS_SUBSPACES_TEM_HPP
+#endif  //QM_SUBSPACES_TEM_HPP

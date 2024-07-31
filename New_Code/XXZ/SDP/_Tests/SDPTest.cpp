@@ -1,13 +1,16 @@
-#include "../../HardCore/hardCoreConstraints.hpp"
-#include "../../HardCore/hardCoreSubspaces.hpp"
+#include "../../../HardCore/hardCoreConstraints.hpp"
+#include "../../../HardCore/hardCoreSubspaces.hpp"
 #include "../hamiltonians_XXZ.hpp"
 
+using std::complex;
 using std::cout;
 using std::endl;
+using std::pair;
+using std::vector;
 
 int main(void) {
   size_t sites = 48;
-  double Jz = -1;
+  double Jz = 0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
@@ -18,7 +21,7 @@ int main(void) {
   //////////////////////////////////////////////////////
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub2(0, sites - 1, 2);
-  HardCore1DOpSubBasis sub4(21, sites - 22, 4);
+  HardCore1DOpSubBasis sub4(20, sites - 21, 4);
   //HardCore1DOpSubBasis sub6(22, sites - 23, 6);
   sub2.init();
   sub4.init();
@@ -44,7 +47,7 @@ int main(void) {
   /////////////////////////////////////////////////////
   cout << "\nNow construct constraint operator set" << endl;
   HardCore1DConsBaseSet base1(0, sites - 1, 1);
-  HardCore1DConsBaseSet base2(21, sites - 22, 2);
+  HardCore1DConsBaseSet base2(20, sites - 21, 2);
   //HardCore1DConsBaseSet base3(22, sites - 23, 3);
   base1.init();
   base2.init();

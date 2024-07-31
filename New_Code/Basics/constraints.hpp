@@ -1,15 +1,21 @@
 /*
   Jiazheng Sun
-  Updated: Jul 26, 2024
+  Updated: Jul 31, 2024
+  
+  Class:
+  ConsBaseSet<MonomialType, IndexType>
+  ConsSet<MonomialType, IndexType>
+  
+  Function:
 */
 
-#ifndef ORI_SDP_GS_CONSTRAINTS_HPP
-#define ORI_SDP_GS_CONSTRAINTS_HPP
+#ifndef QM_CONSTRAINTS_HPP
+#define QM_CONSTRAINTS_HPP
 
 #include "./operators_Tem.hpp"
-#include "./subspaces.hpp"
+#include "./subspaces_Tem.hpp"
 
-//---------------------------------------------------------------ConsBaseSet-------------
+//---------------------------------------ConsBaseSet<MonomialType, IndexType>------------
 
 template<typename MonomialType, typename IndexType>
 class ConsBaseSet {
@@ -23,9 +29,11 @@ class ConsBaseSet {
   ConsBaseSet() : order(0), BaseOpSet() {}
   ConsBaseSet(IndexType start, IndexType end, size_t order) :
       start(start), end(end), order(order), BaseOpSet() {}
-  ConsBaseSet(const ConsBaseSet & rhs) : BaseOpSet(rhs.BaseOpSet) {}
+  ConsBaseSet(const ConsBaseSet & rhs) :
+      start(rhs.start), end(rhs.end), order(rhs.order), BaseOpSet(rhs.BaseOpSet) {}
   virtual void init() = 0;
-  ~ConsBaseSet() {}
+  virtual ~ConsBaseSet() {}
+  /*Get information of the constraint base set.*/
   size_t getLength() const { return BaseOpSet.size(); }
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
@@ -35,7 +43,7 @@ class ConsBaseSet {
   virtual std::string toString() = 0;
 };
 
-//-----------------------------------------------------------------ConsSet---------------
+//------------------------------------------ConsSet<MonomialType, IndexType>-------------
 
 template<typename MonomialType, typename IndexType>
 class ConsSet {
@@ -44,7 +52,8 @@ class ConsSet {
 
  public:
   ConsSet() : OpSet() {}
-  ~ConsSet() {}
+  virtual ~ConsSet() {}
+  /*Get information of the constraint set.*/
   size_t getLength() const { return OpSet.size(); }
   virtual std::string toString() = 0;
   virtual void addBaseSet(ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
@@ -57,4 +66,4 @@ template<typename MonomialType, typename IndexType>
 void printMatrix(ConsSet<MonomialType, IndexType> & constraints,
                  OpBasis<MonomialType, IndexType> & basis);
 
-#endif  //ORI_SDP_GS_CONSTRAINTS_HPP
+#endif  //QM_CONSTRAINTS_HPP
