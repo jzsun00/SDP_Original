@@ -1,7 +1,7 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
-
+  Updated: Jul 31, 2024
+  
   Class Implementations:
   FermiFockstate
   FermiState

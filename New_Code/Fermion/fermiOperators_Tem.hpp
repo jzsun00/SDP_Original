@@ -1,28 +1,46 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
-
+  Updated: Jul 31, 2024
+  
   Class Implementations:
   FermiLadderOp<IndexType>
   FermiMonomial<OpType>
   FermiPolynomial<MonomialType>
 */
 
-#ifndef QM_FERMI_OPERATORS_TEM_CPP
-#define QM_FERMI_OPERATORS_TEM_CPP
+#ifndef QM_FERMI_OPERATORS_TEM_HPP
+#define QM_FERMI_OPERATORS_TEM_HPP
 
 #include "fermiOperators.hpp"
-
-using std::vector;
 
 //------------------------------------------------------FermiLadderOp<IndexType>---------
 
 template<typename IndexType>
-bool FermiLadderOp<IndexType>::operator>(FermiLadderOp const & rhs) const {
+FermiLadderOp<IndexType> & FermiLadderOp<IndexType>::operator=(
+    const FermiLadderOp<IndexType> & rhs) {
+  if (this != &rhs) {
+    this->index = rhs.index;
+    this->isUnit = rhs.isUnit;
+    this->creatorF = rhs.creatorF;
+  }
+  return *this;
+}
+
+template<typename IndexType>
+bool FermiLadderOp<IndexType>::operator>(const FermiLadderOp & rhs) const {
   return !(*this < rhs || *this == rhs);
 }
 
 //---------------------------------------------------------FermiMonomial<OpType>---------
+
+template<typename OpType>
+FermiMonomial<OpType> & FermiMonomial<OpType>::operator=(
+    const FermiMonomial<OpType> & rhs) {
+  if (this != &rhs) {
+    this->Expr = rhs.Expr;
+  }
+  return *this;
+}
 
 template<typename OpType>
 int FermiMonomial<OpType>::findWrongOrder() const {
@@ -46,76 +64,38 @@ bool FermiMonomial<OpType>::isNorm() const {
 }
 
 template<typename OpType>
-FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprS(size_t index) {
+FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprStart(size_t index) const {
   return FermiMonomial<OpType>(
-      vector<OpType>(this->Expr.begin(), this->Expr.begin() + index));
+      std::vector<OpType>(this->Expr.begin(), this->Expr.begin() + index));
 }
 
 template<typename OpType>
-FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprE(size_t index) {
+FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprEnd(size_t index) const {
   return FermiMonomial<OpType>(
-      vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
+      std::vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
 }
 
 //-------------------------------------------------FermiPolynomial<MonomialType>---------
 
 template<typename MonomialType>
 FermiPolynomial<MonomialType> & FermiPolynomial<MonomialType>::operator=(
-    FermiPolynomial<MonomialType> const & rhs) {
-  this->Terms = rhs.Terms;
+    const FermiPolynomial<MonomialType> & rhs) {
+  if (this != &rhs) {
+    this->Terms = rhs.Terms;
+  }
   return *this;
 }
-/*
-template<typename MonomialType>
-void FermiPolynomial<MonomialType>::normalize() {
-  for (typename vector<pair<complex<double>, MonomialType> >::iterator it =
-           this->Terms.begin();
-       it != this->Terms.end();
-       ++it) {
-    std::cout << "Length = " << this->Terms.size() << std::endl;
-    std::cout << "it->second = " << it->second.toString() << std::endl;
-    if (it->second.isNorm()) {
-      continue;
-    }
-    std::cout << "NormOnce(it->first, it->second) = "
-              << NormOnce(it->first, it->second).toString() << std::endl;
-    (*this) += NormOnce(it->first, it->second);
-    this->eraseZeros();
-    std::cout << "(*this) = " << this->toString() << std::endl;
-  }
-  //this->eraseZeros();
-}
-*/
 
 template<typename MonomialType>
 bool FermiPolynomial<MonomialType>::isNorm() const {
-  for (size_t i = 0; i < this->Terms.size(); i++) {
+  size_t len = this->Terms.size();
+  for (size_t i = 0; i < len; i++) {
     if (!(this->Terms[i].second.isNorm())) {
       return false;
     }
   }
   return true;
 }
-/*
-template<typename MonomialType>
-void FermiPolynomial<MonomialType>::normalize() {
-  for (size_t i = 0; i < this->Terms.size(); i++) {
-    //std::cout << "Length = " << this->Terms.size() << std::endl;
-    //std::cout << "\nCurrent term: "
-    //          << "i = " << i << ": " << this->Terms[i].second.toString() << std::endl;
-    if (this->Terms[i].second.isNorm()) {
-      continue;
-    }
-    //std::cout << "NormOnce(it->first, it->second) = "
-    //<< NormOnce(this->Terms[i].first, this->Terms[i].second).toString()
-    //          << std::endl;
-    (*this) += NormOnce(this->Terms[i].first, this->Terms[i].second);
-    this->eraseZeros();
-    std::cout << "\n(*this) = " << this->toString() << std::endl;
-  }
-  this->eraseZeros();
-}
-*/
 
 template<typename MonomialType>
 int FermiPolynomial<MonomialType>::findNonNorm() const {
@@ -136,7 +116,6 @@ void FermiPolynomial<MonomialType>::normOneTerm(int index) {
   MonomialType mn(this->Terms[index].second);
   this->Terms.erase(this->Terms.begin() + index);
   (*this) += NormOnce(pref, mn);
-  //std::cout << "\n(*this) = " << this->toString() << std::endl;
 }
 
 template<typename MonomialType>
@@ -160,19 +139,18 @@ void FermiPolynomial<MonomialType>::eraseNonNorm() {
       this->Terms.end());
 }
 
-//----------------------------------------------------------------Algebra Functions------
+//---------------------------------------------------------Algebra Functions-------------
 
 template<typename OpType>
-FermiPolynomial<FermiMonomial<OpType> > FermiCommute(OpType op1, OpType op2) {
-  FermiMonomial<OpType> mn0(op1);
-  mn0 *= op2;
-  FermiMonomial<OpType> mnr(op2);
+FermiPolynomial<FermiMonomial<OpType> > FermiCommute(const OpType & op1,
+                                                     const OpType & op2) {
+  FermiMonomial<OpType> mnr(op2);  //op2*op1
   mnr *= op1;
-  if (op1.getCreatorF() == op2.getCreatorF()) {
+  if (op1.getCreatorF() == op2.getCreatorF()) {  //-op2*op1
     FermiPolynomial<FermiMonomial<OpType> > ans(std::complex<double>(-1, 0), mnr);
     return ans;
   }
-  else {
+  else {  //delta_{ij}-op2*op1
     FermiPolynomial<FermiMonomial<OpType> > ans(std::complex<double>(-1, 0), mnr);
     if (op1.getIndex() == op2.getIndex()) {
       OpType unit(true);
@@ -187,31 +165,25 @@ template<typename OpType>
 FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
                                                  FermiMonomial<OpType> mn) {
   size_t index = mn.findWrongOrder();
-  //std::cout << "index = " << index << std::endl;
   FermiPolynomial<FermiMonomial<OpType> > mid = FermiCommute(mn[index], mn[index + 1]);
-  //std::cout << "mid = " << mid.toString() << std::endl;
   FermiPolynomial<FermiMonomial<OpType> > ans;
-  if (index > 0) {
-    FermiMonomial<OpType> mnFront(mn.sliceExprS(index));
+  if (index > 0) {  //Wrong order not at beginning
+    FermiMonomial<OpType> mnFront(mn.sliceExprStart(index));
     FermiPolynomial<FermiMonomial<OpType> > polyFront(std::complex<double>(1, 0),
                                                       mnFront);
     ans = mnFront;
     ans *= mid;
   }
-  else {
+  else {  //Wrong order at beginning
     ans = mid;
   }
-  //std::cout << "ans = " << ans.toString() << std::endl;
-  if (index < mn.getSize() - 2) {
+  if (index < mn.getSize() - 2) {  //Not at end
     FermiPolynomial<FermiMonomial<OpType> > mnRear(std::complex<double>(1, 0),
-                                                   mn.sliceExprE(index + 2));
-    //std::cout << "Rear = " << mnRear.toString() << std::endl;
+                                                   mn.sliceExprEnd(index + 2));
     ans *= mnRear;
   }
-  //std::cout << "ans = " << ans.toString() << std::endl;
   ans *= pref;
-  //std::cout << "ans = " << ans.toString() << std::endl;
   return ans;
 }
 
-#endif  //QM_FERMI_OPERATORS_TEM_CPP
+#endif  //QM_FERMI_OPERATORS_TEM_HPP

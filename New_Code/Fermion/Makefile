@@ -39,4 +39,4 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(TEST_DIR)/%~
+	rm -rf $(TEST_DIR)/*~ $(SRC_DIR)/*~

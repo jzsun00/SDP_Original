@@ -1,4 +1,12 @@
-#include "../fermiOperators.hpp"
+/*
+  Jiazheng Sun
+  Updated: Jul 31, 2024
+*/
+
+#ifndef QM_FERMI_1D_LADDEROP_TEST_CPP
+#define QM_FERMI_1D_LADDEROP_TEST_CPP
+
+#include "../fermiOperators_Tem.hpp"
 
 using std::cout;
 using std::endl;
@@ -84,3 +92,5 @@ int main(void) {
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;
 }
+
+#endif  //QM_FERMI_1D_LADDEROP_TEST_CPP

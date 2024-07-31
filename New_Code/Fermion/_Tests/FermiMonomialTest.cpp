@@ -1,5 +1,14 @@
-#include "../fermiOperators.hpp"
+/*
+  Jiazheng Sun
+  Updated: Jul 31, 2024
+*/
 
+#ifndef QM_FERMI_MONOMIAL_TEST_CPP
+#define QM_FERMI_MONOMIAL_TEST_CPP
+
+#include "../fermiOperators_Tem.hpp"
+
+using std::complex;
 using std::cout;
 using std::endl;
 
@@ -75,18 +84,18 @@ int main(void) {
        << ".FindWrongorder() = " << mn2cp.findWrongOrder()
        << "), isNorm = " << mn2cp.isNorm() << endl;
   cout << "Slice: "
-       << "start to 1 " << mn2cp.sliceExprS(1).toString() << endl;
+       << "start to 1 " << mn2cp.sliceExprStart(1).toString() << endl;
   cout << "Slice: "
-       << "start to 2 " << mn2cp.sliceExprS(2).toString() << endl;
+       << "start to 2 " << mn2cp.sliceExprStart(2).toString() << endl;
   cout << "Slice: "
-       << "start to 3 " << mn2cp.sliceExprS(3).toString() << endl;
+       << "start to 3 " << mn2cp.sliceExprStart(3).toString() << endl;
   cout << "Slice: "
-       << "0 to end " << mn2cp.sliceExprE(0).toString() << endl;
+       << "0 to end " << mn2cp.sliceExprEnd(0).toString() << endl;
   cout << "Slice: "
-       << "1 to end " << mn2cp.sliceExprE(1).toString() << endl;
+       << "1 to end " << mn2cp.sliceExprEnd(1).toString() << endl;
   cout << "Slice: "
-       << "2 to end " << mn2cp.sliceExprE(2).toString() << endl;
-  FermiMonomial<Fermi1DLadderOp> test1(mn2cp.sliceExprS(2));
+       << "2 to end " << mn2cp.sliceExprEnd(2).toString() << endl;
+  FermiMonomial<Fermi1DLadderOp> test1(mn2cp.sliceExprStart(2));
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1(complex<double>(1, 0), test1);
   cout << "poly1 = " << poly1.toString() << endl;
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly2 = poly1;
@@ -104,3 +113,5 @@ int main(void) {
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;
 }
+
+#endif  //QM_FERMI_MONOMIAL_TEST_CPP

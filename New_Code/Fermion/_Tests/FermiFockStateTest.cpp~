@@ -1,7 +1,0 @@
-#include "../fermiStates.hpp"
-
-int main(void) {
-  /*Constructors tests*/
-  /*Overloaded operators tests*/
-  return EXIT_SUCCESS;
-}

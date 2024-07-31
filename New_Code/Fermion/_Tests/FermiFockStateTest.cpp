@@ -1,7 +1,16 @@
+/*
+  Jiazheng Sun
+  Updated: Jul 31, 2024
+*/
+
+#ifndef QM_FERMI_FOCK_STATE_TEST_CPP
+#define QM_FERMI_FOCK_STATE_TEST_CPP
+
 #include "../fermiStates.hpp"
 
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main(void) {
   /*Constructors tests*/
@@ -46,3 +55,5 @@ int main(void) {
   cout << "Tests pass!" << endl;
   return EXIT_SUCCESS;
 }
+
+#endif  //QM_FERMI_FOCK_STATE_TEST_CPP

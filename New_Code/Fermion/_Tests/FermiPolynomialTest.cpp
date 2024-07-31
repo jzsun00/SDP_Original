@@ -1,5 +1,14 @@
-#include "../fermiOperators.hpp"
+/*
+  Jiazheng Sun
+  Updated: Jul 31, 2024
+*/
 
+#ifndef QM_FERMI_POLYNOMIAL_TEST_CPP
+#define QM_FERMI_POLYNOMIAL_TEST_CPP
+
+#include "../fermiOperators_Tem.hpp"
+
+using std::complex;
 using std::cout;
 using std::endl;
 
@@ -69,3 +78,5 @@ int main(void) {
   cout << "poly1cp2 => " << poly1cp2.toString() << endl;
   return EXIT_SUCCESS;
 }
+
+#endif  //QM_FERMI_POLYNOMIAL_TEST_CPP

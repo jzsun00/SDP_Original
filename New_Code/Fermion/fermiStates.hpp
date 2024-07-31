@@ -1,20 +1,24 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
-
+  Updated: Jul 31, 2024
+  
+  Class:
+  FermiFockstate
+  FermiState
+  FermiBasis
+  
   Define Fock states, quantum states for Fermionic systems.
   Define the full basis for a Fermion lattice system.
 */
 
-#ifndef ORI_SDP_GS_FERMISTATES_HPP
-#define ORI_SDP_GS_FERMISTATES_HPP
+#ifndef QM_FERMI_STATES_HPP
+#define QM_FERMI_STATES_HPP
 
 #include <bitset>
 #include <cmath>
 #include <numeric>
 
-#include "../Basics/states.hpp"
-#include "../Basics/states_Tem.cpp"
+#include "../Basics/states_Tem.hpp"
 
 //----------------------------------------------------------------FermiFockState--------
 
@@ -57,4 +61,4 @@ class Fermi1DBasis : Basis<FermiFockState> {
   std::string toString();
 };
 
-#endif
+#endif  //QM_FERMI_STATES_HPP

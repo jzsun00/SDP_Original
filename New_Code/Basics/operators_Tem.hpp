@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 28, 2024
+  Updated: Jul 31, 2024
 
   Class Implementations:
   LadderOp<IndexType>
@@ -33,9 +33,11 @@ std::string LadderOp<IndexType>::toString() const {
 
 template<typename IndexType>
 LadderOp<IndexType> & LadderOp<IndexType>::operator=(const Operator<IndexType> & rhs) {
-  this->index = rhs.index;
-  this->isUnit = rhs.isUnit;
-  this->creatorF = rhs.creatorF;
+  if (this != &rhs) {
+    this->index = rhs.index;
+    this->isUnit = rhs.isUnit;
+    this->creatorF = rhs.creatorF;
+  }
   return *this;
 }
 
@@ -71,10 +73,12 @@ std::string SpinOp<IndexType>::toString() const {
 
 template<typename IndexType>
 SpinOp<IndexType> & SpinOp<IndexType>::operator=(const SpinOp<IndexType> & rhs) {
-  this->index = rhs.index;
-  this->isZ = rhs.isZ;
-  this->isPlus = rhs.isPlus;
-  this->isUnit = rhs.isUnit;
+  if (this != &rhs) {
+    this->index = rhs.index;
+    this->isZ = rhs.isZ;
+    this->isPlus = rhs.isPlus;
+    this->isUnit = rhs.isUnit;
+  }
   return *this;
 }
 
@@ -107,7 +111,9 @@ std::string Monomial<OpType>::toString() const {
 
 template<typename OpType>
 Monomial<OpType> & Monomial<OpType>::operator=(const Monomial<OpType> & rhs) {
-  Expr = rhs.Expr;
+  if (this != &rhs) {
+    Expr = rhs.Expr;
+  }
   return *this;
 }
 
@@ -164,7 +170,9 @@ std::string Polynomial<MonomialType>::toString() const {
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator=(
     Polynomial<MonomialType> const & rhs) {
-  Terms = rhs.Terms;
+  if (this != &rhs) {
+    Terms = rhs.Terms;
+  }
   return *this;
 }
 
