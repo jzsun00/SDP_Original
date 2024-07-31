@@ -9,7 +9,7 @@ OBJ_DIR := ./_Objs
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic
-LDFLAGS := #-lblas -llapack -lgfortran
+LDFLAGS := #-lopenblas -llapack -lgfortran
 
 # Source files
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
@@ -36,4 +36,4 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
 .PHONY: all clean
 
 clean:
-	rm -rf $(SRC_DIR)/*.cpp~ $(SRC_DIR)/*.hpp~ $(TEST_DIR)/*.cpp~
+	rm -rf $(SRC_DIR)/*~ $(TEST_DIR)/*~

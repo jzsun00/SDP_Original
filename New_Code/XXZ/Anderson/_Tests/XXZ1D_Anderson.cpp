@@ -1,7 +1,7 @@
 /*
   Jiazheng Sun
   Updated: Jul 30, 2024
-
+  
   Calculate Anderson bound of ground state energy of 1D XXZ model.
 */
 
@@ -23,15 +23,15 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 20;
+  size_t sites = 27;
   vector<double> Jz;
   //Jz.push_back(-1);
-  for (int i = 1; i < 25; i++) {
+  for (int i = -8; i < -1; i++) {
     Jz.push_back((double)i / 8.0);
   }
   cout << "Number of sites = " << sites << endl;
-  omp_set_num_threads(8);  //Multi-threading when generating matrices
-  vector<double> Energy;   //Store the results
+  omp_set_num_threads(12);  //Multi-threading when generating matrices
+  vector<double> Energy;    //Store the results
 
   for (size_t i = 0; i < Jz.size(); i++) {
     cout << "Jz = " << Jz[i] << endl << endl;
@@ -39,12 +39,12 @@ int main() {
     SpinHalfPolynomial1D poly = makePoly(sites, Jz[i]);
     SpinHalfBasis1D basis(sites);
     auto start_basis_init = std::chrono::high_resolution_clock::now();
-    basis.init(0);
+    basis.init(1);
     auto end_basis_init = std::chrono::high_resolution_clock::now();
     //std::cout << "Basis construction complete!" << std::endl;
     //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;
     size_t dim = basis.getSize();
-    //std::cout << "dim = " << dim << std::endl;
+    std::cout << "dim = " << dim << std::endl;
 
     /*Consruct sparse Hamiltonian.*/
     XXZSparseHamiltonian * ham = new XXZSparseHamiltonian(poly, sites, Jz[i]);
@@ -82,16 +82,16 @@ int main() {
         end_matrix_init - start_matrix_init);
     auto duration_solve =
         std::chrono::duration_cast<std::chrono::milliseconds>(end_solve - start_solve);
-    //cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
-    //     << endl;
-    //cout << "\nInitiating Matrix Running Time: " << duration_matrix_init.count() << " ms"
-    //     << endl;
-    //cout << "\nSolving Running Time: " << duration_solve.count() << " ms" << endl;
+    cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
+         << endl;
+    cout << "\nInitiating Matrix Running Time: " << duration_matrix_init.count() << " ms"
+         << endl;
+    cout << "\nSolving Running Time: " << duration_solve.count() << " ms" << endl;
 
     // Printing solution.
     Solution(A, dprob);
     double gs = dprob.Eigenvalue(0).real();
-    for (size_t i = 1; i <= 2; i++) {
+    for (size_t i = 1; i < 5; i++) {
       if (dprob.Eigenvalue(i).real() < gs) {
         gs = dprob.Eigenvalue(i).real();
       }
@@ -102,19 +102,22 @@ int main() {
   }
 
   // Print to data file.
-  std::string directory = "../_Data/";
-  std::string filename = "E0vsJz_N_" + std::to_string(sites - 2) + "_pos.txt";
+  std::string directory = "./_Data/";
+  std::string filename = directory + "E0vsJz_N_" + std::to_string(sites - 2) + "_neg.txt";
   std::ofstream outFile(filename);
   if (!outFile) {
-    std::cerr << "Error: Could not open file " << filename << std::endl;
+    throw std::runtime_error("Error: Could not open file " + filename);
   }
   outFile << "Jz"
-          << "\t"
+          << " "
           << "Energy" << std::endl;
   for (size_t i = 0; i < Jz.size(); ++i) {
-    outFile << Jz[i] << "\t" << Energy[i] << std::endl;
+    outFile << Jz[i] << " " << Energy[i] << std::endl;
   }
-  cout << "\nData successfully written in" << filename << endl;
+  cout << "\nData successfully written in File:\n" << filename << endl;
   outFile.close();
 
+  // Exit
+  cout << "EXIT SUCCESS" << endl;
+  return EXIT_SUCCESS;
 }  // main
