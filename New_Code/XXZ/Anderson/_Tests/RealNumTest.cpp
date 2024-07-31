@@ -10,10 +10,7 @@
 #define XXZ_1D_ANDERSON_REALNUM_TEST_CPP
 
 #include <chrono>
-#include <cstddef>
 #include <cstdio>
-#include <cstdlib>
-#include <vector>
 
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arlnsmat.h"
@@ -29,7 +26,7 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 18;
+  size_t sites = 27;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -42,7 +39,7 @@ int main() {
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
   SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
-  basis->init(-6);
+  basis->init(1);
   auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
   //std::cout << "Basis:" << std::endl << basis.toString() << std::endl;

@@ -3,6 +3,7 @@
   Updated: Jul 30, 2024
 
   Calculate Anderson bound of 1D XXZ model ground state energy.
+  Use full basis of quantum states without symmetry considerations.
   Use real number elements and symmetric matrix for higher performance.
 */
 
@@ -10,10 +11,7 @@
 #define XXZ_1D_ANDERSON_FULL_BASIS_TEST_CPP
 
 #include <chrono>
-#include <cstddef>
 #include <cstdio>
-#include <cstdlib>
-#include <vector>
 
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arlnsmat.h"
@@ -21,7 +19,6 @@
 #include "../include/arlssym.h"
 #include "../matrices/sym/lsmatrxa.h"
 #include "../matrices/sym/lsymsol.h"
-#include "omp.h"
 
 using std::cout;
 using std::endl;
@@ -29,27 +26,26 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 16;
+  size_t sites = 21;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
 
   /*Set threads for generating the sparse matrix.
     Use single thread for ARPACK++ since OpenBLAS works better at single thread.*/
-  omp_set_num_threads(12);
+  omp_set_num_threads(8);
 
   /*Construct polynomial and basis.*/
   SpinHalfPolynomial1D poly = makePoly(sites, Jz);
-  //cout << "poly = " << poly.toString() << endl;
   SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
   basis->init();
   auto end_basis_init = std::chrono::high_resolution_clock::now();
   std::cout << "Basis construction complete!" << std::endl;
   //std::cout << "Basis:" << std::endl << basis->toString() << std::endl;
-  std::cout << "toDecimal:" << (*basis)[0].toDecimal() << (*basis)[1].toDecimal()
-            << (*basis)[2].toDecimal() << endl;
-  size_t dim = basis->getSize();
+  //std::cout << "toDecimal:" << (*basis)[0].toDecimal() << (*basis)[1].toDecimal()
+  //          << (*basis)[2].toDecimal() << endl;
+  const size_t dim = basis->getSize();
   std::cout << "dim = " << dim << std::endl;
   auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
       end_basis_init - start_basis_init);
@@ -71,21 +67,18 @@ int main() {
 
   int nnz = ham->getNumNonZero();
   std::cout << "nnz = " << nnz << std::endl;
-  //std::cout << "irow = " << intVector_toString(ham->getIrow()) << endl;
-  //std::cout << "pcol = " << intVector_toString(ham->getPcol()) << endl;
-  //std::cout << "val = " << doubleVector_toString(ham->getNzVal()) << endl;
-
   vector<int> irowVec = ham->getIrow();
   vector<int> pcolVec = ham->getPcol();
   vector<double> valAVec = ham->getNzVal();
-  size_t valASize = valAVec.size();
+  const size_t valASize = valAVec.size();
   delete ham;
 
   //ARluNonSymMatrix<complex<double>, double> A(dim, nnz, valA, irow, pcol);
   ARluSymMatrix<double> A(dim, nnz, valAVec.data(), irowVec.data(), pcolVec.data());
 
   // Defining what we need: the 3 lowest eigenvalues of A.
-  ARluSymStdEig<double> dprob(3, A, "SA");
+  const size_t solutionNum = 3;
+  ARluSymStdEig<double> dprob(solutionNum, A, "SA");
   dprob.ChangeMaxit(1000);
 
   // Finding eigenvalues and eigenvectors.
@@ -94,10 +87,6 @@ int main() {
   auto end_solve = std::chrono::high_resolution_clock::now();
 
   // Record time.
-  //auto duration_basis_init = std::chrono::duration_cast<std::chrono::milliseconds>(
-  //    end_basis_init - start_basis_init);
-  //auto duration_matrix_init = std::chrono::duration_cast<std::chrono::milliseconds>(
-  //    end_matrix_init - start_matrix_init);
   auto duration_solve =
       std::chrono::duration_cast<std::chrono::milliseconds>(end_solve - start_solve);
   cout << "\nInitiating Basis Running Time: " << duration_basis_init.count() << " ms"
@@ -109,16 +98,17 @@ int main() {
   // Printing solution.
   Solution(A, dprob);
 
+  // Compute and print ground state energy.
   double gs = dprob.Eigenvalue(0);
-  for (size_t i = 1; i < 3; i++) {
+  for (size_t i = 1; i < solutionNum; i++) {
     if (dprob.Eigenvalue(i) < gs) {
       gs = dprob.Eigenvalue(i);
     }
   }
-
   gs /= (sites - 2);
   cout << "\nGround State Energy = " << gs << endl;
 
+  // Exit
   return EXIT_SUCCESS;
 }  // main
 
