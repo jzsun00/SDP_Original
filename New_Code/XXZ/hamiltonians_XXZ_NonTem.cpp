@@ -127,10 +127,11 @@ void XXZSparseRealHamiltonian::createFullBasisMatrix(const SpinHalfBasis1D & bas
   dim = basis.getSize();
   pcol.push_back(0);
   vector<SpinHalfState1D> midStates(dim);
-#pragma omp parallel  //Parallel compute all (poly * baseState)
+  omp_set_num_threads(12);
+#pragma omp parallel
   {
 #pragma omp for
-    for (size_t i = 0; i < dim; i++) {
+    for (size_t i = 0; i < dim; i++) {  //Parallel compute all (poly * baseState)
       midStates[i] = poly * basis[i];
     }
   }

@@ -22,7 +22,7 @@ HEADER_FILES := $(foreach dir,$(HEADER_DIRS),$(wildcard $(dir)/*.hpp))
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 
 # Object files
-OBJ_FILES := $(patsubst %.cpp,%.o,$(filter-out $(TEST_DIR)/%.cpp,$(SRC_FILES)))
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o,$(filter-out $(TEST_DIR)/%.cpp,$(SRC_FILES)))
 BASIC_OBJ_FILES := $(wildcard $(BASIC_OBJ_DIR)/*.o)
 SPIN_OBJ_FILES := $(wildcard $(SPIN_OBJ_DIR)/*.o)
 

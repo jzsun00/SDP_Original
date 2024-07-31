@@ -2,7 +2,7 @@
 
 # Directories
 SRC_DIR := .
-BASIC_DIR = ../Basics
+BASIC_DIR := ../Basics
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
 OBJ_DIR := ./_Objs

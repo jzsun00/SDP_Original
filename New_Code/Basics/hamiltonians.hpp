@@ -18,8 +18,6 @@
 #ifndef QM_HAMILTONIANS_HPP
 #define QM_HAMILTONIANS_HPP
 
-#include <cstddef>
-
 #include "./operators_Tem.hpp"
 #include "./states_Tem.hpp"
 

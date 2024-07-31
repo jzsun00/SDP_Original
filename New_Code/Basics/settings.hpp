@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
+  Updated: Jul 30, 2024
 
   Class:
   
@@ -14,8 +14,8 @@
   Define general settings that can be used for the entire project.
 */
 
-#ifndef ORI_SDP_GS_SETTINGS_HPP
-#define ORI_SDP_GS_SETTINGS_HPP
+#ifndef QM_SETTINGS_HPP
+#define QM_SETTINGS_HPP
 
 #include <algorithm>
 #include <chrono>
@@ -55,4 +55,4 @@ std::string complexVector_toString(const std::vector<std::complex<double> > & ve
 std::string complexMatrix_toString(
     const std::vector<std::vector<std::complex<double> > > & matrix);
 
-#endif  //ORI_SDP_GS_SETTINGS_HPP
+#endif  //QM_SETTINGS_HPP

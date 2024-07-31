@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 23, 2024
+  Updated: Jul 30, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
@@ -10,8 +10,8 @@
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
 */
 
-#ifndef ORI_SDP_GS_SETTINGS_NONTEM_CPP
-#define ORI_SDP_GS_SETTINGS_NONTEM_CPP
+#ifndef QM_SETTINGS_NONTEM_CPP
+#define QM_SETTINGS_NONTEM_CPP
 
 #include <sstream>
 
@@ -117,4 +117,4 @@ std::string complexMatrix_toString(const vector<vector<complex<double> > > & mat
   return ans;
 }
 
-#endif  //ORI_SDP_GS_SETTINGS_NONTEM_CPP
+#endif  //QM_SETTINGS_NONTEM_CPP

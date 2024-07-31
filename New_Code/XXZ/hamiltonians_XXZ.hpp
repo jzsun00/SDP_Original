@@ -18,6 +18,7 @@
 #include "../Basics/hamiltonians_Tem.hpp"
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
+#include "omp.h"
 
 //--------------------------------------------------------XXZSparseHamiltonian-----------
 
