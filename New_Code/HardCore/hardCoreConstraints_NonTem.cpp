@@ -1,13 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Apr 16, 2024
+  Updated: Jul 31, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
  */
 
-#ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
-#define ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
+#ifndef QM_HARDCORE_CONSTRAINTS_NONTEM_CPP
+#define QM_HARDCORE_CONSTRAINTS_NONTEM_CPP
 
 #include <fstream>
 #include <iostream>
@@ -575,4 +575,4 @@ void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
   }
 }
 
-#endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_NONTEM_CPP
+#endif  //QM_HARDCORE_CONSTRAINTS_NONTEM_CPP

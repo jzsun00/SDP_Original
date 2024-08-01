@@ -1,62 +1,59 @@
 /*
   Jiazheng Sun
-  Updated: Apr 16, 2024
+  Updated: Jul 31, 2024
 */
 
-#ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
-#define ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
+#ifndef QM_FERMI_CONSTRAINTS_HPP
+#define QM_FERMI_CONSTRAINTS_HPP
 
-#include "../Basics/constraints.hpp"
-#include "./hardCoreOperators.hpp"
-#include "./hardCoreSubspaces.hpp"
+#include "../Basics/constraints_Tem.hpp"
+#include "./fermiOperators_Tem.hpp"
+#include "./fermiSubspaces.hpp"
 
-//----------------------------------------------------------HardCore1DConsBaseSet--------
+//----------------------------------------------------------Fermi1DConsBaseSet--------
 
-class HardCore1DConsBaseSet
-    : public ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> {
+class Fermi1DConsBaseSet : public ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> {
  public:
-  HardCore1DConsBaseSet() : ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int>() {}
-  HardCore1DConsBaseSet(int start, int end, size_t order) :
-      ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int>(start, end, order) {}
-  HardCore1DConsBaseSet(ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) :
-      ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int>(rhs) {}
+  Fermi1DConsBaseSet() : ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>() {}
+  Fermi1DConsBaseSet(int start, int end, size_t order) :
+      ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>(start, end, order) {}
+  Fermi1DConsBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs) :
+      ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
   virtual void init();
-  ~HardCore1DConsBaseSet() {}
+  virtual ~Fermi1DConsBaseSet() {}
   virtual std::string toString();
 };
 
-//------------------------------------------------------------HardCore1DConsSet----------
+//------------------------------------------------------------Fermi1DConsSet----------
 
-class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int> {
+class Fermi1DConsSet : public ConsSet<FermiMonomial<Fermi1DLadderOp>, int> {
  public:
-  HardCore1DConsSet() : ConsSet<HardCoreMonomial<HardCore1DLadderOp>, int>() {
-    HardCore1DLadderOp unit(true);
+  Fermi1DConsSet() : ConsSet<FermiMonomial<Fermi1DLadderOp>, int>() {
+    Fermi1DLadderOp unit(true);
     OpSet.push_back(unit);
   }
+  virtual ~Fermi1DConsSet() {}
   virtual std::string toString();
-  virtual void addBaseSet(ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
-  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > getIJPoly(size_t i, size_t j);
+  virtual void addBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > getIJPoly(size_t i, size_t j);
 };
 
 //-------------------------------------------------------------Other Functions-----------
 
-void printMatrixHardCore1D(HardCore1DConsSet & constraints,
-                           HardCore1DOpBasis & basis,
-                           std::string fileName,
-                           vector<complex<double> > ham,
-                           vector<pair<size_t, size_t> > & pairs);
+void printMatrixFermi1D(Fermi1DConsSet & constraints,
+                        Fermi1DOpBasis & basis,
+                        std::string fileName,
+                        std::vector<std::complex<double> > ham,
+                        std::vector<std::pair<size_t, size_t> > & pairs);
 
-void printMatrixXX1D(size_t max, std::string fileName);
+void printSparseMatrixFermi1D(Fermi1DConsSet & constraints,
+                              Fermi1DOpBasis & basis,
+                              std::string fileName,
+                              std::vector<std::complex<double> > ham,
+                              std::vector<std::pair<size_t, size_t> > & pairs);
 
-void printSparseMatrixHardCore1D(HardCore1DConsSet & constraints,
-                                 HardCore1DOpBasis & basis,
-                                 std::string fileName,
-                                 vector<complex<double> > ham,
-                                 vector<pair<size_t, size_t> > & pairs);
+void FermiTransMatToReIm(
+    std::vector<std::vector<std::vector<std::complex<double> > > > & matrices,
+    std::vector<std::pair<size_t, size_t> > & pairs);
 
-void printSparseMatrixXX1D(size_t max, std::string fileName);
-
-void transMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
-                    vector<pair<size_t, size_t> > & pairs);
-
-#endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
+#endif  //QM_FERMI_CONSTRAINTS_HPP

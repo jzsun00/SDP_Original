@@ -1,43 +1,49 @@
 # Makefile
 
 # Directories
-SRC_DIR := ../../Basics ../../HardCore .
+SRC_DIR := .
+BASIC_DIR := ../../Basics
+FERMI_DIR := ../../Fermion
+HARDCORE_DIR := ../../HardCore
+HEADER_DIRS = . ../../Basics ../../Fermion ../../HardCore
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
+OBJ_DIR := ./_Objs
+BASIC_OBJ_DIR := ../../Basics/_Objs
+FERMI_OBJ_DIR := ../../Fermion/_Objs
+HARDCORE_OBJ_DIR := ../../HardCore/_Objs
 
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++14 -Wall -Wextra
-#LDFLAGS := -lsuperlu  -larpack -lblas -llapack -lgfortran
-LDFLAGS := #-lblas -llapack -lgfortran
+CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic
+LDFLAGS := #-lsuperlu  -larpack -lopenblas -llapack -lgfortran
 
 # Source files
 SRC_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.cpp))
-HEADER_FILES := $(foreach dir,$(SRC_DIR),$(wildcard $(dir)/*.hpp))
-#SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
-#HEADER_FILES := $(wildcard $(SRC_DIR)/*.hpp)
+HEADER_FILES := $(foreach dir,$(HEADER_DIRS),$(wildcard $(dir)/*.hpp))
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 
 # Object files
-#OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(SRC_DIR)/%.o, $(SRC_FILES))
-OBJ_FILES := $(patsubst %.cpp,%.o,$(filter-out $(TEST_DIR)/%.cpp,$(SRC_FILES)))
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+BASIC_OBJ_FILES := $(wildcard $(BASIC_OBJ_DIR)/*.o)
+FERMI_OBJ_FILES := $(wildcard $(FERMI_OBJ_DIR)/*.o)
+HARDCORE_OBJ_FILES := $(wildcard $(HARDCORE_OBJ_DIR)/*.o)
+
 # Executables
-EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%, $(TEST_FILES))
+EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%.exe, $(TEST_FILES))
 
 # Targets
 .PHONY: all clean
 
-all: $(OBJ_FILES) $(EXE_FILES)
+all: $(OBJ_FILES) $(EXE_FILES) clean
 
-$(EXE_DIR)/%: $(TEST_DIR)/%.cpp $(OBJ_FILES)
+$(EXE_DIR)/%.exe: $(TEST_DIR)/%.cpp $(OBJ_FILES) $(BASIC_OBJ_FILES) $(FERMI_OBJ_FILES) $(HARDCORE_OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-#$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
-#	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-%.o: %.cpp $(HEADER_FILES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER_FILES)
+	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(EXE_DIR) $(SRC_DIR)/*.o
+	rm -rf $(TEST_DIR)/*~ $(SRC_DIR)/*~

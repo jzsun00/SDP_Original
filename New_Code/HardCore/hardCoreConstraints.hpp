@@ -1,10 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Apr 16, 2024
+  Updated: Jul 31, 2024
 */
 
-#ifndef ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
-#define ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
+#ifndef QM_HARDCORE_CONSTRAINTS_HPP
+#define QM_HARDCORE_CONSTRAINTS_HPP
 
 #include "../Basics/constraints_Tem.hpp"
 #include "./hardCoreOperators_Tem.hpp"
@@ -60,4 +60,4 @@ void transMatToReIm(
     std::vector<std::vector<std::vector<std::complex<double> > > > & matrices,
     std::vector<std::pair<size_t, size_t> > & pairs);
 
-#endif  //ORI_SDP_GS_HARDCORECONSTRAINTS_HPP
+#endif  //QM_HARDCORE_CONSTRAINTS_HPP

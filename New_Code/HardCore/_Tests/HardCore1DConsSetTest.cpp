@@ -25,6 +25,6 @@ int main(void) {
   basis.addSubspace(subBasis2);
   cout << "Basis:" << endl;
   cout << basis.toString() << endl;
-  printMatrixHardCore1D(fullSet, basis);
+  //printMatrixHardCore1D(fullSet, basis);
   cout << "Tests pass!" << endl;
 }

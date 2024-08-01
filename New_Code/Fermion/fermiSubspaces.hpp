@@ -1,55 +1,60 @@
 /*
   Jiazheng Sun
   Updated: Jul 31, 2024
+  
+  Class:
+  Fermi1DOpSubBasis
+  Fermi1DOpBasis
+  
+  Function:
+  vector<pair<size_t, size_t> > findHermPairs(const Fermi1DOpBasis & basis)
+  string printHermPairs(const vector<pair<size_t, size_t> > & pairs)
+  void transVecToReIm(vector<complex<double> > & vec, vector<pair<size_t, size_t> > & pairs)
 */
 
 #ifndef QM_FERMI_SUBSPACES_HPP
 #define QM_FERMI_SUBSPACES_HPP
 
-#include <set>
-
 #include "../Basics/subspaces_Tem.hpp"
 #include "./fermiOperators_Tem.hpp"
 
-//-------------------------------------------------------------HardCore1DOpSubBasis------
+//----------------------------------------------------------Fermi1DOpSubBasis------------
 
-class HardCore1DOpSubBasis
-    : public OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> {
+class Fermi1DOpSubBasis : public OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int> {
  public:
-  HardCore1DOpSubBasis() : OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {}
-  HardCore1DOpSubBasis(int start, int end, size_t order) :
-      OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>(start, end, order) {}
-  HardCore1DOpSubBasis(OpSubBasis const & rhs) :
-      OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>(rhs) {}
+  Fermi1DOpSubBasis() : OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>() {}
+  Fermi1DOpSubBasis(int start, int end, size_t order) :
+      OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>(start, end, order) {}
+  Fermi1DOpSubBasis(const OpSubBasis & rhs) :
+      OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
   virtual void init();
-  ~HardCore1DOpSubBasis() {}
+  virtual ~Fermi1DOpSubBasis() {}
+  /*Get information of the operator sub-basis.*/
   virtual std::string toString();
-  bool isNew(HardCoreMonomial<HardCore1DLadderOp> const & mn);
+  bool isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) const;
 };
 
-//---------------------------------------------------------------HardCore1DOpBasis-------
+//-----------------------------------------------------------Fermi1DOpBasis--------------
 
-class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int> {
+class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
  public:
-  HardCore1DOpBasis() : OpBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {
-    HardCore1DLadderOp unit(true);
+  Fermi1DOpBasis() : OpBasis<FermiMonomial<Fermi1DLadderOp>, int>() {
+    Fermi1DLadderOp unit(true);
     Basis.push_back(unit);
   }
-  ~HardCore1DOpBasis() {}
-  HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
+  virtual ~Fermi1DOpBasis() {}
+  FermiMonomial<Fermi1DLadderOp> operator[](size_t num) { return Basis[num]; }
+  /*Get information of the operator basis.*/
   virtual std::string toString();
-  virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
-  vector<complex<double> > projPolyInf(
-      HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly);
+  virtual void addSubspace(const OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
+  std::vector<std::complex<double> > projPolyInf(
+      FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly);
 };
 
-//--------------------------------------------------------------Other Functions----------
+//-----------------------------------------------------------Other Functions-------------
 
-vector<pair<size_t, size_t> > findHermPairs(HardCore1DOpBasis & basis);
+std::vector<std::pair<size_t, size_t> > FermiFindHermPairs(const Fermi1DOpBasis & basis);
 
-std::string printHermPairs(vector<pair<size_t, size_t> > & pairs);
-
-void transVecToReIm(vector<complex<double> > & vec,
-                    vector<pair<size_t, size_t> > & pairs);
+std::string FermiPrintHermPairs(const std::vector<std::pair<size_t, size_t> > & pairs);
 
 #endif  //QM_FERMI_SUBSPACES_HPP

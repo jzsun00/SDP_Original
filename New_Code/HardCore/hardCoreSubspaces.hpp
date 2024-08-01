@@ -39,7 +39,8 @@ class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, i
   ~HardCore1DOpBasis() {}
   HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
   virtual std::string toString();
-  virtual void addSubspace(OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
+  virtual void addSubspace(
+      const OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
   std::vector<std::complex<double> > projPolyInf(
       HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly);
 };

@@ -142,7 +142,7 @@ std::string HardCore1DOpBasis::toString() {
 }
 
 void HardCore1DOpBasis::addSubspace(
-    OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
+    const OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
   vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getFullBasis();
   Basis.insert(Basis.end(), sub.begin(), sub.end());
 }

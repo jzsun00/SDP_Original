@@ -1,7 +1,9 @@
 #include "../hardCoreSubspaces.hpp"
 
+using std::complex;
 using std::cout;
 using std::endl;
+using std::vector;
 
 int main(void) {
   HardCore1DOpSubBasis basis1(0, 2, 2);

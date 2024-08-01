@@ -65,7 +65,7 @@ class ConsSet {
   //virtual Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
 };
 
-//-------------------------------------------------------------Other Functions-----------
+//-------------------------------------------------------Other Functions-----------------
 
 template<typename MonomialType, typename IndexType>
 void printMatrix(ConsSet<MonomialType, IndexType> & constraints,

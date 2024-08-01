@@ -11,6 +11,8 @@
 #ifndef QM_FERMI_OPERATORS_TEM_HPP
 #define QM_FERMI_OPERATORS_TEM_HPP
 
+#include <cstddef>
+
 #include "fermiOperators.hpp"
 
 //------------------------------------------------------FermiLadderOp<IndexType>---------
@@ -40,6 +42,11 @@ FermiMonomial<OpType> & FermiMonomial<OpType>::operator=(
     this->Expr = rhs.Expr;
   }
   return *this;
+}
+
+template<typename OpType>
+void FermiMonomial<OpType>::reverse() {
+  std::reverse(this->Expr.begin(), this->Expr.end());
 }
 
 template<typename OpType>
@@ -73,6 +80,25 @@ template<typename OpType>
 FermiMonomial<OpType> FermiMonomial<OpType>::sliceExprEnd(size_t index) const {
   return FermiMonomial<OpType>(
       std::vector<OpType>(this->Expr.begin() + index, this->Expr.end()));
+}
+
+template<typename OpType>
+void FermiMonomial<OpType>::moveIndex(int offset) {
+  size_t len = this->getSize();
+  for (size_t i = 0; i < len; i++) {
+    this->Expr[i].moveIndex(offset);
+  }
+}
+
+template<typename OpType>
+bool FermiMonomial<OpType>::equiv(const FermiMonomial<OpType> & rhs) const {
+  if (this->getSize() != rhs.getSize()) {
+    return false;
+  }
+  FermiMonomial<OpType> rhsCopy(rhs);
+  int offset = -rhs[0].getIndex() + this->Expr[0].getIndex();
+  rhsCopy.moveIndex(offset);
+  return (*this) == rhsCopy;
 }
 
 //-------------------------------------------------FermiPolynomial<MonomialType>---------

@@ -52,7 +52,7 @@ Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, s
 }
 */
 
-//-------------------------------------------------------------Other Functions-----------
+//-------------------------------------------------------Other Functions-----------------
 
 template<typename MonomialType, typename IndexType>
 void printMatrix(ConsSet<MonomialType, IndexType> & constrains,

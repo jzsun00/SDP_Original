@@ -53,6 +53,7 @@ class Fermi1DLadderOp : public FermiLadderOp<int> {
     annihilation operators ascending, creation operators descending;
     if not same type, creator is always larger.*/
   virtual bool operator<(const FermiLadderOp<int> & rhs) const;
+  void moveIndex(int i) { this->index += i; }
 };
 
 //---------------------------------------------------------FermiMonomial<OpType>---------
@@ -71,10 +72,14 @@ class FermiMonomial : public Monomial<OpType> {
   /*Tools for normal order.
     Normal order: all creation operators on the right,
     annihilation operators index ascending, creation operators index descending.*/
+  void reverse();
   int findWrongOrder() const;
   bool isNorm() const;
   FermiMonomial<OpType> sliceExprStart(size_t index) const;
   FermiMonomial<OpType> sliceExprEnd(size_t index) const;
+  /*Tools for infinite system.*/
+  void moveIndex(int i);
+  bool equiv(const FermiMonomial<OpType> & rhs) const;
 };
 
 //-------------------------------------------------FermiPolynomial<MonomialType>---------
