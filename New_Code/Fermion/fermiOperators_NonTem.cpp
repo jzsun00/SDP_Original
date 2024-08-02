@@ -9,7 +9,7 @@
 #ifndef QM_FERMI_OPERATORS_NONTEM_CPP
 #define QM_FERMI_OPERATORS_NONTEM_CPP
 
-#include "fermiOperators.hpp"
+#include "./fermiOperators.hpp"
 
 //------------------------------------------------------------Fermi1DLadderOp------------
 

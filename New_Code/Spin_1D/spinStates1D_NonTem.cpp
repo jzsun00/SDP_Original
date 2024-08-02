@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 29, 2024
+  Updated: Aug 2, 2024
   
   Class Implementations:
   SpinHalfBaseState1D
