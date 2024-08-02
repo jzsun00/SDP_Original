@@ -3,15 +3,19 @@
 # Directories
 SRC_DIR := .
 BASIC_DIR := ../../Basics
+SPIN_DIR := ../../Spin_1D
 FERMI_DIR := ../../Fermion
 HARDCORE_DIR := ../../HardCore
-HEADER_DIRS = . ../../Basics ../../Fermion ../../HardCore
+XXZ_DIR := ..
+HEADER_DIRS = . .. ../../Basics ../../Spin_1D ../../Fermion ../../HardCore
 TEST_DIR := ./_Tests
 EXE_DIR := ./_Exes
 OBJ_DIR := ./_Objs
 BASIC_OBJ_DIR := ../../Basics/_Objs
+SPIN_OBJ_DIR := ../../Spin_1D/_Objs
 FERMI_OBJ_DIR := ../../Fermion/_Objs
 HARDCORE_OBJ_DIR := ../../HardCore/_Objs
+XXZ_OBJ_DIR := ../_Objs
 
 # Compiler and flags
 CXX := g++
@@ -26,8 +30,10 @@ TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 # Object files
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
 BASIC_OBJ_FILES := $(wildcard $(BASIC_OBJ_DIR)/*.o)
+SPIN_OBJ_FILES := $(wildcard $(SPIN_OBJ_DIR)/*.o)
 FERMI_OBJ_FILES := $(wildcard $(FERMI_OBJ_DIR)/*.o)
 HARDCORE_OBJ_FILES := $(wildcard $(HARDCORE_OBJ_DIR)/*.o)
+XXZ_OBJ_FILES := $(wildcard $(XXZ_OBJ_DIR)/*.o)
 
 # Executables
 EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%.exe, $(TEST_FILES))
@@ -37,7 +43,7 @@ EXE_FILES := $(patsubst $(TEST_DIR)/%.cpp, $(EXE_DIR)/%.exe, $(TEST_FILES))
 
 all: $(OBJ_FILES) $(EXE_FILES) clean
 
-$(EXE_DIR)/%.exe: $(TEST_DIR)/%.cpp $(OBJ_FILES) $(BASIC_OBJ_FILES) $(FERMI_OBJ_FILES) $(HARDCORE_OBJ_FILES)
+$(EXE_DIR)/%.exe: $(TEST_DIR)/%.cpp $(OBJ_FILES) $(BASIC_OBJ_FILES) $(SPIN_OBJ_FILES) $(FERMI_OBJ_FILES) $(HARDCORE_OBJ_FILES) $(XXZ_OBJ_FILES)
 	@mkdir -p $(EXE_DIR)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 

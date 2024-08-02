@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 2, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.

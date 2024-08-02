@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 2, 2024
 */
 
 #ifndef QM_FERMI_CONSTRAINTS_HPP

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 2, 2024
   
   Class:
   Fermi1DOpSubBasis
@@ -53,8 +53,11 @@ class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
 
 //-----------------------------------------------------------Other Functions-------------
 
-std::vector<std::pair<size_t, size_t> > FermiFindHermPairs(const Fermi1DOpBasis & basis);
+std::vector<std::pair<size_t, size_t> > FermiFindHermPairs(Fermi1DOpBasis & basis);
 
-std::string FermiPrintHermPairs(const std::vector<std::pair<size_t, size_t> > & pairs);
+std::string FermiPrintHermPairs(std::vector<std::pair<size_t, size_t> > & pairs);
+
+void FermiTransVecToReIm(std::vector<std::complex<double> > & vec,
+                         std::vector<std::pair<size_t, size_t> > & pairs);
 
 #endif  //QM_FERMI_SUBSPACES_HPP

@@ -217,4 +217,14 @@ std::string FermiPrintHermPairs(vector<pair<size_t, size_t> > & pairs) {
   return ans;
 }
 
+void FermiTransVecToReIm(std::vector<std::complex<double> > & vec,
+                         std::vector<std::pair<size_t, size_t> > & pairs) {
+  for (size_t i = 0; i < pairs.size(); i++) {
+    complex<double> ori1 = vec[pairs[i].first];
+    complex<double> ori2 = vec[pairs[i].second];
+    vec[pairs[i].first] = ori1 + ori2;
+    vec[pairs[i].second] = complex<double>(0, 1.0) * (ori1 - ori2);
+  }
+}
+
 #endif  //QM_FERMI_SUBSPACES_NONTEM_CPP

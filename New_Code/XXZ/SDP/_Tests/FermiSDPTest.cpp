@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 2, 2024
 */
 
 #include "../../../Fermion/fermiConstraints.hpp"
@@ -66,7 +66,7 @@ int main(void) {
   std::string fileNameS = "./XXZ_data/N_" + std::to_string(sites) + ".dat-s";
   cout << "\nNow start writing data files" << endl;
   //printMatrixHardCore1D(fullSet, basis, fileName, ham, pairs);
-  printSparseFermi1D(fullSet, basis, fileNameS, ham, pairs);
+  printSparseMatrixFermi1D(fullSet, basis, fileNameS, ham, pairs);
   /////////////////////////////////////////////////////
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;
