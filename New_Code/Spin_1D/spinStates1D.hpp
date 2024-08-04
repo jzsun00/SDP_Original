@@ -32,7 +32,7 @@ class SpinHalfBaseState1D : public SpinBaseState<bool> {
   SpinHalfBaseState1D() : SpinBaseState() {}
   SpinHalfBaseState1D(size_t N) : SpinBaseState(std::vector<bool>(N, false)) {}
   SpinHalfBaseState1D(const std::vector<bool> & input) : SpinBaseState(input) {}
-  SpinHalfBaseState1D(const SpinBaseState & rhs) : SpinBaseState(rhs) {}
+  SpinHalfBaseState1D(const SpinHalfBaseState1D & rhs) : SpinBaseState(rhs) {}
   virtual ~SpinHalfBaseState1D() {}
   /*Get information of the 1D spin-1/2 base state.*/
   virtual std::string numToString(bool num) const { return std::to_string(num); }

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 30, 2024
+  Updated: Aug 2, 2024
 
   Class:
   SpinHalfOp1D
@@ -31,6 +31,7 @@ class SpinHalfOp1D : public SpinOp<int> {
   /*Get information of the spin operator.*/
   virtual std::string indexToString() const { return std::to_string(index); }
   /*Overload operators.*/
+  SpinHalfOp1D & operator=(const SpinHalfOp1D & rhs);
   SpinHalfState1D operator*(const SpinHalfBaseState1D & rhs) const;
   SpinHalfState1D operator*(const SpinHalfState1D & rhs) const;
 };
@@ -44,8 +45,9 @@ class SpinHalfMonomial1D : public Monomial<SpinHalfOp1D> {
   SpinHalfMonomial1D(SpinHalfMonomial1D const & rhs) : Monomial<SpinHalfOp1D>(rhs) {}
   ~SpinHalfMonomial1D() {}
   /*Overload operators.*/
-  SpinHalfState1D operator*(SpinHalfBaseState1D const & rhs) const;
-  SpinHalfState1D operator*(SpinHalfState1D const & rhs) const;
+  SpinHalfMonomial1D & operator=(const SpinHalfMonomial1D & rhs);
+  SpinHalfState1D operator*(const SpinHalfBaseState1D & rhs) const;
+  SpinHalfState1D operator*(const SpinHalfState1D & rhs) const;
 };
 
 //----------------------------------------------------------SpinHalfPolynomial1D---------
@@ -53,9 +55,9 @@ class SpinHalfMonomial1D : public Monomial<SpinHalfOp1D> {
 class SpinHalfPolynomial1D : public Polynomial<SpinHalfMonomial1D> {
  public:
   SpinHalfPolynomial1D() : Polynomial<SpinHalfMonomial1D>() {}
-  SpinHalfPolynomial1D(SpinHalfMonomial1D const & mn) :
+  SpinHalfPolynomial1D(const SpinHalfMonomial1D & mn) :
       Polynomial<SpinHalfMonomial1D>(mn) {}
-  SpinHalfPolynomial1D(Polynomial<SpinHalfMonomial1D> const & rhs) :
+  SpinHalfPolynomial1D(const SpinHalfPolynomial1D & rhs) :
       Polynomial<SpinHalfMonomial1D>(rhs) {}
   ~SpinHalfPolynomial1D() {}
   /*Overload operators.*/

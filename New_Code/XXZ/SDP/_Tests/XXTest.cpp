@@ -5,7 +5,7 @@
 
 #include "../../../HardCore/hardCoreConstraints.hpp"
 #include "../../../HardCore/hardCoreSubspaces.hpp"
-#include "../hamiltonians_XXZ.hpp"
+#include "../../hamiltonians_XXZ.hpp"
 
 using std::cout;
 using std::endl;

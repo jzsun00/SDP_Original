@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 3, 2024
   
   Class:
   XXZSparseHamiltonian
@@ -17,6 +17,7 @@
 
 #include "../Basics/hamiltonians_Tem.hpp"
 #include "../Fermion/fermiOperators_Tem.hpp"
+#include "../HardCore/hardCoreOperators_Tem.hpp"
 #include "../Spin_1D/spinOperators1D.hpp"
 #include "../Spin_1D/spinStates1D.hpp"
 #include "omp.h"
@@ -89,11 +90,18 @@ class XXZFullHamiltonian
 
 //----------------------------------------------------------------Other Functions--------
 
-SpinHalfPolynomial1D makePoly(size_t sites, double Jz);
+SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz);
 
 FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
                                                                int end,
                                                                double Jz);
+
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
+                                                                  int end,
+                                                                  double Jz);
+
+HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makeHardCorePoly(size_t sites,
+                                                                           double Jz);
 
 SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs);
 

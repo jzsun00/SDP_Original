@@ -1,6 +1,6 @@
 #include "../../../HardCore/hardCoreConstraints.hpp"
 #include "../../../HardCore/hardCoreSubspaces.hpp"
-#include "../hamiltonians_XXZ.hpp"
+#include "../../hamiltonians_XXZ.hpp"
 
 using std::complex;
 using std::cout;
@@ -11,7 +11,8 @@ using std::vector;
 int main(void) {
   size_t sites = 48;
   double Jz = 0;
-  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 = makePoly(sites, Jz);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 =
+      makeHardCorePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
   poly1.normalize();

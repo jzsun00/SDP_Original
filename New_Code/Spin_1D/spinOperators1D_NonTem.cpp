@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 30, 2024
+  Updated: Aug 2, 2024
 
   Class Implementations:
   SpinHalfOp1D
@@ -18,6 +18,16 @@ using std::pair;
 using std::vector;
 
 //--------------------------------------------------------------SpinHalfOp1D-------------
+
+SpinHalfOp1D & SpinHalfOp1D::operator=(const SpinHalfOp1D & rhs) {
+  if (this != &rhs) {
+    this->index = rhs.index;
+    this->isZ = rhs.isZ;
+    this->isPlus = rhs.isPlus;
+    this->isUnit = rhs.isUnit;
+  }
+  return *this;
+}
 
 SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfBaseState1D const & rhs) const {
   if (isZ) {
@@ -61,6 +71,13 @@ SpinHalfState1D SpinHalfOp1D::operator*(SpinHalfState1D const & rhs) const {
 
 //-----------------------------------------------------------SpinHalfMonomial1D----------
 
+SpinHalfMonomial1D & SpinHalfMonomial1D::operator=(const SpinHalfMonomial1D & rhs) {
+  if (this != &rhs) {
+    this->Expr = rhs.Expr;
+  }
+  return *this;
+}
+
 SpinHalfState1D SpinHalfMonomial1D::operator*(SpinHalfBaseState1D const & rhs) const {
   SpinHalfState1D ans(rhs);
   for (vector<SpinHalfOp1D>::const_iterator it = Expr.begin(); it != Expr.end(); ++it) {
@@ -80,7 +97,9 @@ SpinHalfState1D SpinHalfMonomial1D::operator*(SpinHalfState1D const & rhs) const
 //----------------------------------------------------------SpinHalfPolynomial1D---------
 
 SpinHalfPolynomial1D & SpinHalfPolynomial1D::operator=(SpinHalfPolynomial1D const & rhs) {
-  Terms = rhs.Terms;
+  if (this != &rhs) {
+    this->Terms = rhs.Terms;
+  }
   return *this;
 }
 

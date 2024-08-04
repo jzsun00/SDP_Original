@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 2, 2024
+  Updated: Aug 3, 2024
 
   Class:
   FermiLadderOp<IndexType>

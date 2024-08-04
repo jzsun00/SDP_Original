@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 3, 2024
   
   Class Implementations:
   FermiLadderOp<IndexType>
@@ -154,14 +154,15 @@ void FermiPolynomial<MonomialType>::normalize() {
 }
 
 template<typename MonomialType>
-bool isNonNorm(std::pair<std::complex<double>, MonomialType> term) {
+bool FermiSsNonNorm(std::pair<std::complex<double>, MonomialType> term) {
   return !(term.second.isNorm());
 }
 
 template<typename MonomialType>
 void FermiPolynomial<MonomialType>::eraseNonNorm() {
   this->Terms.erase(
-      std::remove_if(this->Terms.begin(), this->Terms.end(), isNonNorm<MonomialType>),
+      std::remove_if(
+          this->Terms.begin(), this->Terms.end(), FermiSsNonNorm<MonomialType>),
       this->Terms.end());
 }
 
