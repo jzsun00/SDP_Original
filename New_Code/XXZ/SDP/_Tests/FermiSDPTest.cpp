@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 5, 2024
   
   Use spinless Fermion formalism to compute ground state energy of 1D XXZ Model.
 */
@@ -22,14 +22,14 @@ int main(void) {
   cout << "\n1D XXZ Model Test: SDP Method" << endl << endl;
 
   /*Set number of sites and Jz.*/
-  size_t sites1 = 20;  //First order
-  size_t sites2 = 0;   //Second order
-  double Jz = 0;
+  size_t sites1 = 10;  //First order
+  size_t sites2 = 10;  //Second order
+  double Jz = 0.5;
   cout << "sites1 = " << sites1 << "\nsites2 = " << sites2 << "\nJz = " << Jz << endl;
 
   /*Construct Hamiltonian and convert to normal order.*/
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1 =
-      makeFermiPolyPBC(0, sites1 - 1, Jz);
+      makeFermiPoly(-2, sites1 + 2, Jz);
   poly1.normalize();
   //cout << "H_XXZ = " << poly1.toString() << endl;
 

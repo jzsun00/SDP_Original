@@ -1,10 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Aug 2, 2024
-
+  Updated: Aug 4, 2024
+  
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
- */
+*/
 
 #ifndef QM_FERMI_CONSTRAINTS_NONTEM_CPP
 #define QM_FERMI_CONSTRAINTS_NONTEM_CPP
