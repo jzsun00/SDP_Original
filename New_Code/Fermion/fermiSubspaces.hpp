@@ -11,14 +11,11 @@
   string printHermPairs(const vector<pair<size_t, size_t> > & pairs)
   void transVecToReIm(vector<complex<double> > & vec, vector<pair<size_t, size_t> > & pairs)
   
-  Define basis for Fermi Operators.
+  Define basis and sub-basis for Fermi Operators.
 */
 
 #ifndef QM_FERMI_SUBSPACES_HPP
 #define QM_FERMI_SUBSPACES_HPP
-
-#include <cstddef>
-#include <unordered_map>
 
 #include "../Basics/subspaces_Tem.hpp"
 #include "./fermiOperators.hpp"
@@ -70,11 +67,11 @@ class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
 
 //-----------------------------------------------------------Other Functions-------------
 
-std::vector<std::pair<size_t, size_t> > FermiFindHermPairs(Fermi1DOpBasis & basis);
+std::vector<std::pair<size_t, size_t> > FermiFindHermPairs(const Fermi1DOpBasis & basis);
 
-std::string FermiPrintHermPairs(std::vector<std::pair<size_t, size_t> > & pairs);
+std::string FermiPrintHermPairs(const std::vector<std::pair<size_t, size_t> > & pairs);
 
 void FermiTransVecToReIm(std::vector<std::complex<double> > & vec,
-                         std::vector<std::pair<size_t, size_t> > & pairs);
+                         const std::vector<std::pair<size_t, size_t> > & pairs);
 
 #endif  //QM_FERMI_SUBSPACES_HPP

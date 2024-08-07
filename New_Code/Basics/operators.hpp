@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
 
   Class:
   Operator<IndexType>
@@ -174,7 +174,7 @@ class Polynomial {
   std::string toString() const;
   /*Overload operators.*/
   Polynomial & operator=(const Polynomial & rhs);
-  bool operator==(const Polynomial & rhs) const { return Terms == rhs.Terms; }
+  virtual bool operator==(const Polynomial & rhs) const { return Terms == rhs.Terms; }
   TermType operator[](size_t i) const { return Terms[i]; }
   Polynomial & operator+=(const MonomialType & rhs);
   Polynomial & operator+=(const TermType & rhs);

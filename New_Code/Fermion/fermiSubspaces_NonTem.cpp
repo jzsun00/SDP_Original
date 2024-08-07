@@ -222,38 +222,29 @@ std::vector<size_t> Fermi1DOpBasis::projPolyFinite(
 
 //--------------------------------------------------------------Other Functions----------
 
-vector<pair<size_t, size_t> > FermiFindHermPairs(Fermi1DOpBasis & basis) {
-  set<size_t> addedIndex;
+vector<pair<size_t, size_t> > FermiFindHermPairs(const Fermi1DOpBasis & basis) {
+  set<size_t> addedIndex;  //Index already scanned or added
   vector<pair<size_t, size_t> > ans;
-  for (size_t index = 1; index < basis.getLength(); index++) {
-    if (addedIndex.find(index) != addedIndex.end()) {
+  size_t len = basis.getLength();
+  for (size_t index = 0; index < len; index++) {
+    if (addedIndex.find(index) != addedIndex.end()) {  //Already scanned index
       continue;
     }
     addedIndex.insert(index);
     FermiMonomial<Fermi1DLadderOp> current = basis[index];
     FermiMonomial<Fermi1DLadderOp> currentCopy(current);
     currentCopy.herm();
-    if (currentCopy == current) {
+    if (currentCopy == current) {  //current is Hermitian
       continue;
     }
-    FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > PolyCurrent(current);
-    FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > PolyCurrentCopy(currentCopy);
-    PolyCurrentCopy.normalOrder();
-    if (PolyCurrent == PolyCurrentCopy) {
-      continue;
-    }
-    for (size_t j = index; j < basis.getLength(); j++) {
-      FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > PolyBasis(basis[j]);
-      if (PolyCurrentCopy == PolyBasis) {
-        addedIndex.insert(j);
-        ans.push_back(pair<size_t, size_t>(index, j));
-      }
-    }
+    size_t hermIndex = basis.findIndex(currentCopy);  //Index of current.herm()
+    addedIndex.insert(hermIndex);
+    ans.push_back(pair<size_t, size_t>(index, hermIndex));
   }
   return ans;
 }
 
-std::string FermiPrintHermPairs(vector<pair<size_t, size_t> > & pairs) {
+std::string FermiPrintHermPairs(const vector<pair<size_t, size_t> > & pairs) {
   std::string ans = "";
   for (size_t i = 0; i < pairs.size(); i++) {
     ans += std::to_string(i + 1);
@@ -267,7 +258,7 @@ std::string FermiPrintHermPairs(vector<pair<size_t, size_t> > & pairs) {
 }
 
 void FermiTransVecToReIm(std::vector<std::complex<double> > & vec,
-                         std::vector<std::pair<size_t, size_t> > & pairs) {
+                         const std::vector<std::pair<size_t, size_t> > & pairs) {
   for (size_t i = 0; i < pairs.size(); i++) {
     complex<double> ori1 = vec[pairs[i].first];
     complex<double> ori2 = vec[pairs[i].second];
