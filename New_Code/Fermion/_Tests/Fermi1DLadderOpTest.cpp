@@ -1,6 +1,8 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
+
+  Test implementations of FermiLadderOp and Fermi1DLadderOp.
 */
 
 #ifndef QM_FERMI_1D_LADDEROP_TEST_CPP
@@ -12,6 +14,8 @@ using std::cout;
 using std::endl;
 
 int main(void) {
+  cout << "Fermi 1D Ladder Operator Test\n" << endl;
+
   /*Constructors tests.*/
   Fermi1DLadderOp lad;
   Fermi1DLadderOp lad1(1, true);
@@ -24,15 +28,15 @@ int main(void) {
   cout << "Default constructor: "
        << "lad = " << lad.toString() << endl;
   cout << "Explicit constructor: "
-       << "lad1 = " << lad1.toString() << endl;
+       << "lad1(1, true) = " << lad1.toString() << endl;
   cout << "Explicit constructor: "
-       << "lad2 = " << lad2.toString() << endl;
+       << "lad2(2, false) = " << lad2.toString() << endl;
   cout << "Unit constructor: "
-       << "e1 = " << e1.toString() << endl;
+       << "e1(true) = " << e1.toString() << endl;
   cout << "Copy constructor: "
-       << "lad1cp = " << lad1cp.toString() << endl;
+       << "lad1cp(lad1) = " << lad1cp.toString() << endl;
   cout << "Copy constructor: "
-       << "lad2cp = " << lad2cp.toString() << endl;
+       << "lad2cp(lad2) = " << lad2cp.toString() << endl;
 
   /*Overloaded operators tests.*/
   Fermi1DLadderOp lad1cp2 = lad1;
@@ -74,10 +78,18 @@ int main(void) {
        << ") = " << (lad2cp < lad3) << endl;
   cout << "Less than operator: (" << lad2cp.toString() << " > " << lad3.toString()
        << ") = " << (lad2cp > lad3) << endl;
+  cout << "Less than operator: (" << lad2.toString() << " < " << lad3.toString()
+       << ") = " << (lad2 < lad3) << endl;
+  cout << "Less than operator: (" << lad2.toString() << " > " << lad3.toString()
+       << ") = " << (lad2 > lad3) << endl;
   cout << "Less than operator: (" << e1.toString() << " < " << e2.toString()
        << ") = " << (e1 < e2) << endl;
   cout << "Less than operator: (" << e1.toString() << " > " << e2.toString()
        << ") = " << (e1 > e2) << endl;
+  cout << "Less than operator: (" << e1.toString() << " < " << lad1.toString()
+       << ") = " << (e1 < lad1) << endl;
+  cout << "Less than operator: (" << e1.toString() << " > " << lad1.toString()
+       << ") = " << (e1 > lad1) << endl;
 
   /*Fermi commutator tests.*/
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly12 = FermiCommute(lad1, lad2);
@@ -89,6 +101,8 @@ int main(void) {
   cout << lad1.toString() << lad1cp.toString() << " = " << poly11cp.toString() << endl;
   cout << lad1cp.toString() << lad2.toString() << " = " << poly1cp2.toString() << endl;
   cout << lad1.toString() << lad2cp.toString() << " = " << poly12cp.toString() << endl;
+
+  /*Exit*/
   cout << "\nTests pass!" << endl;
   return EXIT_SUCCESS;
 }

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 6, 2024
   
   Class Implementations:
   Fermi1DOpSubBasis
@@ -15,7 +15,6 @@
 #ifndef QM_FERMI_SUBSPACES_NONTEM_CPP
 #define QM_FERMI_SUBSPACES_NONTEM_CPP
 
-#include <cstddef>
 #include <set>
 
 #include "./fermiSubspaces.hpp"
@@ -26,6 +25,16 @@ using std::set;
 using std::vector;
 
 //----------------------------------------------------------Fermi1DOpSubBasis------------
+
+Fermi1DOpSubBasis & Fermi1DOpSubBasis::operator=(const Fermi1DOpSubBasis & rhs) {
+  if (this != &rhs) {
+    this->start = rhs.start;
+    this->end = rhs.end;
+    this->order = rhs.order;
+    this->Basis = rhs.Basis;
+  }
+  return *this;
+}
 
 void FermiMonomialsGenerator(vector<int> & current,
                              int start,
@@ -93,17 +102,16 @@ void Fermi1DOpSubBasis::init() {
         for (size_t j = 0; j < creation.size(); ++j) {
           FermiMonomial<Fermi1DLadderOp> copy(annihilation[i]);
           copy *= creation[j];
-          //Basis.push_back(copy *= creation[j]);
-          if (isNew(copy)) {
-            Basis.push_back(copy);
-          }
+          //if (isNew(copy)) {
+          Basis.push_back(copy);
+          //}
         }
       }
     }
   }
 }
 
-std::string Fermi1DOpSubBasis::toString() {
+std::string Fermi1DOpSubBasis::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(Basis.size());
@@ -130,7 +138,7 @@ bool Fermi1DOpSubBasis::isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) cons
 
 //---------------------------------------------------------------Fermi1DOpBasis-------
 
-std::string Fermi1DOpBasis::toString() {
+std::string Fermi1DOpBasis::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(Basis.size());
@@ -189,7 +197,7 @@ vector<pair<size_t, size_t> > FermiFindHermPairs(Fermi1DOpBasis & basis) {
     }
     FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > PolyCurrent(current);
     FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > PolyCurrentCopy(currentCopy);
-    PolyCurrentCopy.normalize();
+    PolyCurrentCopy.normalOrder();
     if (PolyCurrent == PolyCurrentCopy) {
       continue;
     }

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 4, 2024
+  Updated: Aug 6, 2024
   
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
@@ -141,7 +141,7 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > Fermi1DConsSet::getIJPoly(size_
   FermiMonomial<Fermi1DLadderOp> mnJ = OpSet[j];
   mnI *= mnJ;
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > ans(mnI);
-  ans.normalize();
+  ans.normalOrder();
   return ans;
 }
 

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 30, 2024
+  Updated: Aug 6, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
@@ -28,8 +28,11 @@ std::string complex_toString(const complex<double> & num) {
   oss.precision(COMPLEX_PRECISION);
   oss << std::scientific;
   oss << num.real();
-  if (num.imag() >= 0) {
+  if (num.imag() > 0) {
     oss << "+" << num.imag() << "i";
+  }
+  else if (std::abs(num.imag()) < ERROR) {
+    oss << "+" << 0 << "i";
   }
   else {
     oss << "-" << -num.imag() << "i";

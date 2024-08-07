@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
 
   Class Implementations:
   LadderOp<IndexType>
@@ -285,9 +285,11 @@ Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
     *this += (copy *= *termIt);
   }
   *this -= current;
+  this->eraseZeros();
   return *this;
 }
 
+//*=
 template<typename MonomialType>
 Polynomial<MonomialType> & Polynomial<MonomialType>::operator*=(
     const std::complex<double> rhs) {

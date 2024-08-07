@@ -1,17 +1,23 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 6, 2024
   
   Class Implementations:
   FermiLadderOp<IndexType>
   FermiMonomial<OpType>
   FermiPolynomial<MonomialType>
+  
+  Function Implementations:
+  FermiPolynomial<FermiMonomial<OpType> > FermiCommute(const OpType & op1, const OpType & op2);
+  FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref, const FermiMonomial<OpType> & mn);
 */
 
 #ifndef QM_FERMI_OPERATORS_TEM_HPP
 #define QM_FERMI_OPERATORS_TEM_HPP
 
 #include <cstddef>
+#include <stdexcept>
+#include <type_traits>
 
 #include "fermiOperators.hpp"
 
@@ -138,14 +144,14 @@ void FermiPolynomial<MonomialType>::normOneTerm(int index) {
   //std::cout << "\nCurrent term: "
   //          << "index = " << index << ": " << this->Terms[index].second.toString()
   //          << std::endl;
-  std::complex<double> pref = this->Terms[index].first;
+  std::complex<double> pref(this->Terms[index].first);
   MonomialType mn(this->Terms[index].second);
   this->Terms.erase(this->Terms.begin() + index);
   (*this) += NormOnce(pref, mn);
 }
 
 template<typename MonomialType>
-void FermiPolynomial<MonomialType>::normalize() {
+void FermiPolynomial<MonomialType>::normalOrder() {
   int index = -1;
   while ((index = findNonNorm()) >= 0) {
     normOneTerm(index);
@@ -154,7 +160,7 @@ void FermiPolynomial<MonomialType>::normalize() {
 }
 
 template<typename MonomialType>
-bool FermiSsNonNorm(std::pair<std::complex<double>, MonomialType> term) {
+bool FermiIsNonNorm(std::pair<std::complex<double>, MonomialType> term) {
   return !(term.second.isNorm());
 }
 
@@ -162,7 +168,7 @@ template<typename MonomialType>
 void FermiPolynomial<MonomialType>::eraseNonNorm() {
   this->Terms.erase(
       std::remove_if(
-          this->Terms.begin(), this->Terms.end(), FermiSsNonNorm<MonomialType>),
+          this->Terms.begin(), this->Terms.end(), FermiIsNonNorm<MonomialType>),
       this->Terms.end());
 }
 
@@ -190,13 +196,18 @@ FermiPolynomial<FermiMonomial<OpType> > FermiCommute(const OpType & op1,
 
 template<typename OpType>
 FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
-                                                 FermiMonomial<OpType> mn) {
-  size_t index = mn.findWrongOrder();
-  FermiPolynomial<FermiMonomial<OpType> > mid = FermiCommute(mn[index], mn[index + 1]);
+                                                 const FermiMonomial<OpType> & mn) {
+  int wrongOrderIdx = mn.findWrongOrder();
+  if (wrongOrderIdx < 0) {
+    throw std::runtime_error(
+        "ERROR: Trying to modify already normal-ordered monomial into normal order!\n");
+  }
+  FermiPolynomial<FermiMonomial<OpType> > mid =
+      FermiCommute(mn[wrongOrderIdx], mn[wrongOrderIdx + 1]);
   FermiPolynomial<FermiMonomial<OpType> > ans;
-  if (index > 0) {  //Wrong order not at beginning
-    FermiMonomial<OpType> mnFront(mn.sliceExprStart(index));
-    FermiPolynomial<FermiMonomial<OpType> > polyFront(std::complex<double>(1, 0),
+  if (wrongOrderIdx > 0) {  //Wrong order not at beginning
+    FermiMonomial<OpType> mnFront(mn.sliceExprStart(wrongOrderIdx));
+    FermiPolynomial<FermiMonomial<OpType> > polyFront(std::complex<double>(1.0, 0),
                                                       mnFront);
     ans = mnFront;
     ans *= mid;
@@ -204,9 +215,9 @@ FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
   else {  //Wrong order at beginning
     ans = mid;
   }
-  if (index < mn.getSize() - 2) {  //Not at end
-    FermiPolynomial<FermiMonomial<OpType> > mnRear(std::complex<double>(1, 0),
-                                                   mn.sliceExprEnd(index + 2));
+  if (wrongOrderIdx + 2 < (int)mn.getSize()) {  //Not at end
+    FermiPolynomial<FermiMonomial<OpType> > mnRear(std::complex<double>(1.0, 0),
+                                                   mn.sliceExprEnd(wrongOrderIdx + 2));
     ans *= mnRear;
   }
   ans *= pref;

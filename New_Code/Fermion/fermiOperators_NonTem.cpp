@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
   
   Class Implementations:
   Fermi1DLadderOp
@@ -23,7 +23,13 @@ Fermi1DLadderOp & Fermi1DLadderOp::operator=(const Fermi1DLadderOp & rhs) {
 }
 
 bool Fermi1DLadderOp::operator<(const FermiLadderOp<int> & rhs) const {
-  if (this->isUnit && rhs.getIsUnit()) {
+  if (this->isUnit && rhs.getIsUnit()) {  //If both are e, they are equal
+    return false;
+  }
+  if (this->isUnit && !rhs.getIsUnit()) {  //If only *this is e, *this is smaller
+    return true;
+  }
+  if (rhs.getIsUnit() && !this->isUnit) {  //If only rhs is e, rhs is smaller
     return false;
   }
   if (!this->creatorF && !rhs.getCreatorF()) {  //Both are annihilation

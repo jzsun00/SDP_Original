@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
   
   Class Implementations:
   OpSubBasis<MonomialType, IndexType>
@@ -9,6 +9,8 @@
 
 #ifndef QM_SUBSPACES_TEM_HPP
 #define QM_SUBSPACES_TEM_HPP
+
+#include <cstddef>
 
 #include "./subspaces.hpp"
 
@@ -36,6 +38,7 @@ std::vector<std::complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly
     for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {
       if (it->second == basisMn) {
         ans[index] = it->first;
+        break;
       }
     }
   }
@@ -63,6 +66,7 @@ std::vector<std::complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
     for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {
       if (it->second == basisMn) {
         ans[index] = it->first;
+        break;
       }
     }
   }

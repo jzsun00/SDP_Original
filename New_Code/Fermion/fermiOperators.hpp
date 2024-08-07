@@ -1,7 +1,7 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
-
+  Updated: Aug 6, 2024
+  
   Class:
   FermiLadderOp<IndexType>
   Fermi1DLadderOp
@@ -78,7 +78,7 @@ class FermiMonomial : public Monomial<OpType> {
   FermiMonomial<OpType> sliceExprStart(size_t index) const;
   FermiMonomial<OpType> sliceExprEnd(size_t index) const;
   /*Tools for infinite system.*/
-  void moveIndex(int i);
+  void moveIndex(int offset);
   bool equiv(const FermiMonomial<OpType> & rhs) const;
 };
 
@@ -94,12 +94,13 @@ class FermiPolynomial : public Polynomial<MonomialType> {
       Polynomial<MonomialType>(pref, mn) {}
   FermiPolynomial(const FermiPolynomial & rhs) : Polynomial<MonomialType>(rhs) {}
   virtual ~FermiPolynomial() {}
+  /*Overload operators.*/
   FermiPolynomial & operator=(const FermiPolynomial<MonomialType> & rhs);
   /*Tools for normalization.*/
   bool isNorm() const;
   int findNonNorm() const;
   void normOneTerm(int index);
-  void normalize();
+  void normalOrder();
   void eraseNonNorm();
 };
 
@@ -111,6 +112,6 @@ FermiPolynomial<FermiMonomial<OpType> > FermiCommute(const OpType & op1,
 
 template<typename OpType>
 FermiPolynomial<FermiMonomial<OpType> > NormOnce(std::complex<double> pref,
-                                                 FermiMonomial<OpType> mn);
+                                                 const FermiMonomial<OpType> & mn);
 
 #endif  //QM_FERMI_OPERATORS_HPP

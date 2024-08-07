@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 6, 2024
   
   Class:
   Fermi1DOpSubBasis
@@ -15,7 +15,10 @@
 #ifndef QM_FERMI_SUBSPACES_HPP
 #define QM_FERMI_SUBSPACES_HPP
 
+#include <unordered_map>
+
 #include "../Basics/subspaces_Tem.hpp"
+#include "./fermiOperators.hpp"
 #include "./fermiOperators_Tem.hpp"
 
 //----------------------------------------------------------Fermi1DOpSubBasis------------
@@ -25,18 +28,27 @@ class Fermi1DOpSubBasis : public OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>
   Fermi1DOpSubBasis() : OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>() {}
   Fermi1DOpSubBasis(int start, int end, size_t order) :
       OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>(start, end, order) {}
-  Fermi1DOpSubBasis(const OpSubBasis & rhs) :
+  Fermi1DOpSubBasis(const Fermi1DOpSubBasis & rhs) :
       OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
-  virtual void init();
   virtual ~Fermi1DOpSubBasis() {}
+  /*Overload operators.*/
+  Fermi1DOpSubBasis & operator=(const Fermi1DOpSubBasis & rhs);
+  virtual void init();
   /*Get information of the operator sub-basis.*/
-  virtual std::string toString();
+  virtual std::string toString() const;
   bool isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) const;
 };
 
 //-----------------------------------------------------------Fermi1DOpBasis--------------
 
+struct Fermi1DOpHash {
+  size_t operator()(const FermiMonomial<Fermi1DLadderOp> & baseState) const;
+};
+
 class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
+ protected:
+  std::unordered_map<FermiMonomial<Fermi1DLadderOp>, size_t, Fermi1DOpHash> lookupTable;
+
  public:
   Fermi1DOpBasis() : OpBasis<FermiMonomial<Fermi1DLadderOp>, int>() {
     Fermi1DLadderOp unit(true);
@@ -45,7 +57,7 @@ class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
   virtual ~Fermi1DOpBasis() {}
   FermiMonomial<Fermi1DLadderOp> operator[](size_t num) { return Basis[num]; }
   /*Get information of the operator basis.*/
-  virtual std::string toString();
+  virtual std::string toString() const;
   virtual void addSubspace(const OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
   std::vector<std::complex<double> > projPolyInf(
       FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly);

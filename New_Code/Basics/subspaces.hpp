@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
   
   Class:
   OpSubBasis<MonomialType, IndexType>
@@ -17,9 +17,9 @@
 template<typename MonomialType, typename IndexType>
 class OpSubBasis {
  protected:
-  IndexType start;
-  IndexType end;
-  size_t order;
+  IndexType start;  //Start site index
+  IndexType end;    //End site index
+  size_t order;     //Order of the Monomial
   std::vector<MonomialType> Basis;
 
  public:
@@ -38,7 +38,7 @@ class OpSubBasis {
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
   std::vector<MonomialType> getFullBasis() const { return Basis; }
-  virtual std::string toString() = 0;
+  virtual std::string toString() const = 0;
   /*Overload operators.*/
   OpSubBasis & operator=(const OpSubBasis<MonomialType, IndexType> & rhs);
   MonomialType operator[](size_t n) const { return Basis[n]; }
@@ -60,7 +60,7 @@ class OpBasis {
   virtual ~OpBasis() {}
   /*Get information of the operator basis.*/
   size_t getLength() const { return Basis.size(); }
-  virtual std::string toString() = 0;
+  virtual std::string toString() const = 0;
   virtual void addSubspace(const OpSubBasis<MonomialType, IndexType> & rhs) = 0;
   /*Overload operators.*/
   OpBasis & operator=(const OpBasis<MonomialType, IndexType> & rhs);
