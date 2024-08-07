@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
   Class:
   Fermi1DOpSubBasis
@@ -10,11 +10,14 @@
   vector<pair<size_t, size_t> > findHermPairs(const Fermi1DOpBasis & basis)
   string printHermPairs(const vector<pair<size_t, size_t> > & pairs)
   void transVecToReIm(vector<complex<double> > & vec, vector<pair<size_t, size_t> > & pairs)
+  
+  Define basis for Fermi Operators.
 */
 
 #ifndef QM_FERMI_SUBSPACES_HPP
 #define QM_FERMI_SUBSPACES_HPP
 
+#include <cstddef>
 #include <unordered_map>
 
 #include "../Basics/subspaces_Tem.hpp"
@@ -33,7 +36,7 @@ class Fermi1DOpSubBasis : public OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>
   virtual ~Fermi1DOpSubBasis() {}
   /*Overload operators.*/
   Fermi1DOpSubBasis & operator=(const Fermi1DOpSubBasis & rhs);
-  virtual void init();
+  virtual void init(bool isInf);
   /*Get information of the operator sub-basis.*/
   virtual std::string toString() const;
   bool isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) const;
@@ -41,26 +44,28 @@ class Fermi1DOpSubBasis : public OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>
 
 //-----------------------------------------------------------Fermi1DOpBasis--------------
 
-struct Fermi1DOpHash {
-  size_t operator()(const FermiMonomial<Fermi1DLadderOp> & baseState) const;
-};
-
 class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
  protected:
-  std::unordered_map<FermiMonomial<Fermi1DLadderOp>, size_t, Fermi1DOpHash> lookupTable;
+  std::map<FermiMonomial<Fermi1DLadderOp>, size_t> lookupTable;
 
  public:
-  Fermi1DOpBasis() : OpBasis<FermiMonomial<Fermi1DLadderOp>, int>() {
-    Fermi1DLadderOp unit(true);
-    Basis.push_back(unit);
-  }
+  Fermi1DOpBasis();
+  Fermi1DOpBasis(const Fermi1DOpBasis & rhs) :
+      OpBasis<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
   virtual ~Fermi1DOpBasis() {}
-  FermiMonomial<Fermi1DLadderOp> operator[](size_t num) { return Basis[num]; }
+  /*Overload operators.*/
+  Fermi1DOpBasis & operator=(const Fermi1DOpBasis & rhs);
+  FermiMonomial<Fermi1DLadderOp> operator[](size_t num) const { return Basis[num]; }
+  void buildTable();
   /*Get information of the operator basis.*/
   virtual std::string toString() const;
   virtual void addSubspace(const OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
+  size_t findIndex(const FermiMonomial<Fermi1DLadderOp> & mn) const;
   std::vector<std::complex<double> > projPolyInf(
-      FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly);
+      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly);
+  std::vector<size_t> projPolyFinite(
+      std::vector<std::complex<double> > & vec,
+      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly);
 };
 
 //-----------------------------------------------------------Other Functions-------------

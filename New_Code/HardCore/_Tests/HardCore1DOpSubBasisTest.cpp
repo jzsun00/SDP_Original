@@ -7,7 +7,7 @@ using std::vector;
 
 int main(void) {
   HardCore1DOpSubBasis basis1(0, 2, 2);
-  basis1.init();
+  basis1.init(true);
   cout << basis1.toString() << endl;
   HardCore1DLadderOp op0(0, true);
   HardCore1DLadderOp op1(1, true);

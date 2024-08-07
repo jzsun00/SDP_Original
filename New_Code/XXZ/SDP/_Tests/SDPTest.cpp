@@ -24,8 +24,8 @@ int main(void) {
   HardCore1DOpSubBasis sub2(0, sites - 1, 2);
   HardCore1DOpSubBasis sub4(20, sites - 21, 4);
   //HardCore1DOpSubBasis sub6(22, sites - 23, 6);
-  sub2.init();
-  sub4.init();
+  sub2.init(true);
+  sub4.init(true);
   //sub6.init();
   HardCore1DOpBasis basis;
   basis.addSubspace(sub2);

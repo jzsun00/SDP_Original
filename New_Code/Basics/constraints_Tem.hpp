@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
   
   Class Implementations:
   ConsBaseSet<MonomialType, IndexType>

@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
 */
 
 #ifndef QM_HARDCORE_SUBSPACES_HPP
@@ -20,11 +20,11 @@ class HardCore1DOpSubBasis
   HardCore1DOpSubBasis() : OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>() {}
   HardCore1DOpSubBasis(int start, int end, size_t order) :
       OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>(start, end, order) {}
-  HardCore1DOpSubBasis(OpSubBasis const & rhs) :
+  HardCore1DOpSubBasis(HardCore1DOpSubBasis const & rhs) :
       OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int>(rhs) {}
-  virtual void init();
-  ~HardCore1DOpSubBasis() {}
-  virtual std::string toString();
+  virtual void init(bool isInf);
+  virtual ~HardCore1DOpSubBasis() {}
+  virtual std::string toString() const;
   bool isNew(HardCoreMonomial<HardCore1DLadderOp> const & mn);
 };
 
@@ -36,9 +36,9 @@ class HardCore1DOpBasis : public OpBasis<HardCoreMonomial<HardCore1DLadderOp>, i
     HardCore1DLadderOp unit(true);
     Basis.push_back(unit);
   }
-  ~HardCore1DOpBasis() {}
+  virtual ~HardCore1DOpBasis() {}
   HardCoreMonomial<HardCore1DLadderOp> operator[](size_t num) { return Basis[num]; }
-  virtual std::string toString();
+  virtual std::string toString() const;
   virtual void addSubspace(
       const OpSubBasis<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
   std::vector<std::complex<double> > projPolyInf(

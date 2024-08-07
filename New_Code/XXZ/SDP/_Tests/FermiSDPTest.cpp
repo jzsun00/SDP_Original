@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 5, 2024
+  Updated: Aug 7, 2024
   
   Use spinless Fermion formalism to compute ground state energy of 1D XXZ Model.
 */
@@ -22,37 +22,41 @@ int main(void) {
   cout << "\n1D XXZ Model Test: SDP Method" << endl << endl;
 
   /*Set number of sites and Jz.*/
-  size_t sites1 = 10;  //First order
-  size_t sites2 = 10;  //Second order
-  double Jz = 0.5;
-  cout << "sites1 = " << sites1 << "\nsites2 = " << sites2 << "\nJz = " << Jz << endl;
+  size_t sites1 = 3;  //First order
+  size_t sites2 = 3;  //Second order
+  double Jz = 0.4;
+  bool isInf = false;
+  cout << "sites1 = " << sites1 << "\nsites2 = " << sites2 << "\nJz = " << Jz
+       << "\nInfinite System = " << isInf << endl;
 
   /*Construct Hamiltonian and convert to normal order.*/
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly1 =
-      makeFermiPoly(-2, sites1 + 2, Jz);
-  poly1.normalize();
-  //cout << "H_XXZ = " << poly1.toString() << endl;
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > hamPoly =
+      makeFermiPoly(0, sites1 - 1, Jz);
+  hamPoly.normalOrder();
+  cout << "H_XXZ = " << hamPoly.toString() << endl;
 
   /*Construct operator basis.*/
   cout << "\nNow construct operator basis" << endl;
   Fermi1DOpBasis basis;
   Fermi1DOpSubBasis sub2(0, sites1 - 1, 2);
-  sub2.init();
+  sub2.init(isInf);
   basis.addSubspace(sub2);
   if (sites2 != 0) {
     Fermi1DOpSubBasis sub4((sites1 - sites2) / 2, (sites1 + sites2) / 2, 4);
-    sub4.init();
+    sub4.init(isInf);
     basis.addSubspace(sub4);
   }
+  basis.buildTable();
   cout << "Operator Basis Construction Finished" << endl;
-  //cout << "Operator Basis:" << basis.toString() << endl;
+  cout << "Operator Basis:" << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = FermiFindHermPairs(basis);
   //cout << "\nHermitian Conjugate Pairs:\n" << printHermPairs(pairs) << endl;
 
   /*Compute cost function vector.*/
   cout << "\nNow compute the cost function vector" << endl;
-  vector<complex<double> > ham = basis.projPoly(poly1);
-  //cout << "Hamiltonian Vector:" << endl << complexVector_toString(ham) << endl;
+  vector<complex<double> > ham(basis.getLength());
+  basis.projPolyFinite(ham, hamPoly);
+  cout << "Hamiltonian Vector:" << endl << complexVector_toString(ham) << endl;
   FermiTransVecToReIm(ham, pairs);
   //cout << "\nAfter Transform To Real And Imaginary Parts Of Green's "
   //       "Functions\nHamiltonian Vector:"

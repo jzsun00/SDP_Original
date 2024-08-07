@@ -1,14 +1,16 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
-  Implementations of methods in class:
-  Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
+  Class Implementations:
+  Fermi1DConsBaseSet
+  Fermi1DConsSet
 */
 
 #ifndef QM_FERMI_CONSTRAINTS_NONTEM_CPP
 #define QM_FERMI_CONSTRAINTS_NONTEM_CPP
 
+#include <exception>
 #include <fstream>
 #include <iostream>
 
@@ -130,7 +132,7 @@ std::string Fermi1DConsSet::toString() {
 }
 
 void Fermi1DConsSet::addBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs) {
-  vector<FermiMonomial<Fermi1DLadderOp> > sub = rhs.getBaseOpSet();
+  vector<FermiMonomial<Fermi1DLadderOp> > sub = rhs.getFullBaseOpSet();
   OpSet.insert(OpSet.end(), sub.begin(), sub.end());
 }
 
@@ -278,9 +280,13 @@ void printSparseMatrixFermi1D(Fermi1DConsSet & constraints,
       //  continue;
       //}
       //vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
-      vector<complex<double> > entryIJ = basis.projPolyInf(polyIJ);
-      for (size_t k = 0; k < matrixNum; k++) {
-        matrices[k][i][j] = entryIJ[k];
+      try {
+        vector<complex<double> > entryIJ = basis.projPolyInf(polyIJ);
+        for (size_t k = 0; k < matrixNum; k++) {
+          matrices[k][i][j] = entryIJ[k];
+        }
+      }
+      catch (std::exception & e) {
       }
     }
   }

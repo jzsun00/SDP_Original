@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: May 10, 2024
+  Updated: Aug 7, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
@@ -59,7 +59,7 @@ vector<HardCoreMonomial<HardCore1DLadderOp> > listMonomials(size_t length,
   return ans;
 }
 
-void HardCore1DOpSubBasis::init() {
+void HardCore1DOpSubBasis::init(bool isInf) {
   for (size_t m = 0; m <= order; ++m) {
     if (m != order / 2) {
       continue;
@@ -87,7 +87,12 @@ void HardCore1DOpSubBasis::init() {
           HardCoreMonomial<HardCore1DLadderOp> copy(annihilation[i]);
           copy *= creation[j];
           //Basis.push_back(copy *= creation[j]);
-          if (isNew(copy)) {
+          if (isInf) {
+            if (isNew(copy)) {
+              Basis.push_back(copy);
+            }
+          }
+          else {
             Basis.push_back(copy);
           }
         }
@@ -96,7 +101,7 @@ void HardCore1DOpSubBasis::init() {
   }
 }
 
-std::string HardCore1DOpSubBasis::toString() {
+std::string HardCore1DOpSubBasis::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(Basis.size());
@@ -124,7 +129,7 @@ bool HardCore1DOpSubBasis::isNew(HardCoreMonomial<HardCore1DLadderOp> const & mn
 
 //---------------------------------------------------------------HardCore1DOpBasis-------
 
-std::string HardCore1DOpBasis::toString() {
+std::string HardCore1DOpBasis::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(Basis.size());

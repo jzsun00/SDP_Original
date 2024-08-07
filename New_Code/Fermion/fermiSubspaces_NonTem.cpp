@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
   Class Implementations:
   Fermi1DOpSubBasis
@@ -15,7 +15,9 @@
 #ifndef QM_FERMI_SUBSPACES_NONTEM_CPP
 #define QM_FERMI_SUBSPACES_NONTEM_CPP
 
+#include <cstddef>
 #include <set>
+#include <stdexcept>
 
 #include "./fermiSubspaces.hpp"
 
@@ -75,7 +77,7 @@ vector<FermiMonomial<Fermi1DLadderOp> > FermiListMonomials(size_t length,
   return ans;
 }
 
-void Fermi1DOpSubBasis::init() {
+void Fermi1DOpSubBasis::init(bool isInf) {
   for (size_t m = 0; m <= order; ++m) {
     if (m != order / 2) {
       continue;
@@ -102,9 +104,14 @@ void Fermi1DOpSubBasis::init() {
         for (size_t j = 0; j < creation.size(); ++j) {
           FermiMonomial<Fermi1DLadderOp> copy(annihilation[i]);
           copy *= creation[j];
-          //if (isNew(copy)) {
-          Basis.push_back(copy);
-          //}
+          if (isInf) {
+            if (isNew(copy)) {
+              Basis.push_back(copy);
+            }
+          }
+          else {
+            Basis.push_back(copy);
+          }
         }
       }
     }
@@ -138,6 +145,26 @@ bool Fermi1DOpSubBasis::isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) cons
 
 //---------------------------------------------------------------Fermi1DOpBasis-------
 
+Fermi1DOpBasis::Fermi1DOpBasis() : OpBasis<FermiMonomial<Fermi1DLadderOp>, int>() {
+  Fermi1DLadderOp unit(true);
+  Basis.push_back(unit);
+}
+
+Fermi1DOpBasis & Fermi1DOpBasis::operator=(const Fermi1DOpBasis & rhs) {
+  if (this != &rhs) {
+    this->Basis = rhs.Basis;
+    this->lookupTable = rhs.lookupTable;
+  }
+  return *this;
+}
+
+void Fermi1DOpBasis::buildTable() {
+  size_t len = Basis.size();
+  for (size_t i = 0; i < len; i++) {
+    lookupTable[Basis[i]] = i;
+  }
+}
+
 std::string Fermi1DOpBasis::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
@@ -161,22 +188,36 @@ void Fermi1DOpBasis::addSubspace(
   Basis.insert(Basis.end(), sub.begin(), sub.end());
 }
 
+size_t Fermi1DOpBasis::findIndex(const FermiMonomial<Fermi1DLadderOp> & mn) const {
+  auto it = lookupTable.find(mn);
+  if (it == lookupTable.end()) {
+    std::string error("ERROR: Input Fermi Monomial ");
+    error += mn.toString();
+    error += " does not exist in the Basis!\n";
+    throw std::runtime_error(error);
+  }
+  return it->second;
+}
+
 vector<complex<double> > Fermi1DOpBasis::projPolyInf(
-    FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > poly) {
+    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) {
   vector<complex<double> > ans(Basis.size());
-  for (size_t index = 0; index < Basis.size(); index++) {
-    FermiMonomial<Fermi1DLadderOp> basisMn = Basis[index];
-    for (typename vector<
-             pair<complex<double>, FermiMonomial<Fermi1DLadderOp> > >::const_iterator it =
-             poly.getBegin();
-         it != poly.getEnd();
-         ++it) {
-      if (it->second.equiv(basisMn)) {
-        ans[index] = it->first;
-      }
-    }
+  for (size_t index = 0; index < poly.getSize(); index++) {
+    ans[findIndex(poly[index].second)] = poly[index].first;
   }
   return ans;
+}
+
+std::vector<size_t> Fermi1DOpBasis::projPolyFinite(
+    std::vector<std::complex<double> > & vec,
+    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) {
+  vector<size_t> validIdx;
+  for (size_t polyIdx = 0; polyIdx < poly.getSize(); polyIdx++) {
+    int basisIdx = findIndex(poly[polyIdx].second);
+    vec[basisIdx] = poly[polyIdx].first;
+    validIdx.push_back(basisIdx);
+  }
+  return validIdx;
 }
 
 //--------------------------------------------------------------Other Functions----------

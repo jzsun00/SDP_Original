@@ -22,6 +22,7 @@
 #define QM_OPERATORS_HPP
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdlib>
 #include <limits>
 #include <stdexcept>
@@ -172,8 +173,9 @@ class Polynomial {
   auto getEnd() const { return Terms.end(); }
   std::string toString() const;
   /*Overload operators.*/
-  Polynomial & operator=(Polynomial const & rhs);
-  bool operator==(Polynomial const & rhs) const { return Terms == rhs.Terms; }
+  Polynomial & operator=(const Polynomial & rhs);
+  bool operator==(const Polynomial & rhs) const { return Terms == rhs.Terms; }
+  TermType operator[](size_t i) const { return Terms[i]; }
   Polynomial & operator+=(const MonomialType & rhs);
   Polynomial & operator+=(const TermType & rhs);
   Polynomial & operator+=(const Polynomial & rhs);

@@ -1,6 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Aug 4, 2024
+  Updated: Aug 7, 2024
+
+  Class:
+  Fermi1DConsBaseSet
+  Fermi1DConsSet
 */
 
 #ifndef QM_FERMI_CONSTRAINTS_HPP
@@ -17,10 +21,11 @@ class Fermi1DConsBaseSet : public ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, in
   Fermi1DConsBaseSet() : ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>() {}
   Fermi1DConsBaseSet(int start, int end, size_t order) :
       ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>(start, end, order) {}
-  Fermi1DConsBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs) :
+  Fermi1DConsBaseSet(const Fermi1DConsBaseSet & rhs) :
       ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
   virtual void init();
   virtual ~Fermi1DConsBaseSet() {}
+  /*Get information of the constraint base set.*/
   virtual std::string toString();
 };
 

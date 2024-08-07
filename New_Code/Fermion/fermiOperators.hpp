@@ -69,6 +69,7 @@ class FermiMonomial : public Monomial<OpType> {
   virtual ~FermiMonomial() {}
   /*Overload operators.*/
   FermiMonomial<OpType> & operator=(const FermiMonomial<OpType> & rhs);
+  bool operator<(const FermiMonomial<OpType> & rhs) const;
   /*Tools for normal order.
     Normal order: all creation operators on the right,
     annihilation operators index ascending, creation operators index descending.*/

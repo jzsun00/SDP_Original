@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
 
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
@@ -131,7 +131,7 @@ std::string HardCore1DConsSet::toString() {
 
 void HardCore1DConsSet::addBaseSet(
     ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
-  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getBaseOpSet();
+  vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getFullBaseOpSet();
   OpSet.insert(OpSet.end(), sub.begin(), sub.end());
 }
 

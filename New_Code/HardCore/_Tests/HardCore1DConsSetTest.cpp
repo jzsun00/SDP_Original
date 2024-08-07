@@ -17,9 +17,9 @@ int main(void) {
   cout << fullSet.toString() << endl;
   cout << fullSet.getIJPoly(1, 2).toString() << endl;
   HardCore1DOpSubBasis subBasis1(0, 1, 1);
-  subBasis1.init();
+  subBasis1.init(true);
   HardCore1DOpSubBasis subBasis2(0, 1, 2);
-  subBasis2.init();
+  subBasis2.init(true);
   HardCore1DOpBasis basis;
   basis.addSubspace(subBasis1);
   basis.addSubspace(subBasis2);

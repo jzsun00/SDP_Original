@@ -19,8 +19,8 @@ int main(void) {
   cout << "\nNow construct the spaces" << endl;
   HardCore1DOpSubBasis sub2(0, 3, 2);
   HardCore1DOpSubBasis sub4(0, 3, 4);
-  sub2.init();
-  sub4.init();
+  sub2.init(true);
+  sub4.init(true);
   cout << sub2.toString() << endl;
   cout << sub4.toString() << endl;
   HardCore1DOpBasis basis;

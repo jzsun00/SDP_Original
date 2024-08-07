@@ -42,6 +42,23 @@ bool FermiLadderOp<IndexType>::operator>(const FermiLadderOp & rhs) const {
 //---------------------------------------------------------FermiMonomial<OpType>---------
 
 template<typename OpType>
+bool FermiMonomial<OpType>::operator<(const FermiMonomial<OpType> & rhs) const {
+  if (this == &rhs) {
+    return false;
+  }
+  size_t len = this->getSize();
+  if (len != rhs.getSize()) {
+    return len < rhs.getSize();
+  }
+  for (size_t i = 0; i < len; i++) {
+    if (this->Expr[i] != rhs.Expr[i]) {
+      return this->Expr[i] < rhs.Expr[i];
+    }
+  }
+  return false;
+}
+
+template<typename OpType>
 FermiMonomial<OpType> & FermiMonomial<OpType>::operator=(
     const FermiMonomial<OpType> & rhs) {
   if (this != &rhs) {

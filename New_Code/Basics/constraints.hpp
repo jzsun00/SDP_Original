@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
   
   Class:
   ConsBaseSet<MonomialType, IndexType>
@@ -13,7 +13,6 @@
 #ifndef QM_CONSTRAINTS_HPP
 #define QM_CONSTRAINTS_HPP
 
-#include "./operators_Tem.hpp"
 #include "./subspaces_Tem.hpp"
 
 //---------------------------------------ConsBaseSet<MonomialType, IndexType>------------
@@ -39,7 +38,7 @@ class ConsBaseSet {
   IndexType getStart() const { return start; }
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
-  std::vector<MonomialType> getBaseOpSet() const { return BaseOpSet; }
+  std::vector<MonomialType> getFullBaseOpSet() const { return BaseOpSet; }
   virtual std::string toString() = 0;
   /*Overload operators.*/
   ConsBaseSet & operator=(const ConsBaseSet<MonomialType, IndexType> & rhs);
@@ -55,6 +54,7 @@ class ConsSet {
 
  public:
   ConsSet() : OpSet() {}
+  ConsSet(const ConsSet<MonomialType, IndexType> & rhs) : OpSet(rhs.OpSet) {}
   virtual ~ConsSet() {}
   /*Get information of the constraint set.*/
   size_t getLength() const { return OpSet.size(); }

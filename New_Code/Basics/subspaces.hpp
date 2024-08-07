@@ -1,10 +1,14 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
   Class:
   OpSubBasis<MonomialType, IndexType>
   OpBasis<MonomialType, IndexType>
+  
+  Define basis and sub-basis of operators.
+  OpSubBasis contains all size=order operators having index in [start, end].
+  OpBasis contains operators from multiple OpSubBasis.
 */
 
 #ifndef QM_SUBSPACES_HPP
@@ -30,7 +34,7 @@ class OpSubBasis {
       start(start), end(end), order(order), Basis() {}
   OpSubBasis(const OpSubBasis & rhs) :
       start(rhs.start), end(rhs.end), order(rhs.order), Basis(rhs.Basis) {}
-  virtual void init() = 0;
+  virtual void init(bool isInf) = 0;
   virtual ~OpSubBasis() {}
   /*Get information of the operator sub-basis.*/
   size_t getLength() const { return Basis.size(); }

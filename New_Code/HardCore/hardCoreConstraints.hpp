@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 31, 2024
+  Updated: Aug 6, 2024
 */
 
 #ifndef QM_HARDCORE_CONSTRAINTS_HPP
