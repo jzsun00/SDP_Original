@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
 */
 
 #ifndef QM_HARDCORE_CONSTRAINTS_HPP
@@ -22,7 +22,7 @@ class HardCore1DConsBaseSet
       ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int>(rhs) {}
   virtual void init();
   ~HardCore1DConsBaseSet() {}
-  virtual std::string toString();
+  virtual std::string toString() const;
 };
 
 //------------------------------------------------------------HardCore1DConsSet----------
@@ -33,8 +33,9 @@ class HardCore1DConsSet : public ConsSet<HardCoreMonomial<HardCore1DLadderOp>, i
     HardCore1DLadderOp unit(true);
     OpSet.push_back(unit);
   }
-  virtual std::string toString();
-  virtual void addBaseSet(ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
+  virtual std::string toString() const;
+  virtual void addBaseSet(
+      const ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs);
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > getIJPoly(size_t i, size_t j);
 };
 

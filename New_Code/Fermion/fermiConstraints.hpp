@@ -1,16 +1,19 @@
 /*
   Jiazheng Sun
   Updated: Aug 7, 2024
-
+  
   Class:
   Fermi1DConsBaseSet
   Fermi1DConsSet
+  
+  Function:
 */
 
 #ifndef QM_FERMI_CONSTRAINTS_HPP
 #define QM_FERMI_CONSTRAINTS_HPP
 
 #include "../Basics/constraints_Tem.hpp"
+#include "../LinearAlgebra/sparseCOO_Tem.hpp"
 #include "./fermiOperators_Tem.hpp"
 #include "./fermiSubspaces.hpp"
 
@@ -26,21 +29,25 @@ class Fermi1DConsBaseSet : public ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, in
   virtual void init();
   virtual ~Fermi1DConsBaseSet() {}
   /*Get information of the constraint base set.*/
-  virtual std::string toString();
+  virtual std::string toString() const;
+  /*Overload operators.*/
+  Fermi1DConsBaseSet & operator=(const Fermi1DConsBaseSet & rhs);
 };
 
 //------------------------------------------------------------Fermi1DConsSet----------
 
 class Fermi1DConsSet : public ConsSet<FermiMonomial<Fermi1DLadderOp>, int> {
  public:
-  Fermi1DConsSet() : ConsSet<FermiMonomial<Fermi1DLadderOp>, int>() {
-    Fermi1DLadderOp unit(true);
-    OpSet.push_back(unit);
-  }
+  Fermi1DConsSet();
+  Fermi1DConsSet(const Fermi1DConsSet & rhs) :
+      ConsSet<FermiMonomial<Fermi1DLadderOp>, int>(rhs) {}
   virtual ~Fermi1DConsSet() {}
-  virtual std::string toString();
-  virtual void addBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
-  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > getIJPoly(size_t i, size_t j);
+  /*Get information of the Fermi 1D constraint set.*/
+  virtual std::string toString() const;
+  /*Overload operators.*/
+  Fermi1DConsSet & operator=(const Fermi1DConsSet & rhs);
+  virtual void addBaseSet(const ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > getIJPoly(size_t i, size_t j) const;
 };
 
 //-------------------------------------------------------------Other Functions-----------
@@ -51,14 +58,15 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
                         std::vector<std::complex<double> > ham,
                         std::vector<std::pair<size_t, size_t> > & pairs);
 
-void printSparseMatrixFermi1D(Fermi1DConsSet & constraints,
-                              Fermi1DOpBasis & basis,
-                              std::string fileName,
-                              std::vector<std::complex<double> > ham,
-                              std::vector<std::pair<size_t, size_t> > & pairs);
+void printSparseMatrixFermi(const Fermi1DConsSet & constraints,
+                            const Fermi1DOpBasis & basis,
+                            const std::string fileName,
+                            const std::vector<std::complex<double> > ham,
+                            const std::vector<std::pair<size_t, size_t> > & pairs,
+                            bool isInf);
 
 void FermiTransMatToReIm(
     std::vector<std::vector<std::vector<std::complex<double> > > > & matrices,
-    std::vector<std::pair<size_t, size_t> > & pairs);
+    const std::vector<std::pair<size_t, size_t> > & pairs);
 
 #endif  //QM_FERMI_CONSTRAINTS_HPP

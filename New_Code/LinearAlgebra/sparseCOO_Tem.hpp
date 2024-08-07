@@ -1,13 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Jul 22, 2024
+  Updated: Aug 7, 2024
 
   Class Implementations:
   COOMatrix<DataType>
 */
 
-#ifndef LA_SPARSE_COO_TEM_CPP
-#define LA_SPARSE_COO_TEM_CPP
+#ifndef LA_SPARSE_COO_TEM_HPP
+#define LA_SPARSE_COO_TEM_HPP
 
 #include <stdexcept>
 
@@ -57,4 +57,4 @@ int findIndex(const std::vector<T> & vec, const T & value) {
   }
 }
 
-#endif  //LA_SPARSE_COO_TEM_CPP
+#endif  //LA_SPARSE_COO_TEM_HPP

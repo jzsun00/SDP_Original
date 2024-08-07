@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 22, 2024
+  Updated: Aug 7, 2024
   
   Define tools for Coordinate Format (COO) sparse matrix operations.
 */

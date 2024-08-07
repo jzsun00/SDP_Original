@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
   Class:
   ConsBaseSet<MonomialType, IndexType>
@@ -39,7 +39,7 @@ class ConsBaseSet {
   IndexType getEnd() const { return end; }
   size_t getOrder() const { return order; }
   std::vector<MonomialType> getFullBaseOpSet() const { return BaseOpSet; }
-  virtual std::string toString() = 0;
+  virtual std::string toString() const = 0;
   /*Overload operators.*/
   ConsBaseSet & operator=(const ConsBaseSet<MonomialType, IndexType> & rhs);
   MonomialType operator[](size_t n) const { return BaseOpSet[n]; }
@@ -58,11 +58,10 @@ class ConsSet {
   virtual ~ConsSet() {}
   /*Get information of the constraint set.*/
   size_t getLength() const { return OpSet.size(); }
-  virtual std::string toString() = 0;
+  virtual std::string toString() const = 0;
   /*Overload operators.*/
   ConsSet & operator=(const ConsSet<MonomialType, IndexType> & rhs);
-  virtual void addBaseSet(ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
-  //virtual Polynomial<MonomialType> getIJPoly(size_t i, size_t j);
+  virtual void addBaseSet(const ConsBaseSet<MonomialType, IndexType> & rhs) = 0;
 };
 
 //-------------------------------------------------------Other Functions-----------------

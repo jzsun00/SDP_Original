@@ -15,7 +15,6 @@
 #ifndef QM_FERMI_SUBSPACES_NONTEM_CPP
 #define QM_FERMI_SUBSPACES_NONTEM_CPP
 
-#include <cstddef>
 #include <set>
 #include <stdexcept>
 
@@ -134,7 +133,7 @@ std::string Fermi1DOpSubBasis::toString() const {
 }
 
 bool Fermi1DOpSubBasis::isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) const {
-  size_t len = Basis.size();
+  const size_t len = Basis.size();
   for (size_t i = 0; i < len; i++) {
     if (toAdd.equiv(Basis[i])) {
       return false;
@@ -159,7 +158,7 @@ Fermi1DOpBasis & Fermi1DOpBasis::operator=(const Fermi1DOpBasis & rhs) {
 }
 
 void Fermi1DOpBasis::buildTable() {
-  size_t len = Basis.size();
+  const size_t len = Basis.size();
   for (size_t i = 0; i < len; i++) {
     lookupTable[Basis[i]] = i;
   }
@@ -200,7 +199,7 @@ size_t Fermi1DOpBasis::findIndex(const FermiMonomial<Fermi1DLadderOp> & mn) cons
 }
 
 vector<complex<double> > Fermi1DOpBasis::projPolyInf(
-    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) {
+    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) const {
   vector<complex<double> > ans(Basis.size());
   for (size_t index = 0; index < poly.getSize(); index++) {
     ans[findIndex(poly[index].second)] = poly[index].first;
@@ -210,7 +209,7 @@ vector<complex<double> > Fermi1DOpBasis::projPolyInf(
 
 std::vector<size_t> Fermi1DOpBasis::projPolyFinite(
     std::vector<std::complex<double> > & vec,
-    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) {
+    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) const {
   vector<size_t> validIdx;
   for (size_t polyIdx = 0; polyIdx < poly.getSize(); polyIdx++) {
     int basisIdx = findIndex(poly[polyIdx].second);
@@ -225,7 +224,7 @@ std::vector<size_t> Fermi1DOpBasis::projPolyFinite(
 vector<pair<size_t, size_t> > FermiFindHermPairs(const Fermi1DOpBasis & basis) {
   set<size_t> addedIndex;  //Index already scanned or added
   vector<pair<size_t, size_t> > ans;
-  size_t len = basis.getLength();
+  const size_t len = basis.getLength();
   for (size_t index = 0; index < len; index++) {
     if (addedIndex.find(index) != addedIndex.end()) {  //Already scanned index
       continue;
@@ -259,7 +258,8 @@ std::string FermiPrintHermPairs(const vector<pair<size_t, size_t> > & pairs) {
 
 void FermiTransVecToReIm(std::vector<std::complex<double> > & vec,
                          const std::vector<std::pair<size_t, size_t> > & pairs) {
-  for (size_t i = 0; i < pairs.size(); i++) {
+  const size_t len = pairs.size();
+  for (size_t i = 0; i < len; i++) {
     complex<double> ori1 = vec[pairs[i].first];
     complex<double> ori2 = vec[pairs[i].second];
     vec[pairs[i].first] = ori1 + ori2;

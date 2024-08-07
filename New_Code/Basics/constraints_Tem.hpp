@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
+  Updated: Aug 7, 2024
   
   Class Implementations:
   ConsBaseSet<MonomialType, IndexType>
@@ -39,18 +39,6 @@ ConsSet<MonomialType, IndexType> & ConsSet<MonomialType, IndexType>::operator=(
   }
   return *this;
 }
-
-/*
-template<typename MonomialType, typename IndexType>
-Polynomial<MonomialType> ConsSet<MonomialType, IndexType>::getIJPoly(size_t i, size_t j) {
-  MonomialType mnI = OpSet[i];
-  mnI.herm();
-  MonomialType mnJ = OpSet[j];
-  mnI *= mnJ;
-  Polynomial<MonomialType> ans(mnI);
-  return ans;
-}
-*/
 
 //-------------------------------------------------------Other Functions-----------------
 

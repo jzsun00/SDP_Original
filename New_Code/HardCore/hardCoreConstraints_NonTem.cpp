@@ -1,10 +1,10 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
-
+  Updated: Aug 7, 2024
+  
   Implementations of methods in class:
   Fermi1DLadderOp, FermiMonomial, FermiPolynomial.
- */
+*/
 
 #ifndef QM_HARDCORE_CONSTRAINTS_NONTEM_CPP
 #define QM_HARDCORE_CONSTRAINTS_NONTEM_CPP
@@ -92,7 +92,7 @@ void HardCore1DConsBaseSet::init() {
   }
 }
 
-std::string HardCore1DConsBaseSet::toString() {
+std::string HardCore1DConsBaseSet::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(BaseOpSet.size());
@@ -112,7 +112,7 @@ std::string HardCore1DConsBaseSet::toString() {
 
 //------------------------------------------------------------HardCore1DConsSet----------
 
-std::string HardCore1DConsSet::toString() {
+std::string HardCore1DConsSet::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(OpSet.size());
@@ -130,7 +130,7 @@ std::string HardCore1DConsSet::toString() {
 }
 
 void HardCore1DConsSet::addBaseSet(
-    ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
+    const ConsBaseSet<HardCoreMonomial<HardCore1DLadderOp>, int> & rhs) {
   vector<HardCoreMonomial<HardCore1DLadderOp> > sub = rhs.getFullBaseOpSet();
   OpSet.insert(OpSet.end(), sub.begin(), sub.end());
 }

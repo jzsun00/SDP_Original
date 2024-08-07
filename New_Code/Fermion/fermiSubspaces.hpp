@@ -59,10 +59,10 @@ class Fermi1DOpBasis : public OpBasis<FermiMonomial<Fermi1DLadderOp>, int> {
   virtual void addSubspace(const OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int> & rhs);
   size_t findIndex(const FermiMonomial<Fermi1DLadderOp> & mn) const;
   std::vector<std::complex<double> > projPolyInf(
-      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly);
+      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) const;
   std::vector<size_t> projPolyFinite(
       std::vector<std::complex<double> > & vec,
-      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly);
+      const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) const;
 };
 
 //-----------------------------------------------------------Other Functions-------------

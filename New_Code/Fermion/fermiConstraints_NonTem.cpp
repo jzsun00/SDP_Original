@@ -5,6 +5,8 @@
   Class Implementations:
   Fermi1DConsBaseSet
   Fermi1DConsSet
+  
+  Function Implementations:
 */
 
 #ifndef QM_FERMI_CONSTRAINTS_NONTEM_CPP
@@ -21,6 +23,16 @@ using std::pair;
 using std::vector;
 
 //-------------------------------------------------------------Fermi1DOpSubBasis------
+
+Fermi1DConsBaseSet & Fermi1DConsBaseSet::operator=(const Fermi1DConsBaseSet & rhs) {
+  if (this != &rhs) {
+    this->start = rhs.start;
+    this->end = rhs.end;
+    this->order = rhs.order;
+    this->BaseOpSet = rhs.BaseOpSet;
+  }
+  return *this;
+}
 
 void FermiConsMonomialsGenerator(vector<int> & current,
                                  int start,
@@ -95,7 +107,7 @@ void Fermi1DConsBaseSet::init() {
   }
 }
 
-std::string Fermi1DConsBaseSet::toString() {
+std::string Fermi1DConsBaseSet::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(BaseOpSet.size());
@@ -114,7 +126,12 @@ std::string Fermi1DConsBaseSet::toString() {
 
 //------------------------------------------------------------Fermi1DConsSet----------
 
-std::string Fermi1DConsSet::toString() {
+Fermi1DConsSet::Fermi1DConsSet() : ConsSet<FermiMonomial<Fermi1DLadderOp>, int>() {
+  Fermi1DLadderOp unit(true);
+  OpSet.push_back(unit);
+}
+
+std::string Fermi1DConsSet::toString() const {
   std::string ans;
   ans += "Number of basis operators = ";
   ans += std::to_string(OpSet.size());
@@ -131,13 +148,22 @@ std::string Fermi1DConsSet::toString() {
   return ans;
 }
 
-void Fermi1DConsSet::addBaseSet(ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs) {
+Fermi1DConsSet & Fermi1DConsSet::operator=(const Fermi1DConsSet & rhs) {
+  if (this != &rhs) {
+    this->OpSet = rhs.OpSet;
+  }
+  return *this;
+}
+
+void Fermi1DConsSet::addBaseSet(
+    const ConsBaseSet<FermiMonomial<Fermi1DLadderOp>, int> & rhs) {
   vector<FermiMonomial<Fermi1DLadderOp> > sub = rhs.getFullBaseOpSet();
   OpSet.insert(OpSet.end(), sub.begin(), sub.end());
 }
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > Fermi1DConsSet::getIJPoly(size_t i,
-                                                                           size_t j) {
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > Fermi1DConsSet::getIJPoly(
+    size_t i,
+    size_t j) const {
   FermiMonomial<Fermi1DLadderOp> mnI = OpSet[i];
   mnI.herm();
   FermiMonomial<Fermi1DLadderOp> mnJ = OpSet[j];
@@ -261,11 +287,12 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
   std::cout << "File has been written successfully." << std::endl;
 }
 
-void printSparseMatrixFermi1D(Fermi1DConsSet & constraints,
-                              Fermi1DOpBasis & basis,
-                              std::string fileName,
-                              vector<complex<double> > ham,
-                              vector<pair<size_t, size_t> > & pairs) {
+void printSparseMatrixFermi(const Fermi1DConsSet & constraints,
+                            const Fermi1DOpBasis & basis,
+                            const std::string fileName,
+                            const std::vector<std::complex<double> > ham,
+                            const std::vector<std::pair<size_t, size_t> > & pairs,
+                            bool isInf) {
   size_t matrixNum = basis.getLength();
   size_t matrixSize = constraints.getLength();
   vector<vector<vector<complex<double> > > > matrices(
@@ -379,7 +406,7 @@ void printSparseMatrixFermi1D(Fermi1DConsSet & constraints,
 }
 
 void FermiTransMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
-                         vector<pair<size_t, size_t> > & pairs) {
+                         const vector<pair<size_t, size_t> > & pairs) {
   for (size_t n = 0; n < pairs.size(); n++) {
     for (size_t i = 0; i < matrices[0].size(); i++) {
       for (size_t j = 0; j < matrices[0].size(); j++) {

@@ -22,9 +22,9 @@ int main(void) {
   cout << "\n1D XXZ Model Test: SDP Method" << endl << endl;
 
   /*Set number of sites and Jz.*/
-  size_t sites1 = 3;  //First order
-  size_t sites2 = 3;  //Second order
-  double Jz = 0.4;
+  size_t sites1 = 4;  //First order
+  size_t sites2 = 0;  //Second order
+  double Jz = 0;
   bool isInf = false;
   cout << "sites1 = " << sites1 << "\nsites2 = " << sites2 << "\nJz = " << Jz
        << "\nInfinite System = " << isInf << endl;
@@ -50,7 +50,7 @@ int main(void) {
   cout << "Operator Basis Construction Finished" << endl;
   cout << "Operator Basis:" << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = FermiFindHermPairs(basis);
-  //cout << "\nHermitian Conjugate Pairs:\n" << printHermPairs(pairs) << endl;
+  cout << "\nHermitian Conjugate Pairs:\n" << FermiPrintHermPairs(pairs) << endl;
 
   /*Compute cost function vector.*/
   cout << "\nNow compute the cost function vector" << endl;
@@ -82,7 +82,7 @@ int main(void) {
   std::string fileNameS =
       "./XXZ_data/N_" + std::to_string(sites1) + "_" + std::to_string(sites2) + ".dat-s";
   cout << "\nNow start writing data files" << endl;
-  printSparseMatrixFermi1D(fullSet, basis, fileNameS, ham, pairs);
+  printSparseMatrixFermi(fullSet, basis, fileNameS, ham, pairs, false);
   cout << "\nData successfully written in File:\n" << fileNameS << endl << endl;
 
   /*Exit*/
