@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 8, 2024
   
   Class:
   Fermi1DOpSubBasis

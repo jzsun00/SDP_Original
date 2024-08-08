@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 8, 2024
   
   Class Implementations:
   Fermi1DConsBaseSet
@@ -12,9 +12,11 @@
 #ifndef QM_FERMI_CONSTRAINTS_NONTEM_CPP
 #define QM_FERMI_CONSTRAINTS_NONTEM_CPP
 
+#include <cstddef>
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 #include "./fermiConstraints.hpp"
 
@@ -173,7 +175,7 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > Fermi1DConsSet::getIJPoly(
   return ans;
 }
 
-//-------------------------------------------------------------Other Functions-----------
+//-------------------------------------------------------------Other Functions--------
 
 void printMatrixFermi1D(Fermi1DConsSet & constraints,
                         Fermi1DOpBasis & basis,
@@ -287,61 +289,61 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
   std::cout << "File has been written successfully." << std::endl;
 }
 
-void printSparseMatrixFermi(const Fermi1DConsSet & constraints,
-                            const Fermi1DOpBasis & basis,
-                            const std::string fileName,
-                            const std::vector<std::complex<double> > ham,
-                            const std::vector<std::pair<size_t, size_t> > & pairs,
-                            bool isInf) {
+void FermiPrintSparseSDPData(const Fermi1DConsSet & constraints,
+                             const Fermi1DOpBasis & basis,
+                             const std::string & fileName,
+                             const std::vector<std::complex<double> > ham,
+                             const std::vector<std::pair<size_t, size_t> > & pairs,
+                             bool isInf) {
   size_t matrixNum = basis.getLength();
   size_t matrixSize = constraints.getLength();
-  vector<vector<vector<complex<double> > > > matrices(
-      matrixNum,
-      vector<vector<complex<double> > >(matrixSize,
-                                        vector<complex<double> >(matrixSize)));
-  for (size_t i = 0; i < matrixSize; i++) {
-    for (size_t j = 0; j < matrixSize; j++) {
+  vector<ComplexCOOMatrix> COOMatrices(matrixNum,
+                                       ComplexCOOMatrix(matrixSize, matrixSize));
+  std::cout << "\nStart Matrix Construction" << std::endl;
+  for (size_t i = 0; i < matrixSize; i++) {  //Fill the matrices
+    for (size_t j = i; j < matrixSize; j++) {
       FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > polyIJ =
           constraints.getIJPoly(i, j);
-      //if ((polyIJ.getSize() % 2) != 0) {
-      //  continue;
-      //}
-      //vector<complex<double> > entryIJ = basis.projPoly(polyIJ);
-      try {
-        vector<complex<double> > entryIJ = basis.projPolyInf(polyIJ);
-        for (size_t k = 0; k < matrixNum; k++) {
-          matrices[k][i][j] = entryIJ[k];
+      vector<complex<double> > entryIJ(matrixNum);
+      vector<size_t> validIdx;  //Only consider validIdx when adding to matrices
+      try {                     //Project polyIJ using the basis
+        if (isInf) {
+          entryIJ = basis.projPolyInf(polyIJ);
+        }
+        else {
+          validIdx = basis.projPolyFinite(entryIJ, polyIJ);
+        }
+        for (size_t k = 0; k < validIdx.size(); k++) {
+          COOMatrices[k].addData(i, j, entryIJ[k]);
         }
       }
       catch (std::exception & e) {
       }
     }
   }
-  FermiTransMatToReIm(matrices, pairs);
+  FermiTransSparseMatToReIm(COOMatrices, pairs);
   std::cout << "\nMatrix construction completed" << std::endl
             << "Start writing file" << std::endl;
+  FermiPrintFileSparseSDPData(COOMatrices, ham, fileName);
+}
+
+void FermiPrintFileSparseSDPData(const vector<ComplexCOOMatrix> & COOMatrices,
+                                 const std::vector<std::complex<double> > ham,
+                                 const std::string & fileName) {
   std::ofstream inputFile(fileName);
   if (!inputFile.is_open()) {
-    std::cerr << "Failed to open file for writing." << std::endl;
+    throw std::invalid_argument("ERROR: Failed to open file for writing!\n");
   }
+  size_t matrixNum = COOMatrices.size();
+  size_t matrixSize = COOMatrices[0].getNrows();
   inputFile << "\"XXZ Test: mDim = " << matrixNum - 1 << ", nBLOCK = 1, {"
             << matrixSize * 2 << "}\"" << std::endl;
   inputFile << matrixNum - 1 << "  =  mDIM" << std::endl;
   inputFile << "1  =  nBLOCK" << std::endl;
   inputFile << matrixSize * 2 << "  = bLOCKsTRUCT" << std::endl;
   inputFile << "{";
-  for (size_t i = 1; i < ham.size(); i++) {
-    if (i == 1) {
-      inputFile << 2 * ham[i].real();
-    }
-    ////////////////////////////////////
-    else if (i == 2) {
-      inputFile << -ham[i].real();
-    }
-    ///////////////////////////////////
-    else {
-      inputFile << ham[i].real();
-    }
+  for (size_t i = 1; i < ham.size(); i++) {  //Print cost function
+    inputFile << ham[i].real();
     if (i < ham.size() - 1) {
       inputFile << ", ";
     }
@@ -416,6 +418,18 @@ void FermiTransMatToReIm(vector<vector<vector<complex<double> > > > & matrices,
         matrices[pairs[n].second][i][j] = complex<double>(0, 1.0) * (ori1 - ori2);
       }
     }
+  }
+}
+
+void FermiTransSparseMatToReIm(std::vector<ComplexCOOMatrix> & matrices,
+                               const std::vector<std::pair<size_t, size_t> > & pairs) {
+  size_t len = pairs.size();
+  for (size_t n = 0; n < len; n++) {
+    ComplexCOOMatrix mat1cp(matrices[pairs[n].first]);
+    matrices[pairs[n].first] += matrices[pairs[n].second];
+    matrices[pairs[n].second] *= complex<double>(-1.0, 0);
+    matrices[pairs[n].second] += mat1cp;
+    matrices[pairs[n].second] *= complex<double>(0, 1.0);
   }
 }
 

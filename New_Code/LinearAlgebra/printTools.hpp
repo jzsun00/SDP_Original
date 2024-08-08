@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 22, 2024
+  Updated: Aug 8, 2024
 
   Class:
   
@@ -43,6 +43,9 @@ namespace LA {
 
   /*Convert an std::vector of integer numbers to std::string.*/
   std::string intVector_toString(const std::vector<int> & vec);
+
+  /*Convert an std::vector of size_t numbers to std::string.*/
+  std::string size_tVector_toString(const std::vector<size_t> & vec);
 
   /*Convert an std::vector of double numbers to std::string.*/
   std::string doubleVector_toString(const std::vector<double> & vec);

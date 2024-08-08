@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Jul 22, 2024
+  Updated: Aug 8, 2024
 
   Function Implementations:
   string complex_toString(const complex<double> & num);
@@ -39,6 +39,25 @@ std::string LA::complex_toString(const complex<double> & num) {
 
 /*Convert an std::vector of integer numbers to std::string.*/
 std::string LA::intVector_toString(const vector<int> & vec) {
+  std::string ans = "[ ";
+  size_t count = 1;
+  const size_t len = vec.size();
+  for (size_t i = 0; i < len; ++i) {
+    ans += (std::to_string(count) + "\t");
+    ans += std::to_string(vec[i]);
+    if (i != len - 1) {
+      ans += "\n";
+    }
+    else {
+      ans += "  ]";
+    }
+    count++;
+  }
+  return ans;
+}
+
+/*Convert an std::vector of size_t numbers to std::string.*/
+std::string LA::size_tVector_toString(const std::vector<size_t> & vec) {
   std::string ans = "[ ";
   size_t count = 1;
   const size_t len = vec.size();

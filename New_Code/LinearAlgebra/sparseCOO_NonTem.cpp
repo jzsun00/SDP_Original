@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 8, 2024
 
   Class Implementations:
   ComplexCOOMatrix
@@ -10,7 +10,7 @@
 #define LA_SPARSE_MATRIX_COO_NON_TEM_CPP
 
 #include "./printTools.hpp"
-#include "./sparseCOO.hpp"
+#include "./sparseCOO_Tem.hpp"
 
 //-----------------------------------------------------------ComplexCOOMatrix------------
 

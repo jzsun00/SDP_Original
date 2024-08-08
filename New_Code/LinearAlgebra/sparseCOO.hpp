@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 8, 2024
   
   Define tools for Coordinate Format (COO) sparse matrix operations.
 */
@@ -39,9 +39,13 @@ class COOMatrix {
   std::vector<size_t> getCols() const { return cols; }
   std::vector<DataType> getAllData() const { return data; }
   std::string toString() const;
-  virtual std::string element_toString(DataType element) const = 0;
+  virtual std::string element_toString(DataType element) const;
   /*Modify the matrix.*/
   void addData(size_t rowId, size_t colId, DataType newData);
+  COOMatrix & operator=(const COOMatrix<DataType> & rhs);
+  COOMatrix & operator+=(const COOMatrix<DataType> & rhs);
+  COOMatrix & operator-=(const COOMatrix<DataType> & rhs);
+  COOMatrix & operator*=(const std::complex<double> pref);
 };
 
 //-----------------------------------------------------------ComplexCOOMatrix------------

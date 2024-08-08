@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 8, 2024
   
   Class:
   Fermi1DConsBaseSet
@@ -50,7 +50,7 @@ class Fermi1DConsSet : public ConsSet<FermiMonomial<Fermi1DLadderOp>, int> {
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > getIJPoly(size_t i, size_t j) const;
 };
 
-//-------------------------------------------------------------Other Functions-----------
+//-------------------------------------------------------------Other Functions--------
 
 void printMatrixFermi1D(Fermi1DConsSet & constraints,
                         Fermi1DOpBasis & basis,
@@ -58,15 +58,22 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
                         std::vector<std::complex<double> > ham,
                         std::vector<std::pair<size_t, size_t> > & pairs);
 
-void printSparseMatrixFermi(const Fermi1DConsSet & constraints,
-                            const Fermi1DOpBasis & basis,
-                            const std::string fileName,
-                            const std::vector<std::complex<double> > ham,
-                            const std::vector<std::pair<size_t, size_t> > & pairs,
-                            bool isInf);
+void FermiPrintSparseSDPData(const Fermi1DConsSet & constraints,
+                             const Fermi1DOpBasis & basis,
+                             const std::string fileName,
+                             const std::vector<std::complex<double> > ham,
+                             const std::vector<std::pair<size_t, size_t> > & pairs,
+                             bool isInf);
+
+void FermiPrintFileSparseSDPData(const vector<ComplexCOOMatrix> & COOMatrices,
+                                 const std::vector<std::complex<double> > ham,
+                                 const std::string & fileName);
 
 void FermiTransMatToReIm(
     std::vector<std::vector<std::vector<std::complex<double> > > > & matrices,
     const std::vector<std::pair<size_t, size_t> > & pairs);
+
+void FermiTransSparseMatToReIm(std::vector<ComplexCOOMatrix> & matrices,
+                               const std::vector<std::pair<size_t, size_t> > & pairs);
 
 #endif  //QM_FERMI_CONSTRAINTS_HPP
