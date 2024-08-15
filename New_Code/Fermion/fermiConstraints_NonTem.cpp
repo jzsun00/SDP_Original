@@ -291,8 +291,8 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
 
 void FermiPrintSparseSDPData(const Fermi1DConsSet & constraints,
                              const Fermi1DOpBasis & basis,
-                             const std::string & fileName,
-                             const std::vector<std::complex<double> > ham,
+                             const std::string fileName,
+                             const std::vector<std::complex<double> > & ham,
                              const std::vector<std::pair<size_t, size_t> > & pairs,
                              bool isInf) {
   size_t matrixNum = basis.getLength();
@@ -301,27 +301,31 @@ void FermiPrintSparseSDPData(const Fermi1DConsSet & constraints,
                                        ComplexCOOMatrix(matrixSize, matrixSize));
   std::cout << "\nStart Matrix Construction" << std::endl;
   for (size_t i = 0; i < matrixSize; i++) {  //Fill the matrices
-    for (size_t j = i; j < matrixSize; j++) {
+    for (size_t j = 0; j < matrixSize; j++) {
       FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > polyIJ =
           constraints.getIJPoly(i, j);
       vector<complex<double> > entryIJ(matrixNum);
       vector<size_t> validIdx;  //Only consider validIdx when adding to matrices
       try {                     //Project polyIJ using the basis
         if (isInf) {
-          entryIJ = basis.projPolyInf(polyIJ);
+          //entryIJ = basis.projPolyInf(polyIJ);
+          validIdx = basis.projPolyInf(entryIJ, polyIJ);
         }
         else {
           validIdx = basis.projPolyFinite(entryIJ, polyIJ);
         }
+        //std::cout << "polyIJ = " << polyIJ.toString() << std::endl;
         for (size_t k = 0; k < validIdx.size(); k++) {
-          COOMatrices[k].addData(i, j, entryIJ[k]);
+          COOMatrices[validIdx[k]].addData(i, j, entryIJ[validIdx[k]]);
         }
       }
       catch (std::exception & e) {
+        //std::cout << e.what() << std::endl;
       }
     }
   }
   FermiTransSparseMatToReIm(COOMatrices, pairs);
+  COOMatrices[0] *= complex<double>(-1.0, 0);
   std::cout << "\nMatrix construction completed" << std::endl
             << "Start writing file" << std::endl;
   FermiPrintFileSparseSDPData(COOMatrices, ham, fileName);
@@ -349,57 +353,30 @@ void FermiPrintFileSparseSDPData(const vector<ComplexCOOMatrix> & COOMatrices,
     }
   }
   inputFile << " }" << std::endl;
-  for (size_t num = 0; num < matrixNum; num++) {
-    for (size_t i = 0; i < matrixSize; i++) {
-      // First Block
-      for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j].real()) < ERROR) {
-          continue;
-        }
-        if (num == 0) {
-          inputFile << num << " "
-                    << "1 " << i + 1 << " " << j + 1 << " " << -matrices[num][i][j].real()
-                    << std::endl;
-        }
-        else {
-          inputFile << num << " "
-                    << "1 " << i + 1 << " " << j + 1 << " " << matrices[num][i][j].real()
-                    << std::endl;
-        }
+  for (size_t num = 0; num < matrixNum; num++) {  //Print constraint matrices
+    size_t nnzNum = COOMatrices[num].getNnz();
+    vector<size_t> rows = COOMatrices[num].getRows();
+    vector<size_t> cols = COOMatrices[num].getCols();
+    vector<complex<double> > values = COOMatrices[num].getAllData();
+    for (size_t i = 0; i < nnzNum; ++i) {
+      size_t row = rows[i];
+      size_t col = cols[i];
+      complex<double> value = values[i];
+      // Real part
+      if (row <= col && std::abs(value.real()) > ERROR) {
+        inputFile << num << " "
+                  << "1 " << row + 1 << " " << col + 1 << " " << value.real()
+                  << std::endl;
+
+        inputFile << num << " "
+                  << "1 " << row + 1 + matrixSize << " " << col + 1 + matrixSize << " "
+                  << value.real() << std::endl;
       }
-      // Second Block
-      for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j].imag()) < ERROR) {
-          continue;
-        }
-        if (num == 0) {
-          inputFile << num << " "
-                    << "1 " << i + 1 << " " << j + 1 + matrixSize << " "
-                    << matrices[num][i][j].imag() << std::endl;
-        }
-        else {
-          inputFile << num << " "
-                    << "1 " << i + 1 << " " << j + 1 + matrixSize << " "
-                    << -matrices[num][i][j].imag() << std::endl;
-        }
-      }
-    }
-    for (size_t i = 0; i < matrixSize; i++) {
-      // Fourth Block
-      for (size_t j = i; j < matrixSize; j++) {
-        if (std::abs(matrices[num][i][j].real()) < ERROR) {
-          continue;
-        }
-        if (num == 0) {
-          inputFile << num << " "
-                    << "1 " << i + 1 + matrixSize << " " << j + 1 + matrixSize << " "
-                    << -matrices[num][i][j].real() << std::endl;
-        }
-        else {
-          inputFile << num << " "
-                    << "1 " << i + 1 + matrixSize << " " << j + 1 + matrixSize << " "
-                    << matrices[num][i][j].real() << std::endl;
-        }
+      // Negative imaginary part (top right block)
+      if (std::abs(value.imag()) > ERROR) {
+        inputFile << num << " "
+                  << "1 " << row + 1 << " " << col + 1 + matrixSize << " "
+                  << -value.imag() << std::endl;
       }
     }
   }

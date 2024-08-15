@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 8, 2024
   
   Class Implementations:
   XXZSparseHamiltonian
@@ -316,6 +316,59 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
         complex<double>(-0.5 * Jz, 0), MNzN);
     ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
         complex<double>(0.25 * Jz, 0), unitMn);
+  }
+  return ans;
+}
+
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
+                                                                     int end,
+                                                                     double Jz) {
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > ans;
+  for (int i = start; i < end; i++) {
+    Fermi1DLadderOp Su(i, true);
+    Fermi1DLadderOp Sd(i, false);
+    Fermi1DLadderOp SuN(i + 1, true);
+    Fermi1DLadderOp SdN(i + 1, false);
+    FermiMonomial<Fermi1DLadderOp> MNud(Su);
+    MNud *= SdN;
+    FermiMonomial<Fermi1DLadderOp> MNdu(Sd);
+    MNdu *= SuN;
+    FermiMonomial<Fermi1DLadderOp> MNz(Su);
+    MNz *= Sd;
+    FermiMonomial<Fermi1DLadderOp> MNzN(SuN);
+    MNzN *= SdN;
+    FermiMonomial<Fermi1DLadderOp> MNzz(MNz);
+    MNzz *= MNzN;
+    Fermi1DLadderOp unitOp(true);
+    FermiMonomial<Fermi1DLadderOp> unitMn(unitOp);
+    if (i == start || i == end - 1) {
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(0.25, 0), MNud);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.25, 0), MNdu);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(0.5 * Jz, 0), MNzz);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.25 * Jz, 0), MNz);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.25 * Jz, 0), MNzN);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(0.125 * Jz, 0), unitMn);
+    }
+    else {
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(0.5, 0), MNud);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.5, 0), MNdu);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(Jz, 0), MNzz);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.5 * Jz, 0), MNz);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(-0.5 * Jz, 0), MNzN);
+      ans += pair<complex<double>, FermiMonomial<Fermi1DLadderOp> >(
+          complex<double>(0.25 * Jz, 0), unitMn);
+    }
   }
   return ans;
 }

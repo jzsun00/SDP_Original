@@ -15,6 +15,7 @@
 #ifndef QM_FERMI_SUBSPACES_NONTEM_CPP
 #define QM_FERMI_SUBSPACES_NONTEM_CPP
 
+#include <exception>
 #include <set>
 #include <stdexcept>
 
@@ -84,6 +85,9 @@ void Fermi1DOpSubBasis::init(bool isInf) {
     if (m == 0) {
       vector<FermiMonomial<Fermi1DLadderOp> > creation =
           FermiListMonomials(order, start, end, true);
+      for (size_t i = 0; i < creation.size(); i++) {
+        creation[i].reverse();
+      }
       Basis.insert(Basis.end(), creation.begin(), creation.end());
     }
     else if (m == order) {
@@ -205,6 +209,40 @@ vector<complex<double> > Fermi1DOpBasis::projPolyInf(
     ans[findIndex(poly[index].second)] = poly[index].first;
   }
   return ans;
+}
+
+std::vector<size_t> Fermi1DOpBasis::projPolyInf(
+    std::vector<std::complex<double> > & vec,
+    const FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > & poly) const {
+  vector<size_t> validIdx;
+  for (size_t polyIdx = 0; polyIdx < poly.getSize(); polyIdx++) {
+    FermiMonomial<Fermi1DLadderOp> cp1(poly[polyIdx].second);
+    FermiMonomial<Fermi1DLadderOp> cp2(poly[polyIdx].second);
+    cp1.moveIndex(-cp1[0].getIndex());
+    cp2.moveIndex(-cp2[cp2.getSize() - 1].getIndex());
+    int basisIdx;
+    bool validPoly = false;
+    try {
+      basisIdx = findIndex(cp1);
+      validPoly = true;
+    }
+    catch (std::exception & e) {
+    }
+    try {
+      basisIdx = findIndex(cp2);
+      validPoly = true;
+    }
+    catch (std::exception & e) {
+    }
+    if (!validPoly) {
+      std::string error("ERROR: Input Fermi Monomial");
+      error += " does not exist in the Basis!\n";
+      throw std::runtime_error(error);
+    }
+    vec[basisIdx] = poly[polyIdx].first;
+    validIdx.push_back(basisIdx);
+  }
+  return validIdx;
 }
 
 std::vector<size_t> Fermi1DOpBasis::projPolyFinite(

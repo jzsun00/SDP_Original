@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 3, 2024
+  Updated: Aug 8, 2024
   
   Class:
   XXZSparseHamiltonian
@@ -95,6 +95,10 @@ SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz);
 FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
                                                                int end,
                                                                double Jz);
+
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
+                                                                     int end,
+                                                                     double Jz);
 
 FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
                                                                   int end,

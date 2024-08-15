@@ -13,6 +13,7 @@
 #define QM_FERMI_CONSTRAINTS_HPP
 
 #include "../Basics/constraints_Tem.hpp"
+#include "../LinearAlgebra/printTools.hpp"
 #include "../LinearAlgebra/sparseCOO_Tem.hpp"
 #include "./fermiOperators_Tem.hpp"
 #include "./fermiSubspaces.hpp"
@@ -61,7 +62,7 @@ void printMatrixFermi1D(Fermi1DConsSet & constraints,
 void FermiPrintSparseSDPData(const Fermi1DConsSet & constraints,
                              const Fermi1DOpBasis & basis,
                              const std::string fileName,
-                             const std::vector<std::complex<double> > ham,
+                             const std::vector<std::complex<double> > & ham,
                              const std::vector<std::pair<size_t, size_t> > & pairs,
                              bool isInf);
 
