@@ -1,12 +1,12 @@
 /*
   Jiazheng Sun
-  Updated: Jul 30, 2024
-
+  Updated: Aug 15, 2024
+  
   Class:
   SparseHamiltonian<PolyType, BaseStateType>
   SparseRealHamiltonian<PolyType, BaseStateType>
   FullHamiltonian<PolyType, BaseStateType>
-
+  
   Define Hamiltonian matrices.
   Sparse Hamiltonians use CSC format for ARPACK++.
   SparseRealHamiltonian contains the lower triangular part of the matrix,

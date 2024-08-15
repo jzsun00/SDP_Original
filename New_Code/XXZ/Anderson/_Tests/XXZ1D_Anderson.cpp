@@ -36,7 +36,7 @@ int main() {
   for (size_t i = 0; i < Jz.size(); i++) {
     cout << "Jz = " << Jz[i] << endl << endl;
     /*Construct polynomial and basis.*/
-    SpinHalfPolynomial1D poly = makeSpinPoly(sites, Jz[i]);
+    SpinHalfPolynomial1D poly = XXZ1D::makeSpinPoly(sites, Jz[i]);
     SpinHalfBasis1D basis(sites);
     auto start_basis_init = std::chrono::high_resolution_clock::now();
     basis.init(1);

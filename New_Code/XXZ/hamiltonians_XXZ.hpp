@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 8, 2024
+  Updated: Aug 15, 2024
   
   Class:
   XXZSparseHamiltonian
@@ -90,23 +90,31 @@ class XXZFullHamiltonian
 
 //----------------------------------------------------------------Other Functions--------
 
-SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz);
+namespace XXZ1D {
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
-                                                               int end,
-                                                               double Jz);
+  /*Open boundary condition, interaction at the boundary is divided by 2.*/
+  SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz);
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
-                                                                     int end,
-                                                                     double Jz);
+  /*Periodic boundary condition.*/
+  SpinHalfPolynomial1D makeSpinPolyPBC(size_t sites, double Jz);
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
-                                                                  int end,
-                                                                  double Jz);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
+                                                                 int end,
+                                                                 double Jz);
 
-HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makeHardCorePoly(size_t sites,
-                                                                           double Jz);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
+                                                                       int end,
+                                                                       double Jz);
 
-SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
+                                                                    int end,
+                                                                    double Jz);
+
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makeHardCorePoly(size_t sites,
+                                                                             double Jz);
+
+  SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs);
+
+}  // namespace XXZ1D
 
 #endif  //ORI_SDP_GS_HAMILTONIANS_XXZ_HPP

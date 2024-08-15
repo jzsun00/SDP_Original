@@ -1,11 +1,20 @@
 /*
   Jiazheng Sun
-  Updated: Aug 8, 2024
+  Updated: Aug 15, 2024
   
   Class Implementations:
   XXZSparseHamiltonian
   XXZSparseRealHamiltonian
   XXZFullHamiltonian
+  
+  Function Implementations:
+  SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz);
+  SpinHalfPolynomial1D makeSpinPolyPBC(size_t sites, double Jz);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start, int end, double Jz);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start, int end, double Jz);
+  FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start, int end, double Jz);
+  HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makeHardCorePoly(size_t sites, double Jz);
+  SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs);
 */
 
 #ifndef ORI_SDP_GS_HAMILTONIANS_XXZ_NONTEM_CPP
@@ -37,7 +46,7 @@ void XXZSparseHamiltonian::createMatrix(SpinHalfBasis1D & basis) {
     {
 #pragma omp for
       for (long unsigned j = 0; j < currentSize; j++) {
-        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+        midStates[j] = XXZ1D::makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
       }
     }
 
@@ -196,7 +205,7 @@ void XXZSparseRealHamiltonian::createRefSymMatrix(SpinHalfBasis1D & basis) {
     {
 #pragma omp for
       for (long unsigned j = 0; j < currentSize; j++) {
-        midStates[j] = makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
+        midStates[j] = XXZ1D::makeMidState(sites, Jz, basis[j + batchSize * batchIdx]);
       }
     }
 
@@ -254,7 +263,7 @@ void XXZSparseRealHamiltonian::createRefSymMatrix(SpinHalfBasis1D & basis) {
 
 //----------------------------------------------------------------Other Functions--------
 
-SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz) {
+SpinHalfPolynomial1D XXZ1D::makeSpinPoly(size_t sites, double Jz) {
   SpinHalfPolynomial1D ans;
   for (size_t i = 0; i < sites - 1; i++) {
     SpinHalfOp1D Sz(i);
@@ -283,9 +292,31 @@ SpinHalfPolynomial1D makeSpinPoly(size_t sites, double Jz) {
   return ans;
 }
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
-                                                               int end,
-                                                               double Jz) {
+SpinHalfPolynomial1D XXZ1D::makeSpinPolyPBC(size_t sites, double Jz) {
+  SpinHalfPolynomial1D ans;
+  for (size_t i = 0; i < sites; i++) {
+    SpinHalfOp1D Sz(i);
+    SpinHalfOp1D SzN((i + 1) % sites);
+    SpinHalfOp1D Su(i, true);
+    SpinHalfOp1D Sd(i, false);
+    SpinHalfOp1D SuN((i + 1) % sites, true);
+    SpinHalfOp1D SdN((i + 1) % sites, false);
+    SpinHalfMonomial1D MNud(Su);
+    MNud *= SdN;
+    SpinHalfMonomial1D MNdu(Sd);
+    MNdu *= SuN;
+    SpinHalfMonomial1D MNz(Sz);
+    MNz *= SzN;
+    ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.5, 0), MNud);
+    ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(0.5, 0), MNdu);
+    ans += pair<complex<double>, SpinHalfMonomial1D>(complex<double>(Jz, 0), MNz);
+  }
+  return ans;
+}
+
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > XXZ1D::makeFermiPoly(int start,
+                                                                      int end,
+                                                                      double Jz) {
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > ans;
   for (int i = start; i < end; i++) {
     Fermi1DLadderOp Su(i, true);
@@ -320,9 +351,9 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
   return ans;
 }
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
-                                                                     int end,
-                                                                     double Jz) {
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > XXZ1D::makeFermiFinitePoly(int start,
+                                                                            int end,
+                                                                            double Jz) {
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > ans;
   for (int i = start; i < end; i++) {
     Fermi1DLadderOp Su(i, true);
@@ -373,9 +404,9 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
   return ans;
 }
 
-FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
-                                                                  int end,
-                                                                  double Jz) {
+FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > XXZ1D::makeFermiPolyPBC(int start,
+                                                                         int end,
+                                                                         double Jz) {
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > ans;
   for (int i = start; i <= end; i++) {
     Fermi1DLadderOp Su(i, true);
@@ -414,8 +445,9 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPolyPBC(int start,
   return ans;
 }
 
-HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > makeHardCorePoly(size_t sites,
-                                                                           double Jz) {
+HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > XXZ1D::makeHardCorePoly(
+    size_t sites,
+    double Jz) {
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > ans;
   for (int i = 0; i < (int)sites - 1; i++) {
     //SpinHalfOp Sz(i);
@@ -490,7 +522,9 @@ inline SpinHalfState1D Szz(size_t index, vector<bool> & Nums, double pref) {
   }
 }
 
-SpinHalfState1D makeMidState(size_t sites, double Jz, const SpinHalfBaseState1D & rhs) {
+SpinHalfState1D XXZ1D::makeMidState(size_t sites,
+                                    double Jz,
+                                    const SpinHalfBaseState1D & rhs) {
   SpinHalfState1D ans;
   vector<bool> Nums(rhs.getAllNums());
   for (size_t i = 0; i < sites - 1; i++) {

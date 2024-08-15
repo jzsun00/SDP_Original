@@ -1,7 +1,7 @@
 /*
   Jiazheng Sun
-  Updated: Aug 2, 2024
-
+  Updated: Aug 15, 2024
+  
   Calculate Anderson bound of 1D XXZ model ground state energy.
   Use full basis of quantum states without symmetry considerations.
   Use real number elements and symmetric matrix for higher performance.
@@ -42,7 +42,7 @@ int main() {
 
   for (size_t i = 0; i < Jz.size(); i++) {
     /*Construct polynomial and basis.*/
-    SpinHalfPolynomial1D poly = makeSpinPoly(sites, Jz[i]);
+    SpinHalfPolynomial1D poly = XXZ1D::makeSpinPoly(sites, Jz[i]);
     SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
     auto start_basis_init = std::chrono::high_resolution_clock::now();
     basis->init();

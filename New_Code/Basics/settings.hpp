@@ -1,16 +1,17 @@
 /*
   Jiazheng Sun
-  Updated: Aug 6, 2024
-
+  Updated: Aug 15, 2024
+  
   Class:
   
   Function:
   string complex_toString(const complex<double> & num);
   string intVector_toString(const vector<int> & vec);
+  string sizetVector_toString(const vector<size_t> & vec);
   string doubleVector_toString(const vector<double> & vec);
   string complexVector_toString(const vector<complex<double> > & vec);
   string complexMatrix_toString(const vector<vector<complex<double> > > & matrix);
-
+  
   Define general settings that can be used for the entire project.
 */
 
@@ -44,6 +45,9 @@ std::string complex_toString(const std::complex<double> & num);
 
 /*Convert an std::vector of integer numbers to std::string.*/
 std::string intVector_toString(const std::vector<int> & vec);
+
+/*Convert an std::vector of size_t numbers to std::string.*/
+std::string sizetVector_toString(const std::vector<size_t> & vec);
 
 /*Convert an std::vector of double numbers to std::string.*/
 std::string doubleVector_toString(const std::vector<double> & vec);

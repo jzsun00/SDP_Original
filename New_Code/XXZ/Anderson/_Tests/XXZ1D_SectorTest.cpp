@@ -39,7 +39,7 @@ int main() {
   for (size_t i = 0; i < Sztotal.size(); i++) {
     cout << "Sztotal = " << Sztotal[i] << endl << endl;
     /*Construct polynomial and basis.*/
-    SpinHalfPolynomial1D poly = makeSpinPoly(sites, Jz);
+    SpinHalfPolynomial1D poly = XXZ1D::makeSpinPoly(sites, Jz);
     SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
     auto start_basis_init = std::chrono::high_resolution_clock::now();
     basis->init(Sztotal[i]);
