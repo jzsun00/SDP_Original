@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 15, 2024
   
   Class Implementations:
   OpSubBasis<MonomialType, IndexType>
@@ -9,8 +9,6 @@
 
 #ifndef QM_SUBSPACES_TEM_HPP
 #define QM_SUBSPACES_TEM_HPP
-
-#include <cstddef>
 
 #include "./subspaces.hpp"
 
@@ -32,7 +30,7 @@ template<typename MonomialType, typename IndexType>
 std::vector<std::complex<double> > OpSubBasis<MonomialType, IndexType>::projPoly(
     const Polynomial<MonomialType> & poly) const {
   const size_t len = Basis.size();
-  std::vector<std::complex<double> > ans(len);
+  std::vector<std::complex<double> > ans(len, std::complex<double>(0, 0));
   for (size_t index = 0; index < len; index++) {
     MonomialType basisMn = Basis[index];
     for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {
@@ -60,7 +58,7 @@ template<typename MonomialType, typename IndexType>
 std::vector<std::complex<double> > OpBasis<MonomialType, IndexType>::projPoly(
     const Polynomial<MonomialType> & poly) const {
   const size_t len = Basis.size();
-  std::vector<std::complex<double> > ans(len);
+  std::vector<std::complex<double> > ans(len, std::complex<double>(0, 0));
   for (size_t index = 0; index < len; index++) {
     MonomialType basisMn = Basis[index];
     for (auto it = poly.getBegin(); it != poly.getEnd(); ++it) {

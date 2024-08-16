@@ -12,7 +12,7 @@ int main(void) {
   size_t sites = 48;
   double Jz = 0;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 =
-      makeHardCorePoly(sites, Jz);
+      XXZ1D::makeHardCorePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   //cout << "\nHamiltonian =\n" << poly1.toString() << endl;
   poly1.normalize();

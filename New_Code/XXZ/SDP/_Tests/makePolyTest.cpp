@@ -10,7 +10,7 @@ int main(void) {
   size_t sites = 3;
   double Jz = 0.2;
   HardCorePolynomial<HardCoreMonomial<HardCore1DLadderOp> > poly1 =
-      makeHardCorePoly(sites, Jz);
+      XXZ1D::makeHardCorePoly(sites, Jz);
   cout << "sites = " << sites << "\nJz = " << Jz << endl;
   cout << "poly1 = " << poly1.toString() << endl;
   poly1.normalize();

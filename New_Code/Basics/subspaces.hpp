@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 7, 2024
+  Updated: Aug 15, 2024
   
   Class:
   OpSubBasis<MonomialType, IndexType>

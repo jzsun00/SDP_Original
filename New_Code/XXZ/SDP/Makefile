@@ -21,7 +21,7 @@ LA_OBJ_DIR := ../../LinearAlgebra/_Objs
 
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic
+CXXFLAGS := -std=c++20 -Wall -Wextra -pedantic -fopenmp
 LDFLAGS := -lsuperlu  -larpack -lopenblas -llapacke -lgfortran
 
 # Source files

@@ -1,12 +1,13 @@
 /*
   Jiazheng Sun
-  Updated: Aug 8, 2024
+  Updated: Aug 15, 2024
   
   Use spinless Fermion formalism to compute ground state energy of 1D XXZ Model.
+  Use finite system and PBC.
 */
 
-#ifndef XXZ_1D_SDP_FERMI_TEST_CPP
-#define XXZ_1D_SDP_FERMI_TEST_CPP
+#ifndef XXZ_1D_SDP_FINITE_FERMI_TEST_CPP
+#define XXZ_1D_SDP_FINITE_FERMI_TEST_CPP
 
 #include "../../../Fermion/fermiConstraints.hpp"
 #include "../../../Fermion/fermiSubspaces.hpp"
@@ -22,18 +23,18 @@ int main(void) {
   cout << "\n1D XXZ Model Test: SDP Method" << endl << endl;
 
   /*Set number of sites and Jz.*/
-  size_t sites1 = 20;  //First order
-  size_t sites2 = 20;  //Second order
-  double Jz = 1.5;
-  bool isInf = true;
+  size_t sites1 = 4;  //First order
+  size_t sites2 = 0;  //Second order
+  double Jz = 0;
+  bool isInf = false;
   cout << "sites1 = " << sites1 << "\nsites2 = " << sites2 << "\nJz = " << Jz
        << "\nInfinite System = " << isInf << endl;
 
   /*Construct Hamiltonian and convert to normal order.*/
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > hamPoly =
-      XXZ1D::makeFermiPoly(-1, sites1, Jz);
+      XXZ1D::makeFermiPolyPBC(0, sites1 - 1, Jz);
   hamPoly.normalOrder();
-  //cout << "H_XXZ = " << hamPoly.toString() << endl;
+  cout << "H_XXZ = " << hamPoly.toString() << endl;
 
   /*Construct operator basis.*/
   cout << "\nNow construct operator basis" << endl;
@@ -48,21 +49,21 @@ int main(void) {
   }
   basis.buildTable();
   cout << "Operator Basis Construction Finished" << endl;
-  //cout << "Operator Basis:" << basis.toString() << endl;
+  cout << "Operator Basis:" << basis.toString() << endl;
   vector<pair<size_t, size_t> > pairs = FermiFindHermPairs(basis);
-  //cout << "\nHermitian Conjugate Pairs:\n" << FermiPrintHermPairs(pairs) << endl;
+  cout << "\nHermitian Conjugate Pairs:\n" << FermiPrintHermPairs(pairs) << endl;
 
   /*Compute cost function vector.*/
   cout << "\nNow compute the cost function vector" << endl;
   vector<complex<double> > ham(basis.getLength());
   basis.projPolyInf(ham, hamPoly);
-  //cout << "Hamiltonian Vector:" << endl << complexVector_toString(ham) << endl;
+  cout << "Hamiltonian Vector:" << endl << complexVector_toString(ham) << endl;
   FermiTransVecToReIm(ham, pairs);
   //cout << "\nAfter Transform To Real And Imaginary Parts Of Green's "
   //       "Functions\nHamiltonian Vector:"
   //     << endl;
   cout << "Identity Constant:\n" << complex_toString(ham[0]) << endl;
-  //cout << complexVector_toString(ham) << endl;
+  cout << complexVector_toString(ham) << endl;
 
   /*Construct constraint operator basis.*/
   cout << "\nNow construct constraint operator set" << endl;
@@ -76,19 +77,19 @@ int main(void) {
     fullSet.addBaseSet(base2);
   }
   cout << "Constraint Set Construction Finished" << endl;
-  //cout << "Constraint operator set:\n" << fullSet.toString() << endl;
+  cout << "Constraint operator set:\n" << fullSet.toString() << endl;
 
   /*Compute constraint matrices.*/
   /*Print cost function and constraint matrices into file.*/
-  std::string fileNameS =
-      "./XXZ_data/N_" + std::to_string(sites1) + "_" + std::to_string(sites2) + ".dat-s";
+  std::string fileName = "./XXZFinite_data/N_" + std::to_string(sites1) + "_" +
+                         std::to_string(sites2) + ".dat-s";
   cout << "\nNow start writing data files" << endl;
-  FermiPrintSparseSDPData(fullSet, basis, fileNameS, ham, pairs, isInf);
-  cout << "\nData successfully written in File:\n" << fileNameS << endl << endl;
+  FermiPrintSparseSDPData(fullSet, basis, fileName, ham, pairs, isInf);
+  cout << "\nData successfully written in File:\n" << fileName << endl << endl;
 
   /*Exit*/
   cout << "\nEXIT SUCCESS" << endl;
   return EXIT_SUCCESS;
 }
 
-#endif  //XXZ_1D_SDP_FERMI_TEST_CPP
+#endif  //XXZ_1D_SDP_FINITE_FERMI_TEST_CPP

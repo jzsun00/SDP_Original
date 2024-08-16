@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 8, 2024
+  Updated: Aug 15, 2024
   
   Class:
   Fermi1DOpSubBasis
@@ -36,6 +36,8 @@ class Fermi1DOpSubBasis : public OpSubBasis<FermiMonomial<Fermi1DLadderOp>, int>
   virtual void init(bool isInf);
   /*Get information of the operator sub-basis.*/
   virtual std::string toString() const;
+
+ private:
   bool isNew(const FermiMonomial<Fermi1DLadderOp> & toAdd) const;
 };
 
