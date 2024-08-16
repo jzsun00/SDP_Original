@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 15, 2024
+  Updated: Aug 16, 2024
 
   Calculate 1D XXZ model ground state energy using exact diagonalization.
   Use PBC and full basis of quantum states without symmetry considerations.
@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <cstdio>
+#include <iomanip>
 
 #include "../../hamiltonians_XXZ.hpp"
 #include "../include/arlnsmat.h"
@@ -26,7 +27,7 @@ using std::vector;
 
 int main() {
   /*Set parameters sites and Jz.*/
-  size_t sites = 18;
+  size_t sites = 12;
   double Jz = 0;
   cout << "Number of sites = " << sites << endl;
   cout << "Jz = " << Jz << endl << endl;
@@ -36,7 +37,7 @@ int main() {
   omp_set_num_threads(8);
 
   /*Construct polynomial and basis.*/
-  SpinHalfPolynomial1D poly = XXZ1D::makeSpinPolyPBC(sites, Jz);
+  SpinHalfPolynomial1D poly = XXZ1D::makeSpinPoly(sites, Jz);
   SpinHalfBasis1D * basis = new SpinHalfBasis1D(sites);
   auto start_basis_init = std::chrono::high_resolution_clock::now();
   basis->init();
@@ -100,8 +101,8 @@ int main() {
       gs = dprob.Eigenvalue(i);
     }
   }
-  gs /= sites;
-  cout << "\nGround State Energy = " << gs << endl;
+  gs /= (sites - 2);
+  cout << "\nGround State Energy = " << std::setprecision(10) << gs << endl;
 
   // Exit
   return EXIT_SUCCESS;

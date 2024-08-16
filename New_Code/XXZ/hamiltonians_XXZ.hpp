@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 15, 2024
+  Updated: Aug 16, 2024
   
   Class:
   XXZSparseHamiltonian
@@ -98,10 +98,13 @@ namespace XXZ1D {
   /*Periodic boundary condition.*/
   SpinHalfPolynomial1D makeSpinPolyPBC(size_t sites, double Jz);
 
+  /**/
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiPoly(int start,
                                                                  int end,
                                                                  double Jz);
 
+  /*Open boundary condition in [start, end],
+    interaction at the boundary is divided by 2.*/
   FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > makeFermiFinitePoly(int start,
                                                                        int end,
                                                                        double Jz);

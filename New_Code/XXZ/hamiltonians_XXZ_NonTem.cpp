@@ -1,6 +1,6 @@
 /*
   Jiazheng Sun
-  Updated: Aug 15, 2024
+  Updated: Aug 16, 2024
   
   Class Implementations:
   XXZSparseHamiltonian
@@ -263,6 +263,7 @@ void XXZSparseRealHamiltonian::createRefSymMatrix(SpinHalfBasis1D & basis) {
 
 //----------------------------------------------------------------Other Functions--------
 
+/*Open boundary condition, interaction at the boundary is divided by 2.*/
 SpinHalfPolynomial1D XXZ1D::makeSpinPoly(size_t sites, double Jz) {
   SpinHalfPolynomial1D ans;
   for (size_t i = 0; i < sites - 1; i++) {
@@ -292,6 +293,7 @@ SpinHalfPolynomial1D XXZ1D::makeSpinPoly(size_t sites, double Jz) {
   return ans;
 }
 
+/*Periodic boundary condition.*/
 SpinHalfPolynomial1D XXZ1D::makeSpinPolyPBC(size_t sites, double Jz) {
   SpinHalfPolynomial1D ans;
   for (size_t i = 0; i < sites; i++) {
@@ -351,6 +353,8 @@ FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > XXZ1D::makeFermiPoly(int start,
   return ans;
 }
 
+/*Open boundary condition in [start, end],
+  interaction at the boundary is divided by 2.*/
 FermiPolynomial<FermiMonomial<Fermi1DLadderOp> > XXZ1D::makeFermiFinitePoly(int start,
                                                                             int end,
                                                                             double Jz) {
